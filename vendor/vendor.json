@@ -3,10 +3,10 @@
 	"ignore": "appengine test github.com/hashicorp/nomad/",
 	"package": [
 		{
-			"checksumSHA1": "MV5JueYPwNkLZ+KNqmDcNDhsKi4=",
+			"checksumSHA1": "oxuGvDcln1djCm5rE9A6+k9xYcc=",
 			"path": "github.com/DreamItGetIT/statuscake",
-			"revision": "acc13ec021cd1e8a6ebb1d9035f513217f5c4562",
-			"revisionTime": "2017-04-10T11:34:45Z"
+			"revision": "f6b9cdfccf736eaca5fac0acb82ea8a3ebcac6f3",
+			"revisionTime": "2017-06-14T14:12:13Z"
 		},
 		{
 			"checksumSHA1": "FIL83loX9V9APvGQIjJpbxq53F0=",
