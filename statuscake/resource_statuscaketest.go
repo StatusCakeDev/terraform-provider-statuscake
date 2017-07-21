@@ -91,6 +91,11 @@ func resourceStatusCakeTest() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+
+			"custom_header": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -112,6 +117,7 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 		BasicUser:    d.Get("basic_user").(string),
 		BasicPass:    d.Get("basic_pass").(string),
 		FindString:   d.Get("contains_string").(string),
+		CustomHeader: d.Get("custom_header").(string),
 	}
 
 	log.Printf("[DEBUG] Creating new StatusCake Test: %s", d.Get("website_name").(string))
@@ -180,6 +186,7 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("basic_user", testResp.BasicUser)
 	d.Set("basic_pass", testResp.BasicPass)
 	d.Set("contains_string", testResp.FindString)
+	d.Set("custom_header", testResp.CustomHeader)
 
 	return nil
 }
@@ -233,6 +240,9 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	}
 	if v, ok := d.GetOk("contains_string"); ok {
 		test.FindString = v.(string)
+	}
+	if v, ok := d.GetOk("custom_header"); ok {
+		test.CustomHeader = v.(string)
 	}
 
 	defaultStatusCodes := "204, 205, 206, 303, 400, 401, 403, 404, 405, 406, " +
