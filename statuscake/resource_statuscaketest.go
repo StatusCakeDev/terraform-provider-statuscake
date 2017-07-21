@@ -76,6 +76,21 @@ func resourceStatusCakeTest() *schema.Resource {
 				Optional: true,
 				Default:  5,
 			},
+
+			"basic_user": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"basic_pass": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"contains_string": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -94,6 +109,9 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 		Confirmation: d.Get("confirmations").(int),
 		Port:         d.Get("port").(int),
 		TriggerRate:  d.Get("trigger_rate").(int),
+		BasicUser:    d.Get("basic_user").(string),
+		BasicPass:    d.Get("basic_pass").(string),
+		FindString:   d.Get("contains_string").(string),
 	}
 
 	log.Printf("[DEBUG] Creating new StatusCake Test: %s", d.Get("website_name").(string))
@@ -159,6 +177,9 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("confirmations", testResp.Confirmation)
 	d.Set("port", testResp.Port)
 	d.Set("trigger_rate", testResp.TriggerRate)
+	d.Set("basic_user", testResp.BasicUser)
+	d.Set("basic_pass", testResp.BasicPass)
+	d.Set("contains_string", testResp.FindString)
 
 	return nil
 }
@@ -203,6 +224,15 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	}
 	if v, ok := d.GetOk("trigger_rate"); ok {
 		test.TriggerRate = v.(int)
+	}
+	if v, ok := d.GetOk("basic_user"); ok {
+		test.BasicUser = v.(string)
+	}
+	if v, ok := d.GetOk("basic_pass"); ok {
+		test.BasicPass = v.(string)
+	}
+	if v, ok := d.GetOk("contains_string"); ok {
+		test.FindString = v.(string)
 	}
 
 	defaultStatusCodes := "204, 205, 206, 303, 400, 401, 403, 404, 405, 406, " +
