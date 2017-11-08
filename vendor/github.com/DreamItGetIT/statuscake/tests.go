@@ -21,6 +21,9 @@ type Test struct {
 	// Website name. Tags are stripped out
 	WebsiteName string `json:"WebsiteName" querystring:"WebsiteName"`
 
+	// CustomHeader. A special header that will be sent along with the HTTP tests.
+	CustomHeader string `json:"CustomHeader" querystring:"CustomHeader"`
+
 	// Test location, either an IP (for TCP and Ping) or a fully qualified URL for other TestTypes
 	WebsiteURL string `json:"WebsiteURL" querystring:"WebsiteURL"`
 
@@ -91,6 +94,9 @@ type Test struct {
 
 	// Comma Seperated List of StatusCodes to Trigger Error on (on Update will replace, so send full list each time)
 	StatusCodes string `json:"StatusCodes" querystring:"StatusCodes"`
+
+	// Set to 1 to enable the Cookie Jar. Required for some redirects.
+	UseJar bool `json:"UseJar" querystring:"UseJar"`
 }
 
 // Validate checks if the Test is valid. If it's invalid, it returns a ValidationError with all invalid fields. It returns nil otherwise.
@@ -135,6 +141,10 @@ func (t *Test) Validate() error {
 
 	if t.TriggerRate < 0 || t.TriggerRate > 59 {
 		e["TriggerRate"] = "must be between 0 and 59"
+	}
+	var jsonVerifiable map[string]interface{}
+	if json.Unmarshal([]byte(t.CustomHeader), &jsonVerifiable) != nil {
+		e["CustomHeader"] = "must be provided as json string"
 	}
 
 	if len(e) > 0 {
