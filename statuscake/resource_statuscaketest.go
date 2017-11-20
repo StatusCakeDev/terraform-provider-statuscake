@@ -77,6 +77,11 @@ func resourceStatusCakeTest() *schema.Resource {
 				Default:  5,
 			},
 
+			"custom_header": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
 			"user_agent": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -126,6 +131,7 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 		Confirmation:   d.Get("confirmations").(int),
 		Port:           d.Get("port").(int),
 		TriggerRate:    d.Get("trigger_rate").(int),
+		CustomHeader:   d.Get("custom_header").(string),
 		UserAgent:      d.Get("user_agent").(string),
 		UseJar:         d.Get("use_jar").(bool),
 		PostRaw:        d.Get("post_raw").(string),
@@ -197,6 +203,7 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("confirmations", testResp.Confirmation)
 	d.Set("port", testResp.Port)
 	d.Set("trigger_rate", testResp.TriggerRate)
+	d.Set("custom_header", testResp.CustomHeader)
 	d.Set("user_agent", testResp.UserAgent)
 	d.Set("use_jar", testResp.UseJar)
 	d.Set("post_raw", testResp.PostRaw)
@@ -247,6 +254,9 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	}
 	if v, ok := d.GetOk("trigger_rate"); ok {
 		test.TriggerRate = v.(int)
+	}
+	if v, ok := d.GetOk("custom_header"); ok {
+		test.CustomHeader = v.(string)
 	}
 	if v, ok := d.GetOk("user_agent"); ok {
 		test.UserAgent = v.(string)
