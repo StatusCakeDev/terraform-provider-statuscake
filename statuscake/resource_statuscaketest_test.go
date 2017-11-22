@@ -136,8 +136,6 @@ func testAccTestCheckAttributes(rn string, test *statuscake.Test) resource.TestC
 				err = check(key, value, strconv.FormatBool(test.Paused))
 			case "timeout":
 				err = check(key, value, strconv.Itoa(test.Timeout))
-			case "contact_id":
-				err = check(key, value, strconv.Itoa(test.ContactID))
 			case "confirmations":
 				err = check(key, value, strconv.Itoa(test.Confirmation))
 			case "trigger_rate":
@@ -171,7 +169,7 @@ resource "statuscake_test" "google" {
 	test_type = "HTTP"
 	check_rate = 300
 	timeout = 10
-	contact_id = 43402
+	contact_id = "43402"
 	confirmations = 1
 	trigger_rate = 10
 }
@@ -195,7 +193,7 @@ resource "statuscake_test" "google" {
 	test_type = "TCP"
 	check_rate = 300
 	timeout = 10
-	contact_id = 43402
+	contact_id = "43402"
 	confirmations = 1
 	port = 80
 }
