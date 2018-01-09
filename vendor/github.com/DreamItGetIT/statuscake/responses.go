@@ -50,7 +50,7 @@ type detailResponse struct {
 	DownTimes       int      `json:"DownTimes,string"`
 	Sensitive       bool     `json:"Sensitive"`
 	TriggerRate     int      `json:"TriggerRate,string"`
-	UseJar          bool     `json:"UseJar"`
+	UseJar          int      `json:"UseJar"`
 	PostRaw         string   `json:"PostRaw"`
 	FinalEndpoint   string   `json:"FinalEndpoint"`
 	FollowRedirect  bool     `json:"FollowRedirect"`

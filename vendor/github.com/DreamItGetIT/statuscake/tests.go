@@ -99,7 +99,7 @@ type Test struct {
 	StatusCodes string `json:"StatusCodes" querystring:"StatusCodes"`
 
 	// Set to 1 to enable the Cookie Jar. Required for some redirects.
-	UseJar bool `json:"UseJar" querystring:"UseJar"`
+	UseJar int `json:"UseJar" querystring:"UseJar"`
 
 	// Raw POST data seperated by an ampersand
 	PostRaw string `json:"PostRaw" querystring:"PostRaw"`

@@ -133,7 +133,7 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 		TriggerRate:    d.Get("trigger_rate").(int),
 		CustomHeader:   d.Get("custom_header").(string),
 		UserAgent:      d.Get("user_agent").(string),
-		UseJar:         d.Get("use_jar").(bool),
+		UseJar:         d.Get("use_jar").(int),
 		PostRaw:        d.Get("post_raw").(string),
 		FindString:     d.Get("find_string").(string),
 		FinalEndpoint:  d.Get("final_endpoint").(string),
@@ -262,7 +262,7 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 		test.UserAgent = v.(string)
 	}
 	if v, ok := d.GetOk("use_jar"); ok {
-		test.UseJar = v.(bool)
+		test.UseJar = v.(int)
 	}
 	if v, ok := d.GetOk("post_raw"); ok {
 		test.PostRaw = v.(string)
