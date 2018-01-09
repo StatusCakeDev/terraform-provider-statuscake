@@ -21,6 +21,12 @@ type Test struct {
 	// Website name. Tags are stripped out
 	WebsiteName string `json:"WebsiteName" querystring:"WebsiteName"`
 
+	// CustomHeader. A special header that will be sent along with the HTTP tests.
+	CustomHeader string `json:"CustomHeader" querystring:"CustomHeader"`
+
+	// Use to populate the test with a custom user agent
+	UserAgent string `json:"UserAgent" queryString:"UserAgent"`
+
 	// Test location, either an IP (for TCP and Ping) or a fully qualified URL for other TestTypes
 	WebsiteURL string `json:"WebsiteURL" querystring:"WebsiteURL"`
 
@@ -28,7 +34,7 @@ type Test struct {
 	Port int `json:"Port" querystring:"Port"`
 
 	// Contact group ID - will return int of contact group used else 0
-	ContactID int `json:"ContactID" querystring:"ContactGroup"`
+	ContactID string `json:"ContactID" querystring:"ContactGroup"`
 
 	// Current status at last test
 	Status string `json:"Status"`
@@ -91,6 +97,18 @@ type Test struct {
 
 	// Comma Seperated List of StatusCodes to Trigger Error on (on Update will replace, so send full list each time)
 	StatusCodes string `json:"StatusCodes" querystring:"StatusCodes"`
+
+	// Set to 1 to enable the Cookie Jar. Required for some redirects.
+	UseJar bool `json:"UseJar" querystring:"UseJar"`
+
+	// Raw POST data seperated by an ampersand
+	PostRaw string `json:"PostRaw" querystring:"PostRaw"`
+
+	// Use to specify the expected Final URL in the testing process
+	FinalEndpoint string `json:"FinalEndpoint" querystring:"FinalEndpoint"`
+
+	// Use to specify whether redirects should be followed
+	FollowRedirect bool `json:"FollowRedirect" querystring:"FollowRedirect"`
 }
 
 // Validate checks if the Test is valid. If it's invalid, it returns a ValidationError with all invalid fields. It returns nil otherwise.
@@ -135,6 +153,19 @@ func (t *Test) Validate() error {
 
 	if t.TriggerRate < 0 || t.TriggerRate > 59 {
 		e["TriggerRate"] = "must be between 0 and 59"
+	}
+
+	if t.PostRaw != "" && t.TestType != "HTTP" {
+		e["PostRaw"] = "must be HTTP to submit a POST request"
+	}
+
+	if t.FinalEndpoint != "" && t.TestType != "HTTP" {
+		e["FinalEndpoint"] = "must be a Valid URL"
+	}
+
+	var jsonVerifiable map[string]interface{}
+	if json.Unmarshal([]byte(t.CustomHeader), &jsonVerifiable) != nil {
+		e["CustomHeader"] = "must be provided as json string"
 	}
 
 	if len(e) > 0 {
