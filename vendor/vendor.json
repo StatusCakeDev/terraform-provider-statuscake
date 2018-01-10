@@ -3,10 +3,10 @@
 	"ignore": "appengine test github.com/hashicorp/nomad/ github.com/hashicorp/terraform/backend",
 	"package": [
 		{
-			"checksumSHA1": "UDL7d1YHLnGWbuPZknKU+1ABNSM=",
+			"checksumSHA1": "xjfJ6T+mQFmC9oMR+UKdGtbs/p4=",
 			"path": "github.com/DreamItGetIT/statuscake",
-			"revision": "a44c945f75f458be83864438f4af9dfb82583ad6",
-			"revisionTime": "2017-11-09T16:06:10Z"
+			"revision": "2081e16dbe691bccf20b1901897d8f8245beefcd",
+			"revisionTime": "2018-01-09T18:02:45Z"
 		},
 		{
 			"checksumSHA1": "FIL83loX9V9APvGQIjJpbxq53F0=",
