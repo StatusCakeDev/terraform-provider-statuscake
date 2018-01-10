@@ -76,6 +76,43 @@ func resourceStatusCakeTest() *schema.Resource {
 				Optional: true,
 				Default:  5,
 			},
+
+			"custom_header": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"user_agent": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"use_jar": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  0,
+			},
+
+			"post_raw": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"find_string": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"final_endpoint": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"follow_redirect": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
 		},
 	}
 }
@@ -84,16 +121,23 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*statuscake.Client)
 
 	newTest := &statuscake.Test{
-		WebsiteName:  d.Get("website_name").(string),
-		WebsiteURL:   d.Get("website_url").(string),
-		CheckRate:    d.Get("check_rate").(int),
-		TestType:     d.Get("test_type").(string),
-		Paused:       d.Get("paused").(bool),
-		Timeout:      d.Get("timeout").(int),
-		ContactID:    d.Get("contact_id").(int),
-		Confirmation: d.Get("confirmations").(int),
-		Port:         d.Get("port").(int),
-		TriggerRate:  d.Get("trigger_rate").(int),
+		WebsiteName:    d.Get("website_name").(string),
+		WebsiteURL:     d.Get("website_url").(string),
+		CheckRate:      d.Get("check_rate").(int),
+		TestType:       d.Get("test_type").(string),
+		Paused:         d.Get("paused").(bool),
+		Timeout:        d.Get("timeout").(int),
+		ContactID:      d.Get("contact_id").(int),
+		Confirmation:   d.Get("confirmations").(int),
+		Port:           d.Get("port").(int),
+		TriggerRate:    d.Get("trigger_rate").(int),
+		CustomHeader:   d.Get("custom_header").(string),
+		UserAgent:      d.Get("user_agent").(string),
+		UseJar:         d.Get("use_jar").(int),
+		PostRaw:        d.Get("post_raw").(string),
+		FindString:     d.Get("find_string").(string),
+		FinalEndpoint:  d.Get("final_endpoint").(string),
+		FollowRedirect: d.Get("follow_redirect").(bool),
 	}
 
 	log.Printf("[DEBUG] Creating new StatusCake Test: %s", d.Get("website_name").(string))
@@ -159,6 +203,13 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("confirmations", testResp.Confirmation)
 	d.Set("port", testResp.Port)
 	d.Set("trigger_rate", testResp.TriggerRate)
+	d.Set("custom_header", testResp.CustomHeader)
+	d.Set("user_agent", testResp.UserAgent)
+	d.Set("use_jar", testResp.UseJar)
+	d.Set("post_raw", testResp.PostRaw)
+	d.Set("find_string", testResp.FindString)
+	d.Set("final_endpoint", testResp.FinalEndpoint)
+	d.Set("follow_redirect", testResp.FollowRedirect)
 
 	return nil
 }
@@ -203,6 +254,27 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	}
 	if v, ok := d.GetOk("trigger_rate"); ok {
 		test.TriggerRate = v.(int)
+	}
+	if v, ok := d.GetOk("custom_header"); ok {
+		test.CustomHeader = v.(string)
+	}
+	if v, ok := d.GetOk("user_agent"); ok {
+		test.UserAgent = v.(string)
+	}
+	if v, ok := d.GetOk("use_jar"); ok {
+		test.UseJar = v.(int)
+	}
+	if v, ok := d.GetOk("post_raw"); ok {
+		test.PostRaw = v.(string)
+	}
+	if v, ok := d.GetOk("find_string"); ok {
+		test.FindString = v.(string)
+	}
+	if v, ok := d.GetOk("final_endpoint"); ok {
+		test.FinalEndpoint = v.(string)
+	}
+	if v, ok := d.GetOk("follow_redirect"); ok {
+		test.FollowRedirect = v.(bool)
 	}
 
 	defaultStatusCodes := "204, 205, 206, 303, 400, 401, 403, 404, 405, 406, " +
