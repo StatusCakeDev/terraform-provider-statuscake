@@ -88,9 +88,9 @@ func resourceStatusCakeTest() *schema.Resource {
 			},
 
 			"use_jar": {
-				Type:     schema.TypeBool,
+				Type:     schema.TypeInt,
 				Optional: true,
-				Default:  false,
+				Default:  0,
 			},
 
 			"post_raw": {
