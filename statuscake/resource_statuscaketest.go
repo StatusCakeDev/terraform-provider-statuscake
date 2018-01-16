@@ -88,12 +88,12 @@ func resourceStatusCakeTest() *schema.Resource {
 
 			"status": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 
 			"uptime": {
 				Type:     schema.TypeFloat,
-				Optional: true,
+				Computed: true,
 			},
 
 			"node_locations": {
@@ -240,6 +240,8 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.Set("test_id", fmt.Sprintf("%d", response.TestID))
+	d.Set("status", response.Status)
+	d.Set("uptime", fmt.Sprintf("%.3f", response.Uptime))
 	d.SetId(fmt.Sprintf("%d", response.TestID))
 
 	return ReadTest(d, meta)
@@ -364,12 +366,6 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	}
 	if v, ok := d.GetOk("user_agent"); ok {
 		test.UserAgent = v.(string)
-	}
-	if v, ok := d.GetOk("status"); ok {
-		test.Status = v.(string)
-	}
-	if v, ok := d.GetOk("uptime"); ok {
-		test.Uptime = v.(float64)
 	}
 	if v, ok := d.GetOk("node_locations"); ok {
 		test.NodeLocations = v.([]string)

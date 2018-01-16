@@ -171,10 +171,6 @@ func testAccTestCheckAttributes(rn string, test *statuscake.Test) resource.TestC
 				err = check(key, value, test.CustomHeader)
 			case "user_agent":
 				err = check(key, value, test.UserAgent)
-			case "status":
-				err = check(key, value, test.Status)
-			case "uptime":
-				err = check(key, value, strconv.FormatFloat(test.Uptime, 'f', -1, 64))
 			case "node_locations":
 				for _, tv := range test.NodeLocations {
 					err = check(key, value, tv)
@@ -260,8 +256,6 @@ resource "statuscake_test" "google" {
 	trigger_rate = 20
 	custom_header = "{ \"Content-Type\": \"application/x-www-form-urlencoded\" }"
 	user_agent = "string9988"
-	status = "string22117"
-	uptime = 3498.27
 	node_locations = [ "string16045", "string19741", "string12122" ]
 	ping_url = "string8410"
 	basic_user = "string27052"
