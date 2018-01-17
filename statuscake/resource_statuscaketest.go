@@ -10,6 +10,16 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
+func castInterfaceToSliceStrings(in interface{}) []string {
+	input := in.([]interface{})
+	res := make([]string, len(input))
+
+	for i, element := range input {
+		res[i] = element.(string)
+	}
+	return res
+}
+
 func resourceStatusCakeTest() *schema.Resource {
 	return &schema.Resource{
 		Create: CreateTest,
@@ -212,7 +222,7 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 		UserAgent:      d.Get("user_agent").(string),
 		Status:         d.Get("status").(string),
 		Uptime:         d.Get("uptime").(float64),
-		NodeLocations:  d.Get("node_locations").([]string),
+		NodeLocations:  castInterfaceToSliceStrings(d.Get("node_locations")),
 		PingURL:        d.Get("ping_url").(string),
 		BasicUser:      d.Get("basic_user").(string),
 		BasicPass:      d.Get("basic_pass").(string),
@@ -301,7 +311,9 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("user_agent", testResp.UserAgent)
 	d.Set("status", testResp.Status)
 	d.Set("uptime", testResp.Uptime)
-	d.Set("node_locations", testResp.NodeLocations)
+	if err := d.Set("node_locations", testResp.NodeLocations); err != nil {
+		return fmt.Errorf("[WARN] Error setting node locations: %s", err)
+	}
 	d.Set("ping_url", testResp.PingURL)
 	d.Set("basic_user", testResp.BasicUser)
 	d.Set("basic_pass", testResp.BasicPass)
@@ -368,7 +380,7 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 		test.UserAgent = v.(string)
 	}
 	if v, ok := d.GetOk("node_locations"); ok {
-		test.NodeLocations = v.([]string)
+		test.NodeLocations = castInterfaceToSliceStrings(v)
 	}
 	if v, ok := d.GetOk("ping_url"); ok {
 		test.PingURL = v.(string)
