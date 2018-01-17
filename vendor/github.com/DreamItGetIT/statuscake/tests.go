@@ -34,7 +34,7 @@ type Test struct {
 	Port int `json:"Port" querystring:"Port"`
 
 	// Contact group ID - will return int of contact group used else 0
-	ContactID string `json:"ContactID" querystring:"ContactGroup"`
+	ContactID int `json:"ContactID" querystring:"ContactGroup"`
 
 	// Current status at last test
 	Status string `json:"Status"`

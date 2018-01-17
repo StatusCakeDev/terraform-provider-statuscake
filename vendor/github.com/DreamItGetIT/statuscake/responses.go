@@ -28,7 +28,7 @@ type detailResponse struct {
 	Paused          bool     `json:"Paused"`
 	WebsiteName     string   `json:"WebsiteName"`
 	URI             string   `json:"URI"`
-	ContactID       string   `json:"ContactID"`
+	ContactID       int      `json:"ContactID"`
 	Status          string   `json:"Status"`
 	Uptime          float64  `json:"Uptime"`
 	CustomHeader    string   `json:"CustomHeader"`
