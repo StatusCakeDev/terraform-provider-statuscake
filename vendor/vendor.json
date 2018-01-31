@@ -4,10 +4,9 @@
 	"package": [
 		{
 			"checksumSHA1": "6Fo7YzTT+MDviHOsqg6dNw8WrV4=",
-			"origin": "github.com/matschaffer/statuscake",
 			"path": "github.com/DreamItGetIT/statuscake",
-			"revision": "24c596002b80d84cf3bfb0f714e880c1b2e9af16",
-			"revisionTime": "2018-01-16T08:09:52Z"
+			"revision": "f69198f958d7326f3c110dd9be1c21abbd8a87a7",
+			"revisionTime": "2018-01-30T22:14:43Z"
 		},
 		{
 			"checksumSHA1": "FIL83loX9V9APvGQIjJpbxq53F0=",
