@@ -10,14 +10,22 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func castInterfaceToSliceStrings(in interface{}) []string {
-	input := in.([]interface{})
-	res := make([]string, len(input))
+func castSetToSliceStrings(configured []interface{}) []string {
+	res := make([]string, len(configured))
 
-	for i, element := range input {
+	for i, element := range configured {
 		res[i] = element.(string)
 	}
 	return res
+}
+
+// Special handling for node_locations since statuscake will return `[""]` for the empty case
+func considerEmptyStringAsEmptyArray(in []string) []string {
+	if len(in) == 1 && in[0] == "" {
+		return []string{}
+	} else {
+		return in
+	}
 }
 
 func resourceStatusCakeTest() *schema.Resource {
@@ -107,9 +115,10 @@ func resourceStatusCakeTest() *schema.Resource {
 			},
 
 			"node_locations": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
+				Set:      schema.HashString,
 			},
 
 			"ping_url": {
@@ -219,7 +228,7 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 		UserAgent:      d.Get("user_agent").(string),
 		Status:         d.Get("status").(string),
 		Uptime:         d.Get("uptime").(float64),
-		NodeLocations:  castInterfaceToSliceStrings(d.Get("node_locations")),
+		NodeLocations:  castSetToSliceStrings(d.Get("node_locations").(*schema.Set).List()),
 		PingURL:        d.Get("ping_url").(string),
 		BasicUser:      d.Get("basic_user").(string),
 		BasicPass:      d.Get("basic_pass").(string),
@@ -308,7 +317,7 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("user_agent", testResp.UserAgent)
 	d.Set("status", testResp.Status)
 	d.Set("uptime", testResp.Uptime)
-	if err := d.Set("node_locations", testResp.NodeLocations); err != nil {
+	if err := d.Set("node_locations", considerEmptyStringAsEmptyArray(testResp.NodeLocations)); err != nil {
 		return fmt.Errorf("[WARN] Error setting node locations: %s", err)
 	}
 	d.Set("ping_url", testResp.PingURL)
@@ -377,7 +386,7 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 		test.UserAgent = v.(string)
 	}
 	if v, ok := d.GetOk("node_locations"); ok {
-		test.NodeLocations = castInterfaceToSliceStrings(v)
+		test.NodeLocations = castSetToSliceStrings(v.(*schema.Set).List())
 	}
 	if v, ok := d.GetOk("ping_url"); ok {
 		test.PingURL = v.(string)
