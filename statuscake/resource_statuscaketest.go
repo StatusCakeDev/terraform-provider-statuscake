@@ -314,24 +314,19 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("port", testResp.Port)
 	d.Set("trigger_rate", testResp.TriggerRate)
 	d.Set("custom_header", testResp.CustomHeader)
-	d.Set("user_agent", testResp.UserAgent)
 	d.Set("status", testResp.Status)
 	d.Set("uptime", testResp.Uptime)
 	if err := d.Set("node_locations", considerEmptyStringAsEmptyArray(testResp.NodeLocations)); err != nil {
 		return fmt.Errorf("[WARN] Error setting node locations: %s", err)
 	}
-	d.Set("ping_url", testResp.PingURL)
-	d.Set("basic_user", testResp.BasicUser)
-	d.Set("basic_pass", testResp.BasicPass)
-	d.Set("public", testResp.Public)
 	d.Set("logo_image", testResp.LogoImage)
-	d.Set("branding", testResp.Branding)
-	d.Set("website_host", testResp.WebsiteHost)
-	d.Set("virus", testResp.Virus)
+	// Even after WebsiteHost is set, the API returns ""
+	// API docs aren't clear on usage will only override state if we get a non-empty value back
+	if testResp.WebsiteHost != "" {
+		d.Set("website_host", testResp.WebsiteHost)
+	}
 	d.Set("find_string", testResp.FindString)
 	d.Set("do_not_find", testResp.DoNotFind)
-	d.Set("real_browser", testResp.RealBrowser)
-	d.Set("test_tags", testResp.TestTags)
 	d.Set("status_codes", testResp.StatusCodes)
 	d.Set("use_jar", testResp.UseJar)
 	d.Set("post_raw", testResp.PostRaw)

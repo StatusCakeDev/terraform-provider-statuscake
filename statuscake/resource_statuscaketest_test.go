@@ -166,8 +166,6 @@ func testAccTestCheckAttributes(rn string, test *statuscake.Test) resource.TestC
 				err = check(key, value, strconv.Itoa(test.TriggerRate))
 			case "custom_header":
 				err = check(key, value, test.CustomHeader)
-			case "user_agent":
-				err = check(key, value, test.UserAgent)
 			case "node_locations":
 				for _, tv := range test.NodeLocations {
 					err = check(key, value, tv)
@@ -175,30 +173,14 @@ func testAccTestCheckAttributes(rn string, test *statuscake.Test) resource.TestC
 						return err
 					}
 				}
-			case "ping_url":
-				err = check(key, value, test.PingURL)
-			case "basic_user":
-				err = check(key, value, test.BasicUser)
-			case "basic_pass":
-				err = check(key, value, test.BasicPass)
 			case "public":
 				err = check(key, value, strconv.Itoa(test.Public))
 			case "logo_image":
 				err = check(key, value, test.LogoImage)
-			case "branding":
-				err = check(key, value, strconv.Itoa(test.Branding))
-			case "website_host":
-				err = check(key, value, test.WebsiteHost)
-			case "virus":
-				err = check(key, value, strconv.Itoa(test.Virus))
 			case "find_string":
 				err = check(key, value, test.FindString)
 			case "do_not_find":
 				err = check(key, value, strconv.FormatBool(test.DoNotFind))
-			case "real_browser":
-				err = check(key, value, strconv.Itoa(test.RealBrowser))
-			case "test_tags":
-				err = check(key, value, test.TestTags)
 			case "status_codes":
 				err = check(key, value, test.StatusCodes)
 			case "use_jar":
