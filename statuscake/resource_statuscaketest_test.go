@@ -2,6 +2,7 @@ package statuscake
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"testing"
 
@@ -19,7 +20,7 @@ func TestAccStatusCake_basic(t *testing.T) {
 		CheckDestroy: testAccTestCheckDestroy(&test),
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTestConfig_basic, testContactGroupId),
+				Config: interpolateTerraformTemplate(testAccTestConfig_basic),
 				Check: resource.ComposeTestCheckFunc(
 					testAccTestCheckExists("statuscake_test.google", &test),
 					testAccTestCheckAttributes("statuscake_test.google", &test),
@@ -38,7 +39,7 @@ func TestAccStatusCake_tcp(t *testing.T) {
 		CheckDestroy: testAccTestCheckDestroy(&test),
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTestConfig_tcp, testContactGroupId),
+				Config: interpolateTerraformTemplate(testAccTestConfig_tcp),
 				Check: resource.ComposeTestCheckFunc(
 					testAccTestCheckExists("statuscake_test.google", &test),
 					testAccTestCheckAttributes("statuscake_test.google", &test),
@@ -57,7 +58,7 @@ func TestAccStatusCake_withUpdate(t *testing.T) {
 		CheckDestroy: testAccTestCheckDestroy(&test),
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTestConfig_basic, testContactGroupId),
+				Config: interpolateTerraformTemplate(testAccTestConfig_basic),
 				Check: resource.ComposeTestCheckFunc(
 					testAccTestCheckExists("statuscake_test.google", &test),
 				),
@@ -210,6 +211,19 @@ func testAccTestCheckDestroy(test *statuscake.Test) resource.TestCheckFunc {
 
 		return nil
 	}
+}
+
+func interpolateTerraformTemplate(template string) string {
+	testContactGroupId := 43402
+
+	if v := os.Getenv("STATUSCAKE_TEST_CONTACT_GROUP_ID"); v != "" {
+		id, err := strconv.Atoi(v)
+		if err == nil {
+			testContactGroupId = id
+		}
+	}
+
+	return fmt.Sprintf(template, testContactGroupId)
 }
 
 const testAccTestConfig_basic = `
