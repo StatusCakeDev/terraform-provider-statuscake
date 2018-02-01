@@ -10,14 +10,22 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func castInterfaceToSliceStrings(in interface{}) []string {
-	input := in.([]interface{})
-	res := make([]string, len(input))
+func castSetToSliceStrings(configured []interface{}) []string {
+	res := make([]string, len(configured))
 
-	for i, element := range input {
+	for i, element := range configured {
 		res[i] = element.(string)
 	}
 	return res
+}
+
+// Special handling for node_locations since statuscake will return `[""]` for the empty case
+func considerEmptyStringAsEmptyArray(in []string) []string {
+	if len(in) == 1 && in[0] == "" {
+		return []string{}
+	} else {
+		return in
+	}
 }
 
 func resourceStatusCakeTest() *schema.Resource {
@@ -107,9 +115,10 @@ func resourceStatusCakeTest() *schema.Resource {
 			},
 
 			"node_locations": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
+				Set:      schema.HashString,
 			},
 
 			"ping_url": {
@@ -123,8 +132,9 @@ func resourceStatusCakeTest() *schema.Resource {
 			},
 
 			"basic_pass": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:      schema.TypeString,
+				Optional:  true,
+				Sensitive: true,
 			},
 
 			"public": {
@@ -175,10 +185,6 @@ func resourceStatusCakeTest() *schema.Resource {
 			"status_codes": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Default: "204, 205, 206, 303, 400, 401, 403, 404, 405, 406, " +
-					"408, 410, 413, 444, 429, 494, 495, 496, 499, 500, 501, 502, 503, " +
-					"504, 505, 506, 507, 508, 509, 510, 511, 521, 522, 523, 524, 520, " +
-					"598, 599",
 			},
 
 			"use_jar": {
@@ -222,7 +228,7 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 		UserAgent:      d.Get("user_agent").(string),
 		Status:         d.Get("status").(string),
 		Uptime:         d.Get("uptime").(float64),
-		NodeLocations:  castInterfaceToSliceStrings(d.Get("node_locations")),
+		NodeLocations:  castSetToSliceStrings(d.Get("node_locations").(*schema.Set).List()),
 		PingURL:        d.Get("ping_url").(string),
 		BasicUser:      d.Get("basic_user").(string),
 		BasicPass:      d.Get("basic_pass").(string),
@@ -308,24 +314,19 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("port", testResp.Port)
 	d.Set("trigger_rate", testResp.TriggerRate)
 	d.Set("custom_header", testResp.CustomHeader)
-	d.Set("user_agent", testResp.UserAgent)
 	d.Set("status", testResp.Status)
 	d.Set("uptime", testResp.Uptime)
-	if err := d.Set("node_locations", testResp.NodeLocations); err != nil {
+	if err := d.Set("node_locations", considerEmptyStringAsEmptyArray(testResp.NodeLocations)); err != nil {
 		return fmt.Errorf("[WARN] Error setting node locations: %s", err)
 	}
-	d.Set("ping_url", testResp.PingURL)
-	d.Set("basic_user", testResp.BasicUser)
-	d.Set("basic_pass", testResp.BasicPass)
-	d.Set("public", testResp.Public)
 	d.Set("logo_image", testResp.LogoImage)
-	d.Set("branding", testResp.Branding)
-	d.Set("website_host", testResp.WebsiteHost)
-	d.Set("virus", testResp.Virus)
+	// Even after WebsiteHost is set, the API returns ""
+	// API docs aren't clear on usage will only override state if we get a non-empty value back
+	if testResp.WebsiteHost != "" {
+		d.Set("website_host", testResp.WebsiteHost)
+	}
 	d.Set("find_string", testResp.FindString)
 	d.Set("do_not_find", testResp.DoNotFind)
-	d.Set("real_browser", testResp.RealBrowser)
-	d.Set("test_tags", testResp.TestTags)
 	d.Set("status_codes", testResp.StatusCodes)
 	d.Set("use_jar", testResp.UseJar)
 	d.Set("post_raw", testResp.PostRaw)
@@ -380,7 +381,7 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 		test.UserAgent = v.(string)
 	}
 	if v, ok := d.GetOk("node_locations"); ok {
-		test.NodeLocations = castInterfaceToSliceStrings(v)
+		test.NodeLocations = castSetToSliceStrings(v.(*schema.Set).List())
 	}
 	if v, ok := d.GetOk("ping_url"); ok {
 		test.PingURL = v.(string)

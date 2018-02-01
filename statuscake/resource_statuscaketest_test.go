@@ -19,7 +19,7 @@ func TestAccStatusCake_basic(t *testing.T) {
 		CheckDestroy: testAccTestCheckDestroy(&test),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTestConfig_basic,
+				Config: fmt.Sprintf(testAccTestConfig_basic, testContactGroupId),
 				Check: resource.ComposeTestCheckFunc(
 					testAccTestCheckExists("statuscake_test.google", &test),
 					testAccTestCheckAttributes("statuscake_test.google", &test),
@@ -38,7 +38,7 @@ func TestAccStatusCake_tcp(t *testing.T) {
 		CheckDestroy: testAccTestCheckDestroy(&test),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTestConfig_tcp,
+				Config: fmt.Sprintf(testAccTestConfig_tcp, testContactGroupId),
 				Check: resource.ComposeTestCheckFunc(
 					testAccTestCheckExists("statuscake_test.google", &test),
 					testAccTestCheckAttributes("statuscake_test.google", &test),
@@ -57,7 +57,7 @@ func TestAccStatusCake_withUpdate(t *testing.T) {
 		CheckDestroy: testAccTestCheckDestroy(&test),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTestConfig_basic,
+				Config: fmt.Sprintf(testAccTestConfig_basic, testContactGroupId),
 				Check: resource.ComposeTestCheckFunc(
 					testAccTestCheckExists("statuscake_test.google", &test),
 				),
@@ -76,12 +76,9 @@ func TestAccStatusCake_withUpdate(t *testing.T) {
 					resource.TestCheckResourceAttr("statuscake_test.google", "trigger_rate", "20"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "custom_header", "{ \"Content-Type\": \"application/x-www-form-urlencoded\" }"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "user_agent", "string9988"),
-					resource.TestCheckResourceAttr("statuscake_test.google", "status", "string22117"),
-					resource.TestCheckResourceAttr("statuscake_test.google", "uptime", "3498.27"),
+					resource.TestCheckResourceAttr("statuscake_test.google", "status", "Up"),
+					resource.TestCheckResourceAttr("statuscake_test.google", "uptime", "0"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "node_locations.#", "3"),
-					resource.TestCheckResourceAttr("statuscake_test.google", "node_locations.0", "string16045"),
-					resource.TestCheckResourceAttr("statuscake_test.google", "node_locations.1", "string19741"),
-					resource.TestCheckResourceAttr("statuscake_test.google", "node_locations.2", "string12122"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "ping_url", "string8410"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "basic_user", "string27052"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "basic_pass", "string5659"),
@@ -169,8 +166,6 @@ func testAccTestCheckAttributes(rn string, test *statuscake.Test) resource.TestC
 				err = check(key, value, strconv.Itoa(test.TriggerRate))
 			case "custom_header":
 				err = check(key, value, test.CustomHeader)
-			case "user_agent":
-				err = check(key, value, test.UserAgent)
 			case "node_locations":
 				for _, tv := range test.NodeLocations {
 					err = check(key, value, tv)
@@ -178,30 +173,14 @@ func testAccTestCheckAttributes(rn string, test *statuscake.Test) resource.TestC
 						return err
 					}
 				}
-			case "ping_url":
-				err = check(key, value, test.PingURL)
-			case "basic_user":
-				err = check(key, value, test.BasicUser)
-			case "basic_pass":
-				err = check(key, value, test.BasicPass)
 			case "public":
 				err = check(key, value, strconv.Itoa(test.Public))
 			case "logo_image":
 				err = check(key, value, test.LogoImage)
-			case "branding":
-				err = check(key, value, strconv.Itoa(test.Branding))
-			case "website_host":
-				err = check(key, value, test.WebsiteHost)
-			case "virus":
-				err = check(key, value, strconv.Itoa(test.Virus))
 			case "find_string":
 				err = check(key, value, test.FindString)
 			case "do_not_find":
 				err = check(key, value, strconv.FormatBool(test.DoNotFind))
-			case "real_browser":
-				err = check(key, value, strconv.Itoa(test.RealBrowser))
-			case "test_tags":
-				err = check(key, value, test.TestTags)
 			case "status_codes":
 				err = check(key, value, test.StatusCodes)
 			case "use_jar":
@@ -240,7 +219,7 @@ resource "statuscake_test" "google" {
 	test_type = "HTTP"
 	check_rate = 300
 	timeout = 10
-	contact_id = 43402
+	contact_id = %d
 	confirmations = 1
 	trigger_rate = 10
 }
@@ -284,7 +263,7 @@ resource "statuscake_test" "google" {
 	test_type = "TCP"
 	check_rate = 300
 	timeout = 10
-	contact_id = 43402
+	contact_id = %d
 	confirmations = 1
 	port = 80
 }
