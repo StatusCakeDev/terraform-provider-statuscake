@@ -176,10 +176,6 @@ func resourceStatusCakeTest() *schema.Resource {
 			"status_codes": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Default: "204, 205, 206, 303, 400, 401, 403, 404, 405, 406, " +
-					"408, 410, 413, 444, 429, 494, 495, 496, 499, 500, 501, 502, 503, " +
-					"504, 505, 506, 507, 508, 509, 510, 511, 521, 522, 523, 524, 520, " +
-					"598, 599",
 			},
 
 			"use_jar": {
