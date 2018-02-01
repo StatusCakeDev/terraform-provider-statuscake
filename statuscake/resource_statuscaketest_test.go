@@ -19,7 +19,7 @@ func TestAccStatusCake_basic(t *testing.T) {
 		CheckDestroy: testAccTestCheckDestroy(&test),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTestConfig_basic,
+				Config: fmt.Sprintf(testAccTestConfig_basic, testContactGroupId),
 				Check: resource.ComposeTestCheckFunc(
 					testAccTestCheckExists("statuscake_test.google", &test),
 					testAccTestCheckAttributes("statuscake_test.google", &test),
@@ -38,7 +38,7 @@ func TestAccStatusCake_tcp(t *testing.T) {
 		CheckDestroy: testAccTestCheckDestroy(&test),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTestConfig_tcp,
+				Config: fmt.Sprintf(testAccTestConfig_tcp, testContactGroupId),
 				Check: resource.ComposeTestCheckFunc(
 					testAccTestCheckExists("statuscake_test.google", &test),
 					testAccTestCheckAttributes("statuscake_test.google", &test),
@@ -57,7 +57,7 @@ func TestAccStatusCake_withUpdate(t *testing.T) {
 		CheckDestroy: testAccTestCheckDestroy(&test),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTestConfig_basic,
+				Config: fmt.Sprintf(testAccTestConfig_basic, testContactGroupId),
 				Check: resource.ComposeTestCheckFunc(
 					testAccTestCheckExists("statuscake_test.google", &test),
 				),
@@ -240,7 +240,7 @@ resource "statuscake_test" "google" {
 	test_type = "HTTP"
 	check_rate = 300
 	timeout = 10
-	contact_id = 43402
+	contact_id = %d
 	confirmations = 1
 	trigger_rate = 10
 }
@@ -284,7 +284,7 @@ resource "statuscake_test" "google" {
 	test_type = "TCP"
 	check_rate = 300
 	timeout = 10
-	contact_id = 43402
+	contact_id = %d
 	confirmations = 1
 	port = 80
 }
