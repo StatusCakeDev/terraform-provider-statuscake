@@ -76,6 +76,52 @@ func resourceStatusCakeTest() *schema.Resource {
 				Optional: true,
 				Default:  5,
 			},
+
+			"custom_header": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"user_agent": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"use_jar": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+
+			"post_raw": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"find_string": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"final_endpoint": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"follow_redirect": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+
+			"status_codes": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default: "204, 205, 206, 303, 400, 401, 403, 404, 405, 406, " +
+					"408, 410, 413, 444, 429, 494, 495, 496, 499, 500, 501, 502, 503, " +
+					"504, 505, 506, 507, 508, 509, 510, 511, 521, 522, 523, 524, 520, " +
+					"598, 599",
+			},
 		},
 	}
 }
@@ -159,6 +205,14 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("confirmations", testResp.Confirmation)
 	d.Set("port", testResp.Port)
 	d.Set("trigger_rate", testResp.TriggerRate)
+	d.Set("custom_header", testResp.CustomHeader)
+	d.Set("user_agent", testResp.UserAgent)
+	d.Set("use_jar", testResp.UseJar)
+	d.Set("post_raw", testResp.PostRaw)
+	d.Set("find_string", testResp.FindString)
+	d.Set("final_endpoint", testResp.FinalEndpoint)
+	d.Set("follow_redirect", testResp.FollowRedirect)
+	d.Set("status_codes", testResp.StatusCodes)
 
 	return nil
 }
@@ -204,13 +258,30 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	if v, ok := d.GetOk("trigger_rate"); ok {
 		test.TriggerRate = v.(int)
 	}
-
-	defaultStatusCodes := "204, 205, 206, 303, 400, 401, 403, 404, 405, 406, " +
-		"408, 410, 413, 444, 429, 494, 495, 496, 499, 500, 501, 502, 503, " +
-		"504, 505, 506, 507, 508, 509, 510, 511, 521, 522, 523, 524, 520, " +
-		"598, 599"
-
-	test.StatusCodes = defaultStatusCodes
+	if v, ok := d.GetOk("custom_header"); ok {
+		test.CustomHeader = v.(string)
+	}
+	if v, ok := d.GetOk("user_agent"); ok {
+		test.UserAgent = v.(string)
+	}
+	if v, ok := d.GetOk("use_jar"); ok {
+		test.UseJar = v.(bool)
+	}
+	if v, ok := d.GetOk("post_raw"); ok {
+		test.PostRaw = v.(string)
+	}
+	if v, ok := d.GetOk("find_string"); ok {
+		test.FindString = v.(string)
+	}
+	if v, ok := d.GetOk("final_endpoint"); ok {
+		test.FinalEndpoint = v.(string)
+	}
+	if v, ok := d.GetOk("follow_redirect"); ok {
+		test.FollowRedirect = v.(bool)
+	}
+	if v, ok := d.GetOk("status_codes"); ok {
+		test.StatusCodes = v.(string)
+	}
 
 	return test
 }
