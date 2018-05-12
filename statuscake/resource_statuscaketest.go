@@ -34,7 +34,7 @@ func resourceStatusCakeTest() *schema.Resource {
 			},
 
 			"contact_id": {
-				Type:     schema.TypeInt,
+				Type:     schema.TypeString,
 				Optional: true,
 			},
 
@@ -90,7 +90,7 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 		TestType:     d.Get("test_type").(string),
 		Paused:       d.Get("paused").(bool),
 		Timeout:      d.Get("timeout").(int),
-		ContactID:    d.Get("contact_id").(int),
+		ContactID:    d.Get("contact_id").(string),
 		Confirmation: d.Get("confirmations").(int),
 		Port:         d.Get("port").(int),
 		TriggerRate:  d.Get("trigger_rate").(int),
@@ -181,7 +181,7 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 		test.CheckRate = v.(int)
 	}
 	if v, ok := d.GetOk("contact_id"); ok {
-		test.ContactID = v.(int)
+		test.ContactID = v.(string)
 	}
 	if v, ok := d.GetOk("test_type"); ok {
 		test.TestType = v.(string)
@@ -191,9 +191,6 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	}
 	if v, ok := d.GetOk("timeout"); ok {
 		test.Timeout = v.(int)
-	}
-	if v, ok := d.GetOk("contact_id"); ok {
-		test.ContactID = v.(int)
 	}
 	if v, ok := d.GetOk("confirmations"); ok {
 		test.Confirmation = v.(int)
