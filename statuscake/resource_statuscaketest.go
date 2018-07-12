@@ -76,6 +76,12 @@ func resourceStatusCakeTest() *schema.Resource {
 				Optional: true,
 				Default:  5,
 			},
+
+			"node_locations": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "",
+			},
 		},
 	}
 }
@@ -84,16 +90,17 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*statuscake.Client)
 
 	newTest := &statuscake.Test{
-		WebsiteName:  d.Get("website_name").(string),
-		WebsiteURL:   d.Get("website_url").(string),
-		CheckRate:    d.Get("check_rate").(int),
-		TestType:     d.Get("test_type").(string),
-		Paused:       d.Get("paused").(bool),
-		Timeout:      d.Get("timeout").(int),
-		ContactID:    d.Get("contact_id").(int),
-		Confirmation: d.Get("confirmations").(int),
-		Port:         d.Get("port").(int),
-		TriggerRate:  d.Get("trigger_rate").(int),
+		WebsiteName:   d.Get("website_name").(string),
+		WebsiteURL:    d.Get("website_url").(string),
+		CheckRate:     d.Get("check_rate").(int),
+		TestType:      d.Get("test_type").(string),
+		Paused:        d.Get("paused").(bool),
+		Timeout:       d.Get("timeout").(int),
+		ContactID:     d.Get("contact_id").(int),
+		Confirmation:  d.Get("confirmations").(int),
+		Port:          d.Get("port").(int),
+		TriggerRate:   d.Get("trigger_rate").(int),
+		NodeLocations: d.Get("node_locations").(string),
 	}
 
 	log.Printf("[DEBUG] Creating new StatusCake Test: %s", d.Get("website_name").(string))
@@ -159,6 +166,7 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("confirmations", testResp.Confirmation)
 	d.Set("port", testResp.Port)
 	d.Set("trigger_rate", testResp.TriggerRate)
+	d.Set("node_locations", testResp.NodeLocations)
 
 	return nil
 }
@@ -203,6 +211,9 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	}
 	if v, ok := d.GetOk("trigger_rate"); ok {
 		test.TriggerRate = v.(int)
+	}
+	if v, ok := d.GetOk("node_locations"); ok {
+		test.NodeLocations = v.(string)
 	}
 
 	defaultStatusCodes := "204, 205, 206, 303, 400, 401, 403, 404, 405, 406, " +
