@@ -10,6 +10,24 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
+func castSetToSliceStrings(configured []interface{}) []string {
+	res := make([]string, len(configured))
+
+	for i, element := range configured {
+		res[i] = element.(string)
+	}
+	return res
+}
+
+// Special handling for node_locations since statuscake will return `[""]` for the empty case
+func considerEmptyStringAsEmptyArray(in []string) []string {
+	if len(in) == 1 && in[0] == "" {
+		return []string{}
+	} else {
+		return in
+	}
+}
+
 func resourceStatusCakeTest() *schema.Resource {
 	return &schema.Resource{
 		Create: CreateTest,
@@ -76,6 +94,118 @@ func resourceStatusCakeTest() *schema.Resource {
 				Optional: true,
 				Default:  5,
 			},
+			"custom_header": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"user_agent": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"status": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+
+			"uptime": {
+				Type:     schema.TypeFloat,
+				Computed: true,
+			},
+
+			"node_locations": {
+				Type:     schema.TypeSet,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+				Optional: true,
+				Set:      schema.HashString,
+			},
+
+			"ping_url": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"basic_user": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"basic_pass": {
+				Type:      schema.TypeString,
+				Optional:  true,
+				Sensitive: true,
+			},
+
+			"public": {
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
+
+			"logo_image": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"branding": {
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
+
+			"website_host": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"virus": {
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
+
+			"find_string": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"do_not_find": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+
+			"real_browser": {
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
+
+			"test_tags": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"status_codes": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"use_jar": {
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
+
+			"post_raw": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"final_endpoint": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"follow_redirect": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -84,16 +214,38 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*statuscake.Client)
 
 	newTest := &statuscake.Test{
-		WebsiteName:  d.Get("website_name").(string),
-		WebsiteURL:   d.Get("website_url").(string),
-		CheckRate:    d.Get("check_rate").(int),
-		TestType:     d.Get("test_type").(string),
-		Paused:       d.Get("paused").(bool),
-		Timeout:      d.Get("timeout").(int),
-		ContactID:    d.Get("contact_id").(int),
-		Confirmation: d.Get("confirmations").(int),
-		Port:         d.Get("port").(int),
-		TriggerRate:  d.Get("trigger_rate").(int),
+		WebsiteName:    d.Get("website_name").(string),
+		WebsiteURL:     d.Get("website_url").(string),
+		CheckRate:      d.Get("check_rate").(int),
+		TestType:       d.Get("test_type").(string),
+		Paused:         d.Get("paused").(bool),
+		Timeout:        d.Get("timeout").(int),
+		ContactID:      d.Get("contact_id").(int),
+		Confirmation:   d.Get("confirmations").(int),
+		Port:           d.Get("port").(int),
+		TriggerRate:    d.Get("trigger_rate").(int),
+		CustomHeader:   d.Get("custom_header").(string),
+		UserAgent:      d.Get("user_agent").(string),
+		Status:         d.Get("status").(string),
+		Uptime:         d.Get("uptime").(float64),
+		NodeLocations:  castSetToSliceStrings(d.Get("node_locations").(*schema.Set).List()),
+		PingURL:        d.Get("ping_url").(string),
+		BasicUser:      d.Get("basic_user").(string),
+		BasicPass:      d.Get("basic_pass").(string),
+		Public:         d.Get("public").(int),
+		LogoImage:      d.Get("logo_image").(string),
+		Branding:       d.Get("branding").(int),
+		WebsiteHost:    d.Get("website_host").(string),
+		Virus:          d.Get("virus").(int),
+		FindString:     d.Get("find_string").(string),
+		DoNotFind:      d.Get("do_not_find").(bool),
+		RealBrowser:    d.Get("real_browser").(int),
+		TestTags:       d.Get("test_tags").(string),
+		StatusCodes:    d.Get("status_codes").(string),
+		UseJar:         d.Get("use_jar").(int),
+		PostRaw:        d.Get("post_raw").(string),
+		FinalEndpoint:  d.Get("final_endpoint").(string),
+		FollowRedirect: d.Get("follow_redirect").(bool),
 	}
 
 	log.Printf("[DEBUG] Creating new StatusCake Test: %s", d.Get("website_name").(string))
@@ -104,6 +256,8 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.Set("test_id", fmt.Sprintf("%d", response.TestID))
+	d.Set("status", response.Status)
+	d.Set("uptime", fmt.Sprintf("%.3f", response.Uptime))
 	d.SetId(fmt.Sprintf("%d", response.TestID))
 
 	return ReadTest(d, meta)
@@ -159,6 +313,25 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("confirmations", testResp.Confirmation)
 	d.Set("port", testResp.Port)
 	d.Set("trigger_rate", testResp.TriggerRate)
+	d.Set("custom_header", testResp.CustomHeader)
+	d.Set("status", testResp.Status)
+	d.Set("uptime", testResp.Uptime)
+	if err := d.Set("node_locations", considerEmptyStringAsEmptyArray(testResp.NodeLocations)); err != nil {
+		return fmt.Errorf("[WARN] Error setting node locations: %s", err)
+	}
+	d.Set("logo_image", testResp.LogoImage)
+	// Even after WebsiteHost is set, the API returns ""
+	// API docs aren't clear on usage will only override state if we get a non-empty value back
+	if testResp.WebsiteHost != "" {
+		d.Set("website_host", testResp.WebsiteHost)
+	}
+	d.Set("find_string", testResp.FindString)
+	d.Set("do_not_find", testResp.DoNotFind)
+	d.Set("status_codes", testResp.StatusCodes)
+	d.Set("use_jar", testResp.UseJar)
+	d.Set("post_raw", testResp.PostRaw)
+	d.Set("final_endpoint", testResp.FinalEndpoint)
+	d.Set("follow_redirect", testResp.FollowRedirect)
 
 	return nil
 }
@@ -192,9 +365,6 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	if v, ok := d.GetOk("timeout"); ok {
 		test.Timeout = v.(int)
 	}
-	if v, ok := d.GetOk("contact_id"); ok {
-		test.ContactID = v.(int)
-	}
 	if v, ok := d.GetOk("confirmations"); ok {
 		test.Confirmation = v.(int)
 	}
@@ -204,13 +374,66 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	if v, ok := d.GetOk("trigger_rate"); ok {
 		test.TriggerRate = v.(int)
 	}
-
-	defaultStatusCodes := "204, 205, 206, 303, 400, 401, 403, 404, 405, 406, " +
-		"408, 410, 413, 444, 429, 494, 495, 496, 499, 500, 501, 502, 503, " +
-		"504, 505, 506, 507, 508, 509, 510, 511, 521, 522, 523, 524, 520, " +
-		"598, 599"
-
-	test.StatusCodes = defaultStatusCodes
+	if v, ok := d.GetOk("custom_header"); ok {
+		test.CustomHeader = v.(string)
+	}
+	if v, ok := d.GetOk("user_agent"); ok {
+		test.UserAgent = v.(string)
+	}
+	if v, ok := d.GetOk("node_locations"); ok {
+		test.NodeLocations = castSetToSliceStrings(v.(*schema.Set).List())
+	}
+	if v, ok := d.GetOk("ping_url"); ok {
+		test.PingURL = v.(string)
+	}
+	if v, ok := d.GetOk("basic_user"); ok {
+		test.BasicUser = v.(string)
+	}
+	if v, ok := d.GetOk("basic_pass"); ok {
+		test.BasicPass = v.(string)
+	}
+	if v, ok := d.GetOk("public"); ok {
+		test.Public = v.(int)
+	}
+	if v, ok := d.GetOk("logo_image"); ok {
+		test.LogoImage = v.(string)
+	}
+	if v, ok := d.GetOk("branding"); ok {
+		test.Branding = v.(int)
+	}
+	if v, ok := d.GetOk("website_host"); ok {
+		test.WebsiteHost = v.(string)
+	}
+	if v, ok := d.GetOk("virus"); ok {
+		test.Virus = v.(int)
+	}
+	if v, ok := d.GetOk("find_string"); ok {
+		test.FindString = v.(string)
+	}
+	if v, ok := d.GetOk("do_not_find"); ok {
+		test.DoNotFind = v.(bool)
+	}
+	if v, ok := d.GetOk("real_browser"); ok {
+		test.RealBrowser = v.(int)
+	}
+	if v, ok := d.GetOk("test_tags"); ok {
+		test.TestTags = v.(string)
+	}
+	if v, ok := d.GetOk("status_codes"); ok {
+		test.StatusCodes = v.(string)
+	}
+	if v, ok := d.GetOk("use_jar"); ok {
+		test.UseJar = v.(int)
+	}
+	if v, ok := d.GetOk("post_raw"); ok {
+		test.PostRaw = v.(string)
+	}
+	if v, ok := d.GetOk("final_endpoint"); ok {
+		test.FinalEndpoint = v.(string)
+	}
+	if v, ok := d.GetOk("follow_redirect"); ok {
+		test.FollowRedirect = v.(bool)
+	}
 
 	return test
 }
