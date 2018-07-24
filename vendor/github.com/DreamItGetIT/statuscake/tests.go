@@ -283,7 +283,7 @@ func (tt *tests) Update(t *Test) (*Test, error) {
 	}
 
 	if !ur.Success {
-		return nil, &updateError{Issues: ur.Issues}
+		return nil, &updateError{Issues: ur.Issues, Message: ur.Message}
 	}
 
 	t2 := *t
