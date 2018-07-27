@@ -14,11 +14,11 @@ The test resource allows StatusCake tests to be managed by Terraform.
 
 ```hcl
 resource "statuscake_test" "google" {
-  website_name = "google.com"
-  website_url  = "www.google.com"
-  test_type    = "HTTP"
-  check_rate   = 300
-  contact_id   = 12345
+  website_name  = "google.com"
+  website_url   = "www.google.com"
+  test_type     = "HTTP"
+  check_rate    = 300
+  contact_group = ["12345"]
 }
 ```
 
@@ -29,7 +29,7 @@ The following arguments are supported:
 * `website_name` - (Required) This is the name of the test and the website to be monitored.
 * `website_url` - (Required) The URL of the website to be monitored
 * `check_rate` - (Optional) Test check rate in seconds. Defaults to 300
-* `contact_id` - (Optional) The id of the contact group to be add to the test.  Each test can have only one.
+* `contact_group` - (Optional) Set test contact groups, must be array of strings. 
 * `test_type` - (Required) The type of Test. Either HTTP, TCP, PING, or DNS
 * `paused` - (Optional) Whether or not the test is paused. Defaults to false.
 * `timeout` - (Optional) The timeout of the test in seconds.

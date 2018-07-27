@@ -51,9 +51,11 @@ func resourceStatusCakeTest() *schema.Resource {
 				Required: true,
 			},
 
-			"contact_id": {
-				Type:     schema.TypeInt,
+			"contact_group": {
+				Type:     schema.TypeSet,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
+				Set:      schema.HashString,
 			},
 
 			"check_rate": {
@@ -223,7 +225,7 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 		TestType:       d.Get("test_type").(string),
 		Paused:         d.Get("paused").(bool),
 		Timeout:        d.Get("timeout").(int),
-		ContactID:      d.Get("contact_id").(int),
+		ContactGroup:   castSetToSliceStrings(d.Get("contact_group").(*schema.Set).List()),
 		Confirmation:   d.Get("confirmations").(int),
 		Port:           d.Get("port").(int),
 		TriggerRate:    d.Get("trigger_rate").(int),
@@ -312,7 +314,7 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("test_type", testResp.TestType)
 	d.Set("paused", testResp.Paused)
 	d.Set("timeout", testResp.Timeout)
-	d.Set("contact_id", testResp.ContactID)
+	d.Set("contact_group", testResp.ContactGroup)
 	d.Set("confirmations", testResp.Confirmation)
 	d.Set("port", testResp.Port)
 	d.Set("trigger_rate", testResp.TriggerRate)
@@ -356,8 +358,8 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	if v, ok := d.GetOk("check_rate"); ok {
 		test.CheckRate = v.(int)
 	}
-	if v, ok := d.GetOk("contact_id"); ok {
-		test.ContactID = v.(int)
+	if v, ok := d.GetOk("contact_group"); ok {
+		test.ContactGroup = castSetToSliceStrings(v.(*schema.Set).List())
 	}
 	if v, ok := d.GetOk("test_type"); ok {
 		test.TestType = v.(string)
