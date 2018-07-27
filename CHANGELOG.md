@@ -1,13 +1,13 @@
-## 0.2.0 (Unreleased)
+## 0.2.0 (July 27, 2018)
 
 IMPROVEMENTS:
 
-* resource/statuscake_test: Add support for all support library options including basic auth, status codes, custom headers and more. [GH-11]
+* resource/statuscake_test: Add support for all support library options including basic auth, status codes, custom headers and more. ([#11](https://github.com/terraform-providers/terraform-provider-statuscake/issues/11))
 
 
 BUG FIXES:
 
-* Fix handling of `contact_id` [GH-11]
+* Fix handling of `contact_id` ([#11](https://github.com/terraform-providers/terraform-provider-statuscake/issues/11))
 
 
 ## 0.1.0 (June 21, 2017)
