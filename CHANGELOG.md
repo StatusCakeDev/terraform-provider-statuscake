@@ -2,7 +2,7 @@
 
 IMPROVEMENTS:
 
-* `statuscake_test` - Add support for all support library options including basic auth, status codes, custom headers and more. [GH-11]
+* resource/statuscake_test: Add support for all support library options including basic auth, status codes, custom headers and more. [GH-11]
 
 
 BUG FIXES:
