@@ -91,7 +91,7 @@ func TestAccStatusCake_withUpdate(t *testing.T) {
 					resource.TestCheckResourceAttr("statuscake_test.google", "find_string", "string15212"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "do_not_find", "false"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "real_browser", "1"),
-					resource.TestCheckResourceAttr("statuscake_test.google", "test_tags", "string8191"),
+					resource.TestCheckResourceAttr("statuscake_test.google", "test_tags.#", "1"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "status_codes", "string23065"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "use_jar", "1"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "post_raw", "string32096"),
@@ -261,7 +261,7 @@ resource "statuscake_test" "google" {
 	find_string = "string15212"
 	do_not_find = false
 	real_browser = 1
-	test_tags = "string8191"
+	test_tags = ["string8191"]
 	status_codes = "string23065"
 	use_jar = 1
 	post_raw = "string32096"

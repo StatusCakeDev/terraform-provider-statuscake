@@ -94,6 +94,7 @@ func resourceStatusCakeTest() *schema.Resource {
 				Optional: true,
 				Default:  5,
 			},
+
 			"custom_header": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -178,8 +179,10 @@ func resourceStatusCakeTest() *schema.Resource {
 			},
 
 			"test_tags": {
-				Type:     schema.TypeString,
+				Type:     schema.TypeSet,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
+				Set:      schema.HashString,
 			},
 
 			"status_codes": {
@@ -240,7 +243,7 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 		FindString:     d.Get("find_string").(string),
 		DoNotFind:      d.Get("do_not_find").(bool),
 		RealBrowser:    d.Get("real_browser").(int),
-		TestTags:       d.Get("test_tags").(string),
+		TestTags:       castSetToSliceStrings(d.Get("test_tags").(*schema.Set).List()),
 		StatusCodes:    d.Get("status_codes").(string),
 		UseJar:         d.Get("use_jar").(int),
 		PostRaw:        d.Get("post_raw").(string),
@@ -417,7 +420,7 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 		test.RealBrowser = v.(int)
 	}
 	if v, ok := d.GetOk("test_tags"); ok {
-		test.TestTags = v.(string)
+		test.TestTags = castSetToSliceStrings(v.(*schema.Set).List())
 	}
 	if v, ok := d.GetOk("status_codes"); ok {
 		test.StatusCodes = v.(string)
