@@ -54,7 +54,7 @@ type Test struct {
 	// A URL to ping if a site goes down.
 	PingURL string `json:"PingURL" querystring:"PingURL"`
 
-	Confirmation int `json:"Confirmationi,string" querystring:"Confirmation"`
+	Confirmation int `json:"Confirmation,string" querystring:"Confirmation"`
 
 	// The number of seconds between checks.
 	CheckRate int `json:"CheckRate" querystring:"CheckRate"`
