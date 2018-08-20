@@ -1,4 +1,16 @@
-## 0.2.1 (Unreleased)
+## 1.0.0 (Unreleased)
+
+NOTES:
+
+* resource/statuscake_test: `contact_id (int)` has been replaced with `contact_group (type: list)`
+* resource:statuscake_test: `test_tags` has been changed from a CSV string to list of strings
+
+
+IMPROVEMENTS:
+
+* resource/statuscake_test: add `contact_group` with multiple contact IDs [GH-8]
+
+
 ## 0.2.0 (July 27, 2018)
 
 IMPROVEMENTS:
