@@ -72,7 +72,6 @@ func TestAccStatusCake_withUpdate(t *testing.T) {
 					resource.TestCheckResourceAttr("statuscake_test.google", "check_rate", "500"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "paused", "true"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "timeout", "40"),
-					resource.TestCheckResourceAttr("statuscake_test.google", "contact_id", "0"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "confirmations", "0"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "trigger_rate", "20"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "custom_header", "{ \"Content-Type\": \"application/x-www-form-urlencoded\" }"),
@@ -91,7 +90,7 @@ func TestAccStatusCake_withUpdate(t *testing.T) {
 					resource.TestCheckResourceAttr("statuscake_test.google", "find_string", "string15212"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "do_not_find", "false"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "real_browser", "1"),
-					resource.TestCheckResourceAttr("statuscake_test.google", "test_tags", "string8191"),
+					resource.TestCheckResourceAttr("statuscake_test.google", "test_tags.#", "1"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "status_codes", "string23065"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "use_jar", "1"),
 					resource.TestCheckResourceAttr("statuscake_test.google", "post_raw", "string32096"),
@@ -159,8 +158,13 @@ func testAccTestCheckAttributes(rn string, test *statuscake.Test) resource.TestC
 				err = check(key, value, strconv.FormatBool(test.Paused))
 			case "timeout":
 				err = check(key, value, strconv.Itoa(test.Timeout))
-			case "contact_id":
-				err = check(key, value, strconv.Itoa(test.ContactID))
+			case "contact_group":
+				for _, tv := range test.ContactGroup {
+					err = check(key, value, tv)
+					if err != nil {
+						return err
+					}
+				}
 			case "confirmations":
 				err = check(key, value, strconv.Itoa(test.Confirmation))
 			case "trigger_rate":
@@ -214,13 +218,10 @@ func testAccTestCheckDestroy(test *statuscake.Test) resource.TestCheckFunc {
 }
 
 func interpolateTerraformTemplate(template string) string {
-	testContactGroupId := 43402
+	testContactGroupId := "43402"
 
 	if v := os.Getenv("STATUSCAKE_TEST_CONTACT_GROUP_ID"); v != "" {
-		id, err := strconv.Atoi(v)
-		if err == nil {
-			testContactGroupId = id
-		}
+		testContactGroupId = v
 	}
 
 	return fmt.Sprintf(template, testContactGroupId)
@@ -233,7 +234,7 @@ resource "statuscake_test" "google" {
 	test_type = "HTTP"
 	check_rate = 300
 	timeout = 10
-	contact_id = %d
+	contact_group = ["%s"]
 	confirmations = 1
 	trigger_rate = 10
 }
@@ -261,7 +262,7 @@ resource "statuscake_test" "google" {
 	find_string = "string15212"
 	do_not_find = false
 	real_browser = 1
-	test_tags = "string8191"
+	test_tags = ["string8191"]
 	status_codes = "string23065"
 	use_jar = 1
 	post_raw = "string32096"
@@ -277,7 +278,7 @@ resource "statuscake_test" "google" {
 	test_type = "TCP"
 	check_rate = 300
 	timeout = 10
-	contact_id = %d
+	contact_group = ["%s"]
 	confirmations = 1
 	port = 80
 }

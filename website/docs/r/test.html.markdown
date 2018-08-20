@@ -14,11 +14,11 @@ The test resource allows StatusCake tests to be managed by Terraform.
 
 ```hcl
 resource "statuscake_test" "google" {
-  website_name = "google.com"
-  website_url  = "www.google.com"
-  test_type    = "HTTP"
-  check_rate   = 300
-  contact_id   = 12345
+  website_name  = "google.com"
+  website_url   = "www.google.com"
+  test_type     = "HTTP"
+  check_rate    = 300
+  contact_group = ["12345"]
 }
 ```
 
@@ -29,7 +29,7 @@ The following arguments are supported:
 * `website_name` - (Required) This is the name of the test and the website to be monitored.
 * `website_url` - (Required) The URL of the website to be monitored
 * `check_rate` - (Optional) Test check rate in seconds. Defaults to 300
-* `contact_id` - (Optional) The id of the contact group to be add to the test.  Each test can have only one.
+* `contact_group` - (Optional) Set test contact groups, must be array of strings. 
 * `test_type` - (Required) The type of Test. Either HTTP, TCP, PING, or DNS
 * `paused` - (Optional) Whether or not the test is paused. Defaults to false.
 * `timeout` - (Optional) The timeout of the test in seconds.
@@ -50,7 +50,7 @@ The following arguments are supported:
 * `find_string` - (Optional) A string that should either be found or not found.
 * `do_not_find` - (Optional) If the above string should be found to trigger a alert. 1 = will trigger if find_string found.
 * `real_browser` - (Optional) Use 1 to TURN OFF real browser testing.
-* `test_tags` - (Optional) Tags should be seperated by a comma - no spacing between tags (this,is,a set,of,tags).
+* `test_tags` - (Optional) Set test tags, must be array of strings.
 * `status_codes` - (Optional) Comma Seperated List of StatusCodes to Trigger Error on. Defaults are "204, 205, 206, 303, 400, 401, 403, 404, 405, 406, 408, 410, 413, 444, 429, 494, 495, 496, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 521, 522, 523, 524, 520, 598, 599".
 * `use_jar` - (Optional) Set to true to enable the Cookie Jar. Required for some redirects. Default is false.
 * `post_raw` - (Optional) Use to populate the RAW POST data field on the test.
