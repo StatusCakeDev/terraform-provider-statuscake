@@ -101,6 +101,9 @@ type Test struct {
 	// Comma Seperated List of StatusCodes to Trigger Error on (on Update will replace, so send full list each time)
 	StatusCodes string `json:"StatusCodes" querystring:"StatusCodes"`
 
+	// Use to specify whether SSL validation should be enabled
+	EnableSSLWarning bool `json:"EnableSSLWarning" querystring:"EnableSSLWarning"`
+
 	// Set to 1 to enable the Cookie Jar. Required for some redirects.
 	UseJar int `json:"UseJar" querystring:"UseJar"`
 

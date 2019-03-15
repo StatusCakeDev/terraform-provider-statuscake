@@ -192,6 +192,11 @@ func resourceStatusCakeTest() *schema.Resource {
 				Optional: true,
 			},
 
+			"validate_ssl": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+
 			"use_jar": {
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -219,38 +224,39 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*statuscake.Client)
 
 	newTest := &statuscake.Test{
-		WebsiteName:    d.Get("website_name").(string),
-		WebsiteURL:     d.Get("website_url").(string),
-		CheckRate:      d.Get("check_rate").(int),
-		TestType:       d.Get("test_type").(string),
-		Paused:         d.Get("paused").(bool),
-		Timeout:        d.Get("timeout").(int),
-		ContactGroup:   castSetToSliceStrings(d.Get("contact_group").(*schema.Set).List()),
-		Confirmation:   d.Get("confirmations").(int),
-		Port:           d.Get("port").(int),
-		TriggerRate:    d.Get("trigger_rate").(int),
-		CustomHeader:   d.Get("custom_header").(string),
-		UserAgent:      d.Get("user_agent").(string),
-		Status:         d.Get("status").(string),
-		Uptime:         d.Get("uptime").(float64),
-		NodeLocations:  castSetToSliceStrings(d.Get("node_locations").(*schema.Set).List()),
-		PingURL:        d.Get("ping_url").(string),
-		BasicUser:      d.Get("basic_user").(string),
-		BasicPass:      d.Get("basic_pass").(string),
-		Public:         d.Get("public").(int),
-		LogoImage:      d.Get("logo_image").(string),
-		Branding:       d.Get("branding").(int),
-		WebsiteHost:    d.Get("website_host").(string),
-		Virus:          d.Get("virus").(int),
-		FindString:     d.Get("find_string").(string),
-		DoNotFind:      d.Get("do_not_find").(bool),
-		RealBrowser:    d.Get("real_browser").(int),
-		TestTags:       castSetToSliceStrings(d.Get("test_tags").(*schema.Set).List()),
-		StatusCodes:    d.Get("status_codes").(string),
-		UseJar:         d.Get("use_jar").(int),
-		PostRaw:        d.Get("post_raw").(string),
-		FinalEndpoint:  d.Get("final_endpoint").(string),
-		FollowRedirect: d.Get("follow_redirect").(bool),
+		WebsiteName:      d.Get("website_name").(string),
+		WebsiteURL:       d.Get("website_url").(string),
+		CheckRate:        d.Get("check_rate").(int),
+		TestType:         d.Get("test_type").(string),
+		Paused:           d.Get("paused").(bool),
+		Timeout:          d.Get("timeout").(int),
+		ContactGroup:     castSetToSliceStrings(d.Get("contact_group").(*schema.Set).List()),
+		Confirmation:     d.Get("confirmations").(int),
+		Port:             d.Get("port").(int),
+		TriggerRate:      d.Get("trigger_rate").(int),
+		CustomHeader:     d.Get("custom_header").(string),
+		UserAgent:        d.Get("user_agent").(string),
+		Status:           d.Get("status").(string),
+		Uptime:           d.Get("uptime").(float64),
+		NodeLocations:    castSetToSliceStrings(d.Get("node_locations").(*schema.Set).List()),
+		PingURL:          d.Get("ping_url").(string),
+		BasicUser:        d.Get("basic_user").(string),
+		BasicPass:        d.Get("basic_pass").(string),
+		Public:           d.Get("public").(int),
+		LogoImage:        d.Get("logo_image").(string),
+		Branding:         d.Get("branding").(int),
+		WebsiteHost:      d.Get("website_host").(string),
+		Virus:            d.Get("virus").(int),
+		FindString:       d.Get("find_string").(string),
+		DoNotFind:        d.Get("do_not_find").(bool),
+		RealBrowser:      d.Get("real_browser").(int),
+		TestTags:         castSetToSliceStrings(d.Get("test_tags").(*schema.Set).List()),
+		StatusCodes:      d.Get("status_codes").(string),
+		EnableSSLWarning: d.Get("validate_ssl").(bool),
+		UseJar:           d.Get("use_jar").(int),
+		PostRaw:          d.Get("post_raw").(string),
+		FinalEndpoint:    d.Get("final_endpoint").(string),
+		FollowRedirect:   d.Get("follow_redirect").(bool),
 	}
 
 	log.Printf("[DEBUG] Creating new StatusCake Test: %s", d.Get("website_name").(string))
@@ -333,6 +339,7 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("find_string", testResp.FindString)
 	d.Set("do_not_find", testResp.DoNotFind)
 	d.Set("status_codes", testResp.StatusCodes)
+	d.Set("validate_ssl", testResp.EnableSSLWarning)
 	d.Set("use_jar", testResp.UseJar)
 	d.Set("post_raw", testResp.PostRaw)
 	d.Set("final_endpoint", testResp.FinalEndpoint)
@@ -426,6 +433,9 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	}
 	if v, ok := d.GetOk("status_codes"); ok {
 		test.StatusCodes = v.(string)
+	}
+	if v, ok := d.GetOk("validate_ssl"); ok {
+		test.EnableSSLWarning = v.(bool)
 	}
 	if v, ok := d.GetOk("use_jar"); ok {
 		test.UseJar = v.(int)
