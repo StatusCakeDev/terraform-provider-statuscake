@@ -35,4 +35,7 @@ func testAccPreCheck(t *testing.T) {
 	if v := os.Getenv("STATUSCAKE_APIKEY"); v == "" {
 		t.Fatal("STATUSCAKE_APIKEY must be set for acceptance tests")
 	}
+	if v := os.Getenv("STATUSCAKE_TEST_CONTACT_GROUP_ID"); v == "" {
+		t.Fatal("STATUSCAKE_TEST_CONTACT_GROUP_ID must be set for acceptance tests")
+	}
 }
