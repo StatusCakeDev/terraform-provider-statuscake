@@ -30,6 +30,25 @@ func TestAccStatusCake_basic(t *testing.T) {
 	})
 }
 
+func TestAccStatusCake_basic_deprecated_contact_ID(t *testing.T) {
+	var test statuscake.Test
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccTestCheckDestroy(&test),
+		Steps: []resource.TestStep{
+			{
+				Config: interpolateTerraformTemplate(testAccTestConfig_deprecated),
+				Check: resource.ComposeTestCheckFunc(
+					testAccTestCheckExists("statuscake_test.google", &test),
+					testAccTestCheckAttributes("statuscake_test.google", &test),
+				),
+			},
+		},
+	})
+}
+
 func TestAccStatusCake_tcp(t *testing.T) {
 	var test statuscake.Test
 
@@ -239,7 +258,18 @@ resource "statuscake_test" "google" {
 	trigger_rate = 10
 }
 `
-
+const testAccTestConfig_deprecated = `
+resource "statuscake_test" "google" {
+	website_name = "google.com"
+	website_url = "www.google.com"
+	test_type = "HTTP"
+	check_rate = 300
+	timeout = 10
+	contact_id = %s
+	confirmations = 1
+	trigger_rate = 10
+}
+`
 const testAccTestConfig_update = `
 resource "statuscake_test" "google" {
 	website_name = "google.com"
