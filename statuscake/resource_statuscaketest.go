@@ -52,10 +52,18 @@ func resourceStatusCakeTest() *schema.Resource {
 			},
 
 			"contact_group": {
-				Type:     schema.TypeSet,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Optional: true,
-				Set:      schema.HashString,
+				Type:          schema.TypeSet,
+				Elem:          &schema.Schema{Type: schema.TypeString},
+				Optional:      true,
+				Set:           schema.HashString,
+				ConflictsWith: []string{"contact_id"},
+			},
+
+			"contact_id": {
+				Type:          schema.TypeInt,
+				Optional:      true,
+				ConflictsWith: []string{"contact_group"},
+				Deprecated:    "use contact_group instead",
 			},
 
 			"check_rate": {
@@ -225,7 +233,6 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 		TestType:       d.Get("test_type").(string),
 		Paused:         d.Get("paused").(bool),
 		Timeout:        d.Get("timeout").(int),
-		ContactGroup:   castSetToSliceStrings(d.Get("contact_group").(*schema.Set).List()),
 		Confirmation:   d.Get("confirmations").(int),
 		Port:           d.Get("port").(int),
 		TriggerRate:    d.Get("trigger_rate").(int),
@@ -251,6 +258,12 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 		PostRaw:        d.Get("post_raw").(string),
 		FinalEndpoint:  d.Get("final_endpoint").(string),
 		FollowRedirect: d.Get("follow_redirect").(bool),
+	}
+
+	if v, ok := d.GetOk("contact_group"); ok {
+		newTest.ContactGroup = castSetToSliceStrings(v.(*schema.Set).List())
+	} else if v, ok := d.GetOk("contact_id"); ok {
+		newTest.ContactID = v.(int)
 	}
 
 	log.Printf("[DEBUG] Creating new StatusCake Test: %s", d.Get("website_name").(string))
@@ -308,13 +321,18 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	if err != nil {
 		return fmt.Errorf("Error Getting StatusCake Test Details for %s: Error: %s", d.Id(), err)
 	}
+
+	if v, ok := d.GetOk("contact_group"); ok {
+		d.Set("contact_group", v)
+	} else if v, ok := d.GetOk("contact_id"); ok {
+		d.Set("contact_id", v)
+	}
 	d.Set("website_name", testResp.WebsiteName)
 	d.Set("website_url", testResp.WebsiteURL)
 	d.Set("check_rate", testResp.CheckRate)
 	d.Set("test_type", testResp.TestType)
 	d.Set("paused", testResp.Paused)
 	d.Set("timeout", testResp.Timeout)
-	d.Set("contact_group", testResp.ContactGroup)
 	d.Set("confirmations", testResp.Confirmation)
 	d.Set("port", testResp.Port)
 	d.Set("trigger_rate", testResp.TriggerRate)
@@ -360,6 +378,8 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	}
 	if v, ok := d.GetOk("contact_group"); ok {
 		test.ContactGroup = castSetToSliceStrings(v.(*schema.Set).List())
+	} else if v, ok := d.GetOk("contact_id"); ok {
+		test.ContactID = v.(int)
 	}
 	if v, ok := d.GetOk("test_type"); ok {
 		test.TestType = v.(string)

@@ -2,7 +2,7 @@
 
 NOTES:
 
-* resource/statuscake_test: `contact_id (int)` has been replaced with `contact_group (type: list)`
+* resource/statuscake_test: `contact_id (int)` has been deprecated, use instead: `contact_group (type: list)`
 * resource:statuscake_test: `test_tags` has been changed from a CSV string to list of strings
 
 
