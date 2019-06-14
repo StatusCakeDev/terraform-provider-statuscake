@@ -61,6 +61,7 @@ type detailResponse struct {
 	UseJar          int                          `json:"UseJar"`
 	PostRaw         string                       `json:"PostRaw"`
 	FinalEndpoint   string                       `json:"FinalEndpoint"`
+	EnableSSLWarning  bool                       `json:"EnableSSLWarning"`
 	FollowRedirect  bool                         `json:"FollowRedirect"`
 	StatusCodes     []string                     `json:"StatusCodes"`
 }
@@ -96,6 +97,7 @@ func (d *detailResponse) test() *Test {
 		UseJar:         d.UseJar,
 		PostRaw:        d.PostRaw,
 		FinalEndpoint:  d.FinalEndpoint,
+		EnableSSLAlert: d.EnableSSLWarning,
 		FollowRedirect: d.FollowRedirect,
 		StatusCodes:    strings.Join(d.StatusCodes[:], ","),
 	}
