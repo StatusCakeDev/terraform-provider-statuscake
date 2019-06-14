@@ -29,8 +29,8 @@ The following arguments are supported:
 * `website_name` - (Required) This is the name of the test and the website to be monitored.
 * `website_url` - (Required) The URL of the website to be monitored
 * `check_rate` - (Optional) Test check rate in seconds. Defaults to 300
-* `contact_id` - **Deprecated** (Optional) The id of the contact group to be added to the test. Each test can have only one. 
-* `contact_group` - (Optional) Set test contact groups, must be array of strings. 
+* `contact_id` - **Deprecated** (Optional) The id of the contact group to be added to the test. Each test can have only one.
+* `contact_group` - (Optional) Set test contact groups, must be array of strings.
 * `test_type` - (Required) The type of Test. Either HTTP, TCP, PING, or DNS
 * `paused` - (Optional) Whether or not the test is paused. Defaults to false.
 * `timeout` - (Optional) The timeout of the test in seconds.
@@ -56,6 +56,7 @@ The following arguments are supported:
 * `use_jar` - (Optional) Set to true to enable the Cookie Jar. Required for some redirects. Default is false.
 * `post_raw` - (Optional) Use to populate the RAW POST data field on the test.
 * `final_endpoint` - (Optional) Use to specify the expected Final URL in the testing process.
+* `enable_ssl_alert` - (Optional) HTTP Tests only. If enabled, tests will send warnings if the SSL certificate is about to expire. Paid users only. Default is false
 * `follow_redirect` - (Optional) Use to specify whether redirects should be followed, set to true to enable. Default is false.
 
 ## Attributes Reference
