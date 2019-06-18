@@ -34,6 +34,9 @@ func resourceStatusCakeTest() *schema.Resource {
 		Update: UpdateTest,
 		Delete: DeleteTest,
 		Read:   ReadTest,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"test_id": {
