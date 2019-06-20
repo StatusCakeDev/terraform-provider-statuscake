@@ -57,6 +57,7 @@ The following arguments are supported:
 * `post_raw` - (Optional) Use to populate the RAW POST data field on the test.
 * `final_endpoint` - (Optional) Use to specify the expected Final URL in the testing process.
 * `follow_redirect` - (Optional) Use to specify whether redirects should be followed, set to true to enable. Default is false.
+* `enable_ssl_alert` - (Optional) HTTP Tests only. If enabled, tests will send warnings if the SSL certificate is about to expire. Paid users only. Default is false.
 
 ## Attributes Reference
 

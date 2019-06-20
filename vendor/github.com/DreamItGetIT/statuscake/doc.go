@@ -11,6 +11,13 @@
 //    log.Fatal(err)
 //  }
 //
+//  v := url.Values{}
+//  v.Set("tags", "test1,test2")
+//  testsWithFilter, err := c.Tests().AllWithFilter(v)
+//  if err != nil {
+//    log.Fatal(err)
+//  }
+//
 //  // delete a `Test`
 //  err = c.Tests().Delete(TestID)
 //
@@ -25,7 +32,10 @@
 //    log.Fatal(err)
 //  }
 //
-//  t2 := c.Tests().Update(t)
+//  t2, err := c.Tests().Update(t)
+//  if err != nil {
+//    log.Fatal(err)
+//  }
 //  fmt.Printf("New Test created with id: %d\n", t2.TestID)
 //
 //  // get Tests details
