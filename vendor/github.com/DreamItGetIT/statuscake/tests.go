@@ -42,7 +42,7 @@ type Test struct {
 	// Current status at last test
 	Status string `json:"Status"`
 
-	// 7 Day Uptime
+	// 1 Day Uptime
 	Uptime float64 `json:"Uptime"`
 
 	// Any test locations seperated by a comma (using the Node Location IDs)
@@ -75,7 +75,7 @@ type Test struct {
 	Branding int `json:"Branding" querystring:"Branding"`
 
 	// Used internally by the statuscake API
-	WebsiteHost string `json:"WebsiteHost"`
+	WebsiteHost string `json:"WebsiteHost" querystring:"WebsiteHost"`
 
 	// Enable virus checking or not. 1 to enable
 	Virus int `json:"Virus" querystring:"Virus"`
@@ -109,6 +109,9 @@ type Test struct {
 
 	// Use to specify the expected Final URL in the testing process
 	FinalEndpoint string `json:"FinalEndpoint" querystring:"FinalEndpoint"`
+
+	// Use to enable SSL validation
+	EnableSSLAlert bool `json:"EnableSSLAlert" querystring:"EnableSSLAlert"`
 
 	// Use to specify whether redirects should be followed
 	FollowRedirect bool `json:"FollowRedirect" querystring:"FollowRedirect"`
@@ -166,9 +169,11 @@ func (t *Test) Validate() error {
 		e["FinalEndpoint"] = "must be a Valid URL"
 	}
 
-	var jsonVerifiable map[string]interface{}
-	if json.Unmarshal([]byte(t.CustomHeader), &jsonVerifiable) != nil {
-		e["CustomHeader"] = "must be provided as json string"
+	if t.CustomHeader != "" {
+		var jsonVerifiable map[string]interface{}
+		if json.Unmarshal([]byte(t.CustomHeader), &jsonVerifiable) != nil {
+			e["CustomHeader"] = "must be provided as json string"
+		}
 	}
 
 	if len(e) > 0 {
@@ -244,6 +249,7 @@ func valueToQueryStringValue(v reflect.Value) string {
 // Tests is a client that implements the `Tests` API.
 type Tests interface {
 	All() ([]*Test, error)
+	AllWithFilter(url.Values) ([]*Test, error)
 	Detail(int) (*Test, error)
 	Update(*Test) (*Test, error)
 	Delete(TestID int) error
@@ -261,6 +267,19 @@ func newTests(c apiClient) Tests {
 
 func (tt *tests) All() ([]*Test, error) {
 	resp, err := tt.client.get("/Tests", nil)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var tests []*Test
+	err = json.NewDecoder(resp.Body).Decode(&tests)
+
+	return tests, err
+}
+
+func (tt *tests) AllWithFilter(filterOptions url.Values) ([]*Test, error) {
+	resp, err := tt.client.get("/Tests", filterOptions)
 	if err != nil {
 		return nil, err
 	}
