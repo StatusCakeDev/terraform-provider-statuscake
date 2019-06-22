@@ -2,14 +2,18 @@
 
 NOTES:
 
-* resource/statuscake_test: `contact_id (int)` has been deprecated, use instead: `contact_group (type: list)`
-* resource:statuscake_test: `test_tags` has been changed from a CSV string to list of strings
+* resource/statuscake_test: `contact_id (int)` has been deprecated, use instead: `contact_group (type: list)` ([#18](https://github.com/terraform-providers/terraform-provider-statuscake/issues/18))
+* resource/statuscake_test: `test_tags` has been changed from a CSV string to list of strings ([#18](https://github.com/terraform-providers/terraform-provider-statuscake/issues/18))
 
+FEATURES:
+
+* Add support for Terraform 0.12 ([#32](https://github.com/terraform-providers/terraform-provider-statuscake/issues/32))
+* resource/statuscake_test: add `enable_ssl_alert` feature for uptime tests ([#26](https://github.com/terraform-providers/terraform-provider-statuscake/issues/26))
+* resource/statuscake_test: add support for Terraform ResourceImporter ([#36](https://github.com/terraform-providers/terraform-provider-statuscake/issues/36))
 
 IMPROVEMENTS:
 
-* resource/statuscake_test: add `contact_group` with multiple contact IDs [GH-8]
-
+* resource/statuscake_test: add `contact_group` with multiple contact IDs ([#18](https://github.com/terraform-providers/terraform-provider-statuscake/issues/18), [#34](https://github.com/terraform-providers/terraform-provider-statuscake/issues/34)))
 
 ## 0.2.0 (July 27, 2018)
 
