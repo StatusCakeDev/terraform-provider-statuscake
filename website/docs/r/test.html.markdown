@@ -64,3 +64,11 @@ The following arguments are supported:
 The following attribute is exported:
 
 * `test_id` - A unique identifier for the test.
+
+## Import
+
+StatusCake test can be imported using the test id, e.g.
+
+```
+tf import statuscake_test.example 123
+```
