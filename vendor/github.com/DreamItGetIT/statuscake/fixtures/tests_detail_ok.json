@@ -1,0 +1,39 @@
+{
+  "TestID": 6735,
+  "TestType": "HTTP",
+  "Paused": false,
+  "WebsiteName": "NL",
+  "CustomHeader": "{\"some\":{\"json\": [\"value\"]}}",
+  "UserAgent": "product/version (comment)",
+  "ContactGroups": [
+    {
+    "ID": 536,
+    "Name": "Dummy ContactGroup",
+    "Email": "github-dreamitgetit-statuscake@maildrop.cc"
+    }
+  ],
+  "ContactID": 536,
+  "Status": "Up",
+  "Uptime": 0,
+  "CheckRate": 60,
+  "Timeout": 40,
+  "LogoImage": "",
+  "WebsiteHost": "Various",
+  "NodeLocations": [
+    "foo",
+    "bar"
+  ],
+  "FindString": "",
+  "DoNotFind": false,
+  "LastTested": "2013-01-20 14:38:18",
+  "NextLocation": "USNY",
+  "Processing": false,
+  "ProcessingState": "Pretest",
+  "ProcessingOn": "dalas.localdomain",
+  "DownTimes": "0",
+  "UseJar": 0,
+  "PostRaw": "",
+  "FinalEndpoint": "",
+  "EnableSSLWarning": false,
+  "FollowRedirect": false
+}

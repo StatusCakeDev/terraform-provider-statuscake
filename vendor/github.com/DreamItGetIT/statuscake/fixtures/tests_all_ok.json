@@ -1,0 +1,23 @@
+[
+  {
+      "TestID": 100,
+      "Paused": false,
+      "TestType": "HTTP",
+      "WebsiteName": "www 1",
+      "ContactGroup": ["1"],
+      "Status": "Up",
+      "Uptime": 100,
+      "NodeLocations": ["foo", "bar"]
+  },
+  {
+      "TestID": 101,
+      "Paused": true,
+      "TestType": "HTTP",
+      "WebsiteName": "www 2",
+      "ContactGroup": ["2"],
+      "Status": "Down",
+      "Uptime": 0,
+      "NodeLocations": ["foo"],
+      "TestTags": ["test1", "test2"]
+  }
+]

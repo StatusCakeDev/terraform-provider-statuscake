@@ -1,0 +1,14 @@
+{
+  "Success": true,
+  "Message": 143616,
+  "Input": {
+    "domain": "https://www.exemple.com",
+    "checkrate": "2073600",
+    "contact_groups": "",
+    "alert_reminder": true,
+    "alert_expiry": true,
+    "alert_broken": true,
+    "alert_mixed": true,
+    "alert_at": "7,18,2019"
+  }
+}
