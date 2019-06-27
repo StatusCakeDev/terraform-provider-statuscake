@@ -2,13 +2,12 @@ package statuscake
 
 import (
 	"fmt"
-	"os"
-	"strconv"
-	"testing"
-
 	"github.com/DreamItGetIT/statuscake"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
+	"os"
+	"strconv"
+	"testing"
 )
 
 func TestAccStatusCakeSsl_basic(t *testing.T) {
@@ -51,10 +50,10 @@ func TestAccStatusCakeSsl_withUpdate(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccSslCheckExists("statuscake_ssl.exemple", &ssl),
 					testAccSslCheckAttributes("statuscake_ssl.exemple", &ssl),
-					resource.TestCheckResourceAttr("statuscake_ssl.exemple", "check_rate", "86400"),
+					resource.TestCheckResourceAttr("statuscake_ssl.exemple", "checkrate", "86400"),
 					resource.TestCheckResourceAttr("statuscake_ssl.exemple", "domain", "https://www.exemple.com"),
-					resource.TestCheckResourceAttr("statuscake_ssl.exemple", "contact_group_c", ""),
-					resource.TestCheckResourceAttr("statuscake_ssl.exemple", "alert_at", "18,8,2019"),
+					resource.TestCheckResourceAttr("statuscake_ssl.exemple", "contact_groups_c", ""),
+					resource.TestCheckResourceAttr("statuscake_ssl.exemple", "alert_at", "18,81,2019"),
 					resource.TestCheckResourceAttr("statuscake_ssl.exemple", "alert_reminder", "false"),
 					resource.TestCheckResourceAttr("statuscake_ssl.exemple", "alert_expiry", "false"),
 					resource.TestCheckResourceAttr("statuscake_ssl.exemple", "alert_broken", "true"),
@@ -83,7 +82,7 @@ func testAccSslCheckExists(rn string, ssl *statuscake.Ssl) resource.TestCheckFun
 		if err != nil {
 			return fmt.Errorf("error getting ssl: %s", err)
 		}
-
+		gotSsl.LastUpdatedUtc = "0000-00-00 00:00:00" // quick fix to avoid issue with it because the state is updated before the value change but it is changed when gotSsl is created
 		*ssl = *gotSsl
 
 		return nil
@@ -122,6 +121,8 @@ func testAccSslCheckAttributes(rn string, ssl *statuscake.Ssl) resource.TestChec
 				err = check(key, value, strconv.FormatBool(ssl.AlertBroken))
 			case "alert_mixed":
 				err = check(key, value, strconv.FormatBool(ssl.AlertMixed))
+			case "last_updated_utc":
+				err = check(key, value, ssl.LastUpdatedUtc)
 			case "paused":
 				err = check(key, value, strconv.FormatBool(ssl.Paused))
 			case "issuer_cn":
@@ -145,8 +146,6 @@ func testAccSslCheckAttributes(rn string, ssl *statuscake.Ssl) resource.TestChec
 				err = check(key, value, ssl.ValidUntilUtc)
 			case "last_reminder":
 				err = check(key, value, strconv.Itoa(ssl.LastReminder))
-			case "last_updated_utc":
-				err = check(key, value, ssl.LastUpdatedUtc)
 			case "flags":
 				for _, tv := range ssl.Flags {
 					err = check(key, value, strconv.FormatBool(tv))
@@ -191,6 +190,9 @@ func interpolateTerraformTemplateSsl(template string) string {
 	if v := os.Getenv("STATUSCAKE_SSL_CONTACT_GROUP_ID"); v != "" {
 		sslContactGroupId = v
 	}
+	if sslContactGroupId == "-1" {
+		sslContactGroupId = ""
+	}
 
 	return fmt.Sprintf(template, sslContactGroupId)
 }
@@ -200,7 +202,7 @@ resource "statuscake_ssl" "exemple" {
 	domain = "https://www.exemple.com"
 	contact_groups_c = "%s"
         checkrate = 3600
-        alert_at = "18,7,2019"
+        alert_at = "18,71,2019"
         alert_reminder = true
 	alert_expiry = true
         alert_broken = false
@@ -213,7 +215,7 @@ resource "statuscake_ssl" "exemple" {
 	domain = "https://www.exemple.com"
         contact_groups_c = ""
         checkrate = 86400 
-        alert_at = "18,8,2019"
+        alert_at = "18,81,2019"
         alert_reminder = false
 	alert_expiry = false
         alert_broken = true
