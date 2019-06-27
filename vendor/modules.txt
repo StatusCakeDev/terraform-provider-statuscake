@@ -6,7 +6,7 @@ cloud.google.com/go/internal/optional
 cloud.google.com/go/internal/trace
 cloud.google.com/go/internal/version
 cloud.google.com/go/compute/metadata
-# github.com/DreamItGetIT/statuscake v0.0.0-20190218105717-471b24d8edfb
+# github.com/DreamItGetIT/statuscake v0.0.0-20190625125909-fc745efe187b
 github.com/DreamItGetIT/statuscake
 # github.com/agext/levenshtein v1.2.2
 github.com/agext/levenshtein
@@ -73,6 +73,8 @@ github.com/google/go-cmp/cmp
 github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
+# github.com/google/go-querystring v1.0.0
+github.com/google/go-querystring/query
 # github.com/googleapis/gax-go/v2 v2.0.3
 github.com/googleapis/gax-go/v2
 # github.com/hashicorp/errwrap v1.0.0
