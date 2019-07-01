@@ -158,8 +158,6 @@ func CreateSsl(d *schema.ResourceData, meta interface{}) error {
 
 	response, err := statuscake.NewSsls(client).Create(newSsl)
 	if err != nil {
-		fmt.Println(newSsl)
-		fmt.Println(client)
 		return fmt.Errorf("Error creating StatusCake Ssl: %s", err.Error())
 	}
 
