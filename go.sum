@@ -17,6 +17,8 @@ github.com/DreamItGetIT/statuscake v0.0.0-20190218105717-471b24d8edfb h1:vJ3lnCy
 github.com/DreamItGetIT/statuscake v0.0.0-20190218105717-471b24d8edfb/go.mod h1:OclNh7ZacJo61GDJablmsOZ7l8/AVtzGqP8G7baOdAs=
 github.com/DreamItGetIT/statuscake v0.0.0-20190625125909-fc745efe187b h1:yUbHQh9UVg9muJwkgX2AaID/Yps2qUCVyeIUd8gcB4M=
 github.com/DreamItGetIT/statuscake v0.0.0-20190625125909-fc745efe187b/go.mod h1:OclNh7ZacJo61GDJablmsOZ7l8/AVtzGqP8G7baOdAs=
+github.com/DreamItGetIT/statuscake v0.0.0-20190628135227-71a9c9823950 h1:lD09IZzV8+5/Lt83alOpxo/QCnRQue0DLTrqcqk3mcE=
+github.com/DreamItGetIT/statuscake v0.0.0-20190628135227-71a9c9823950/go.mod h1:OclNh7ZacJo61GDJablmsOZ7l8/AVtzGqP8G7baOdAs=
 github.com/Unknwon/com v0.0.0-20151008135407-28b053d5a292/go.mod h1:KYCjqMOeHpNuTOiFQU6WEcTG7poCJrUs0YgyHNtn1no=
 github.com/abdullin/seq v0.0.0-20160510034733-d5467c17e7af/go.mod h1:5Jv4cbFiHJMsVxt52+i0Ha45fjshj6wxYr1r19tB9bw=
 github.com/agext/levenshtein v1.2.1/go.mod h1:JEDfjyjHDjOF/1e4FlBE/PkbqA9OfWu2ki2W0IB5558=
