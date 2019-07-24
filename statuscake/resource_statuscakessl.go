@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strconv"
 
-	"log"
-
 	"github.com/DreamItGetIT/statuscake"
 	"github.com/hashicorp/terraform/helper/schema"
+	"log"
+	"strings"
 )
 
 func resourceStatusCakeSsl() *schema.Resource {
@@ -32,14 +32,18 @@ func resourceStatusCakeSsl() *schema.Resource {
 			},
 
 			"contact_groups": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Computed: true,
+				Type:          schema.TypeSet,
+				Elem:          &schema.Schema{Type: schema.TypeString},
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"contact_groups_c"},
 			},
 
 			"contact_groups_c": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"contact_groups"},
 			},
 
 			"checkrate": {
@@ -143,6 +147,10 @@ func resourceStatusCakeSsl() *schema.Resource {
 func CreateSsl(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*statuscake.Client)
 
+	if v, ok := d.GetOk("contact_groups"); ok {
+		d.Set("contact_groups_c", strings.Join(castSetToSliceStrings(v.(*schema.Set).List()), ","))
+	}
+
 	newSsl := &statuscake.PartialSsl{
 		Domain:         d.Get("domain").(string),
 		Checkrate:      strconv.Itoa(d.Get("checkrate").(int)),
@@ -162,7 +170,6 @@ func CreateSsl(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.Set("ssl_id", response.ID)
-	d.Set("contact_groups", response.ContactGroups)
 	d.Set("paused", response.Paused)
 	d.Set("issuer_cn", response.IssuerCn)
 	d.Set("cert_score", response.CertScore)
@@ -253,7 +260,9 @@ func getStatusCakeSslInput(d *schema.ResourceData) *statuscake.PartialSsl {
 		ssl.Checkrate = strconv.Itoa(v.(int))
 	}
 
-	if v, ok := d.GetOk("contact_groups_c"); ok {
+	if v, ok := d.GetOk("contact_groups"); ok {
+		ssl.ContactGroupsC = strings.Join(castSetToSliceStrings(v.(*schema.Set).List()), ",")
+	} else if v, ok := d.GetOk("contact_groups_c"); ok {
 		ssl.ContactGroupsC = v.(string)
 	}
 
