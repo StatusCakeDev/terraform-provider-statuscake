@@ -64,6 +64,7 @@ type detailResponse struct {
 	EnableSSLWarning  bool                       `json:"EnableSSLWarning"`
 	FollowRedirect  bool                         `json:"FollowRedirect"`
 	StatusCodes     []string                     `json:"StatusCodes"`
+	Tags            []string                     `json:"Tags"`
 }
 
 func (d *detailResponse) test() *Test {
@@ -100,5 +101,6 @@ func (d *detailResponse) test() *Test {
 		EnableSSLAlert: d.EnableSSLWarning,
 		FollowRedirect: d.FollowRedirect,
 		StatusCodes:    strings.Join(d.StatusCodes[:], ","),
+		TestTags:       d.Tags,
 	}
 }

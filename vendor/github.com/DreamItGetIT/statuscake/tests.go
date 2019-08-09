@@ -99,7 +99,7 @@ type Test struct {
 	TestTags []string `json:"TestTags" querystring:"TestTags"`
 
 	// Comma Seperated List of StatusCodes to Trigger Error on (on Update will replace, so send full list each time)
-	StatusCodes string `json:"StatusCodes" querystring:"StatusCodes"`
+	StatusCodes string `json:"StatusCodes" querystring:"StatusCodes" querystringoptions:"omitempty"`
 
 	// Set to 1 to enable the Cookie Jar. Required for some redirects.
 	UseJar int `json:"UseJar" querystring:"UseJar"`
