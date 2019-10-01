@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"github.com/DreamItGetIT/statuscake"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func castSetToSliceStrings(configured []interface{}) []string {
