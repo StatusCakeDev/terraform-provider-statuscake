@@ -213,6 +213,11 @@ func resourceStatusCakeTest() *schema.Resource {
 				Optional: true,
 			},
 
+			"post_body": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
 			"final_endpoint": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -265,6 +270,7 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 		StatusCodes:    d.Get("status_codes").(string),
 		UseJar:         d.Get("use_jar").(int),
 		PostRaw:        d.Get("post_raw").(string),
+		PostBody:       d.Get("post_body").(string),
 		FinalEndpoint:  d.Get("final_endpoint").(string),
 		EnableSSLAlert: d.Get("enable_ssl_alert").(bool),
 		FollowRedirect: d.Get("follow_redirect").(bool),
@@ -363,6 +369,7 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("status_codes", testResp.StatusCodes)
 	d.Set("use_jar", testResp.UseJar)
 	d.Set("post_raw", testResp.PostRaw)
+	d.Set("post_body", testResp.PostBody)
 	d.Set("final_endpoint", testResp.FinalEndpoint)
 	d.Set("enable_ssl_alert", testResp.EnableSSLAlert)
 	d.Set("follow_redirect", testResp.FollowRedirect)
@@ -463,6 +470,9 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	}
 	if v, ok := d.GetOk("post_raw"); ok {
 		test.PostRaw = v.(string)
+	}
+	if v, ok := d.GetOk("post_body"); ok {
+		test.PostBody = v.(string)
 	}
 	if v, ok := d.GetOk("final_endpoint"); ok {
 		test.FinalEndpoint = v.(string)

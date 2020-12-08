@@ -55,6 +55,7 @@ The following arguments are supported:
 * `status_codes` - (Optional) Comma Separated List of StatusCodes to Trigger Error on. Defaults are "204, 205, 206, 303, 400, 401, 403, 404, 405, 406, 408, 410, 413, 444, 429, 494, 495, 496, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 521, 522, 523, 524, 520, 598, 599".
 * `use_jar` - (Optional) Set to true to enable the Cookie Jar. Required for some redirects. Default is false.
 * `post_raw` - (Optional) Use to populate the RAW POST data field on the test.
+* `post_body` - (Optional) Use to populate the POST Body (formdata) field on the test.
 * `final_endpoint` - (Optional) Use to specify the expected Final URL in the testing process.
 * `enable_ssl_alert` - (Optional) HTTP Tests only. If enabled, tests will send warnings if the SSL certificate is about to expire. Paid users only. Default is false
 * `follow_redirect` - (Optional) Use to specify whether redirects should be followed, set to true to enable. Default is false.
