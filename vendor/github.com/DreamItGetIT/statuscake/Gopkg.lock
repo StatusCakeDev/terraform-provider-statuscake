@@ -18,6 +18,14 @@
   version = "v1.1.1"
 
 [[projects]]
+  digest = "1:a63cff6b5d8b95638bfe300385d93b2a6d9d687734b863da8e09dc834510a690"
+  name = "github.com/google/go-querystring"
+  packages = ["query"]
+  pruneopts = "UT"
+  revision = "44c6ddd0a2342c386950e880b658017258da92fc"
+  version = "v1.0.0"
+
+[[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
   name = "github.com/pmezard/go-difflib"
   packages = ["difflib"]
@@ -30,7 +38,7 @@
   name = "github.com/stretchr/testify"
   packages = [
     "assert",
-    "require",
+    "require"
   ]
   pruneopts = "UT"
   revision = "f35b8ab0b5a2cef36673838d662e249dd9c94686"
@@ -41,8 +49,9 @@
   analyzer-version = 1
   input-imports = [
     "github.com/DreamItGetIT/statuscake",
+    "github.com/google/go-querystring/query",
     "github.com/stretchr/testify/assert",
-    "github.com/stretchr/testify/require",
+    "github.com/stretchr/testify/require"
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
