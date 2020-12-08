@@ -1,0 +1,70 @@
+[
+  {
+    "id": "12345",
+    "paused": false,
+    "domain": "https://google.com",
+    "cert_score": "95",
+    "cipher_score": "100",
+    "cert_status": "CERT_OK",
+    "cipher": "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+    "valid_from_utc": "2017-10-10 14:06:00",
+    "valid_until_utc": "2017-12-29 00:00:00",
+    "mixed_content": [
+      {
+        "type": "img",
+        "src": "http://example.com/image.gif"
+      }
+    ],
+    "flags": {
+      "is_extended": false,
+      "has_pfs": true,
+      "is_broken": false,
+      "is_expired": false,
+      "is_missing": false,
+      "is_revoked": false,
+      "is_mixed": false
+    },
+    "contact_groups": [12, 13, 14],
+    "alert_at": "1,7,30",
+    "last_reminder": 0,
+    "alert_reminder": false,
+    "alert_expiry": false,
+    "alert_broken": false,
+    "alert_mixed": false,
+    "last_updated_utc": "2017-10-24 09:02:25"
+  },
+  {
+    "id": "12346",
+    "paused": false,
+    "domain": "https://google2.com",
+    "cert_score": "95",
+    "cipher_score": "100",
+    "cert_status": "CERT_OK",
+    "cipher": "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+    "valid_from_utc": "2017-10-10 14:06:00",
+    "valid_until_utc": "2017-12-29 00:00:00",
+    "mixed_content": [
+      {
+        "type": "img",
+        "src": "http://example.com/image.gif"
+      }
+    ],
+    "flags": {
+      "is_extended": false,
+      "has_pfs": true,
+      "is_broken": false,
+      "is_expired": false,
+      "is_missing": false,
+      "is_revoked": false,
+      "is_mixed": false
+    },
+    "contact_groups": [12, 13, 14],
+    "alert_at": "1,7,30",
+    "last_reminder": 0,
+    "alert_reminder": false,
+    "alert_expiry": false,
+    "alert_broken": false,
+    "alert_mixed": false,
+    "last_updated_utc": "2017-10-24 09:02:25"
+  }
+]
