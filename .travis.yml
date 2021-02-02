@@ -4,7 +4,7 @@ services:
 - docker
 language: go
 go:
-  - "1.11.x"
+- "1.14.x"
 
 install:
 # This script is used by the Travis build to install a cookie for
@@ -25,4 +25,4 @@ matrix:
   allow_failures:
   - go: tip
 env:
-  - GOFLAGS=-mod=vendor GO111MODULE=on
+- GOFLAGS=-mod=vendor GO111MODULE=on
