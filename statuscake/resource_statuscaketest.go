@@ -228,6 +228,16 @@ func resourceStatusCakeTest() *schema.Resource {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
+
+			"dns_server": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+
+			"dns_ip": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -268,6 +278,8 @@ func CreateTest(d *schema.ResourceData, meta interface{}) error {
 		FinalEndpoint:  d.Get("final_endpoint").(string),
 		EnableSSLAlert: d.Get("enable_ssl_alert").(bool),
 		FollowRedirect: d.Get("follow_redirect").(bool),
+		DNSServer:      d.Get("dns_server").(string),
+		DNSIP:          d.Get("dns_ip").(string),
 	}
 
 	if v, ok := d.GetOk("contact_group"); ok {
@@ -366,6 +378,8 @@ func ReadTest(d *schema.ResourceData, meta interface{}) error {
 	d.Set("final_endpoint", testResp.FinalEndpoint)
 	d.Set("enable_ssl_alert", testResp.EnableSSLAlert)
 	d.Set("follow_redirect", testResp.FollowRedirect)
+	d.Set("dns_server", testResp.DNSServer)
+	d.Set("dns_ip", testResp.DNSIP)
 
 	return nil
 }
@@ -472,6 +486,12 @@ func getStatusCakeTestInput(d *schema.ResourceData) *statuscake.Test {
 	}
 	if v, ok := d.GetOk("follow_redirect"); ok {
 		test.FollowRedirect = v.(bool)
+	}
+	if v, ok := d.GetOk("dns_server"); ok {
+		test.DNSServer = v.(string)
+	}
+	if v, ok := d.GetOk("dns_ip"); ok {
+		test.DNSIP = v.(string)
 	}
 
 	return test

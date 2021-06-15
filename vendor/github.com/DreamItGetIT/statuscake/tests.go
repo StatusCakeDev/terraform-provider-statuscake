@@ -99,13 +99,16 @@ type Test struct {
 	TestTags []string `json:"TestTags" querystring:"TestTags"`
 
 	// Comma Seperated List of StatusCodes to Trigger Error on (on Update will replace, so send full list each time)
-	StatusCodes string `json:"StatusCodes" querystring:"StatusCodes"`
+	StatusCodes string `json:"StatusCodes" querystring:"StatusCodes" querystringoptions:"omitempty"`
 
 	// Set to 1 to enable the Cookie Jar. Required for some redirects.
 	UseJar int `json:"UseJar" querystring:"UseJar"`
 
 	// Raw POST data seperated by an ampersand
 	PostRaw string `json:"PostRaw" querystring:"PostRaw"`
+
+	// POST Body data, json
+	PostBody string `json:"PostBody" querystring:"PostBody"`
 
 	// Use to specify the expected Final URL in the testing process
 	FinalEndpoint string `json:"FinalEndpoint" querystring:"FinalEndpoint"`
@@ -115,6 +118,12 @@ type Test struct {
 
 	// Use to specify whether redirects should be followed
 	FollowRedirect bool `json:"FollowRedirect" querystring:"FollowRedirect"`
+
+	// DNS Tests only. Hostname or IP of DNS server to use.
+	DNSServer string `json:"DNSServer" querystring:"DNSServer"`
+
+	// DNS Tests only. IP to compare against WebsiteURL value.
+	DNSIP string `json:"DNSIP" querystring:"DNSIP"`
 }
 
 // Validate checks if the Test is valid. If it's invalid, it returns a ValidationError with all invalid fields. It returns nil otherwise.
@@ -149,8 +158,8 @@ func (t *Test) Validate() error {
 		e["Virus"] = "must be 0 or 1"
 	}
 
-	if t.TestType != "HTTP" && t.TestType != "TCP" && t.TestType != "PING" {
-		e["TestType"] = "must be HTTP, TCP, or PING"
+	if t.TestType != "HTTP" && t.TestType != "TCP" && t.TestType != "PING" && t.TestType != "DNS" {
+		e["TestType"] = "must be HTTP, TCP, DNS or PING"
 	}
 
 	if t.RealBrowser < 0 || t.RealBrowser > 1 {
@@ -162,11 +171,27 @@ func (t *Test) Validate() error {
 	}
 
 	if t.PostRaw != "" && t.TestType != "HTTP" {
-		e["PostRaw"] = "must be HTTP to submit a POST request"
+		e["PostRaw"] = "must be HTTP to submit a POST request with PostRaw"
+	}
+
+	if t.PostBody != "" && t.TestType != "HTTP" {
+		e["PostBody"] = "must be HTTP to submit a POST request with PostBody"
 	}
 
 	if t.FinalEndpoint != "" && t.TestType != "HTTP" {
 		e["FinalEndpoint"] = "must be a Valid URL"
+	}
+
+	if t.TestType == "DNS" && t.DNSIP == "" {
+		e["DNSIP"] = "is required"
+	}
+
+	if t.DNSServer != "" && t.TestType != "DNS" {
+		e["DNSServer"] = "must be only used for DNS type tests"
+	}
+
+	if t.DNSIP != "" && t.TestType != "DNS" {
+		e["DNSIP"] = "must be only used for DNS type tests"
 	}
 
 	if t.CustomHeader != "" {
