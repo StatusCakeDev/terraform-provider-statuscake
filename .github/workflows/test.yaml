@@ -1,0 +1,36 @@
+name: test
+on:
+  pull_request:
+  push:
+    branches:
+    - master
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+        - "ubuntu-latest"
+        - "macos-latest"
+        go:
+        - "1.17"
+        - "1.16"
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-go@v1
+      with:
+        go-version: ${{ matrix.go }}
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/go/pkg/mod
+          ~/.cache/go-build
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+    - run: |
+        go test -v -cover ./...
+      timeout-minutes: 10
+      env:
+        TF_ACC: "1"
