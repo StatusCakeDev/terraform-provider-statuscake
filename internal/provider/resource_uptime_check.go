@@ -178,10 +178,18 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 						"request_payload": &schema.Schema{
 							Type:        schema.TypeMap,
 							Optional:    true,
-							Description: "Payload submitted with the request. Setting this updates the check to use the HTTP POST verb",
+							Description: "Payload submitted with the request. Setting this updates the check to use the HTTP POST verb. Only one of `request_payload` or `request_payload_raw` may be specified",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
+							ConflictsWith: []string{"http_check.0.request_payload_raw"},
+						},
+						"request_payload_raw": &schema.Schema{
+							Type:          schema.TypeString,
+							Optional:      true,
+							ValidateFunc:  validation.StringIsNotEmpty,
+							Description:   "Raw payload submitted with the request. Setting this updates the check to use the HTTP POST verb. Only one of `request_payload` or `request_payload_raw` may be specified",
+							ConflictsWith: []string{"http_check.0.request_payload"},
 						},
 						"status_codes": &schema.Schema{
 							Type:        schema.TypeSet,
@@ -917,6 +925,13 @@ func expandUptimeCheckHTTPCheck(v interface{}, d *schema.ResourceData) (interfac
 		transformed["post_body"] = payload
 	}
 
+	raw, err := expandUptimeCheckRequestRaw(original["request_payload_raw"], d)
+	if err != nil {
+		return nil, err
+	} else if d.HasChange("http_check.0.request_payload_raw") {
+		transformed["post_raw"] = raw
+	}
+
 	codes, err := expandUptimeCheckStatusCodes(original["status_codes"], d)
 	if err != nil {
 		return nil, err
@@ -964,6 +979,7 @@ func flattenUptimeCheckHTTPCheck(v interface{}, d *schema.ResourceData) interfac
 			"request_headers":      flattenUptimeCheckRequestHeaders(data.CustomHeader, d),
 			"request_method":       flattenUptimeCheckRequestMethod(data.TestType, d),
 			"request_payload":      flattenUptimeCheckRequestPayload(data.PostBody, d),
+			"request_payload_raw":  flattenUptimeCheckRequestRaw(data.PostRaw, d),
 			"status_codes":         flattenUptimeCheckStatusCodes(data.StatusCodes, d),
 			"timeout":              flattenUptimeCheckTimeout(data.Timeout, d),
 			"user_agent":           flattenUptimeCheckUserAgent(data.UserAgent, d),
@@ -1143,6 +1159,14 @@ func flattenUptimeCheckRequestPayload(v interface{}, d *schema.ResourceData) int
 		return map[string]interface{}{}
 	}
 	return body
+}
+
+func expandUptimeCheckRequestRaw(v interface{}, d *schema.ResourceData) (interface{}, error) {
+	return v.(string), nil
+}
+
+func flattenUptimeCheckRequestRaw(v interface{}, d *schema.ResourceData) interface{} {
+	return v
 }
 
 func expandUptimeCheckRegions(v interface{}, d *schema.ResourceData) (interface{}, error) {
