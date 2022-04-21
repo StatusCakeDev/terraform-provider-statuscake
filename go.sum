@@ -47,8 +47,8 @@ github.com/Microsoft/go-winio v0.4.16/go.mod h1:XB6nPKklQyQ7GC9LdcBEcBl8PF76WugX
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7 h1:YoJbenK9C67SkzkDfmQuVln04ygHj3vjZfd9FL+GmQQ=
 github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7/go.mod h1:z4/9nQmJSSwwds7ejkxaJwO37dru3geImFUdJlaLzQo=
-github.com/StatusCakeDev/statuscake-go v1.0.0-beta.2 h1:vnFdUfGsnJ9H84dkwdXRtmOeqG+vs0M4kqh84uypqIM=
-github.com/StatusCakeDev/statuscake-go v1.0.0-beta.2/go.mod h1:YfNT7PEkwFWhLnvmyY/DTsita9rXUzCkSu8HkLGYrMw=
+github.com/StatusCakeDev/statuscake-go v1.0.0-beta.3 h1:6yNlBzJOOMphxGDkNJ+1eh3DHMEzqR6yNnY6GSr7yHQ=
+github.com/StatusCakeDev/statuscake-go v1.0.0-beta.3/go.mod h1:Cfu47C+WZqA+iQ6Hg1SGJqNrV9LRcJ0RmoZkSvFPncY=
 github.com/acomagu/bufpipe v1.0.3 h1:fxAGrHZTgQ9w5QqVItgzwj235/uYZYgbXitB+dLupOk=
 github.com/acomagu/bufpipe v1.0.3/go.mod h1:mxdxdup/WdsKVreO5GpW4+M/1CE2sMG4jeGJ2sYmHc4=
 github.com/agext/levenshtein v1.2.1/go.mod h1:JEDfjyjHDjOF/1e4FlBE/PkbqA9OfWu2ki2W0IB5558=
@@ -387,8 +387,8 @@ github.com/oklog/run v1.0.0/go.mod h1:dlhp/R75TPv97u0XWUtDeV/lRKWPKSdTuV0TZvrmrQ
 github.com/oklog/run v1.1.0 h1:GEenZ1cK0+q0+wsJew9qUg/DyD8k3JzYsZAi5gYi2mA=
 github.com/oklog/run v1.1.0/go.mod h1:sVPdnTZT1zYwAJeCMu2Th4T21pA3FPOQRfWjQlk7DVU=
 github.com/oklog/ulid v1.3.1/go.mod h1:CirwcVhetQ6Lv90oh/F+FBtV6XMibvdAFo93nm5qn4U=
-github.com/pact-foundation/pact-go/v2 v2.0.0-beta.9.0.20211117063130-cac3cf0f2829 h1:f9yMdjaqK0yhCBP16ptmEEaCka/UE6j/Qnspb1HQtyY=
-github.com/pact-foundation/pact-go/v2 v2.0.0-beta.9.0.20211117063130-cac3cf0f2829/go.mod h1:PD3fonf3iERFx4T7Dpa3TKq8J2FJJww+nhKLPbYEEdg=
+github.com/pact-foundation/pact-go/v2 v2.0.0-beta.10 h1:rGxEG6omnfKiAWK/t9bX+LBZ/x/y4fJz1xoHxmq6BxI=
+github.com/pact-foundation/pact-go/v2 v2.0.0-beta.10/go.mod h1:PD3fonf3iERFx4T7Dpa3TKq8J2FJJww+nhKLPbYEEdg=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 github.com/pelletier/go-toml v1.2.0/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
