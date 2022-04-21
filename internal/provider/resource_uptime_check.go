@@ -192,8 +192,8 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 						"request_payload_raw": &schema.Schema{
 							Type:          schema.TypeString,
 							Optional:      true,
-							ValidateFunc:  validation.StringIsNotEmpty,
 							Description:   "Raw payload submitted with the request. Setting this updates the check to use the HTTP POST verb. Only one of `request_payload` or `request_payload_raw` may be specified",
+							ValidateFunc:  validation.StringIsNotEmpty,
 							ConflictsWith: []string{"http_check.0.request_payload"},
 						},
 						"status_codes": &schema.Schema{
