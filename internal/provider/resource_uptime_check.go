@@ -52,9 +52,14 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 				ValidateFunc: intvalidation.Int32InSlice(statuscake.UptimeTestCheckRateValues()),
 			},
 			"confirmation": &schema.Schema{
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      2,
+				Type:     schema.TypeInt,
+				Required: true,
+				// Cannot use `Default` because 0 is a valid value and Go interprets
+				// this as the zero-value for an integer, therefore forcing Terraform
+				// to set the default value.
+				DefaultFunc: func() (interface{}, error) {
+					return 2, nil
+				},
 				Description:  "Number of confirmation servers to confirm downtime before an alert is triggered",
 				ValidateFunc: validation.IntBetween(0, 3),
 			},
@@ -185,19 +190,20 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 						},
 						"status_codes": &schema.Schema{
 							Type:        schema.TypeSet,
-							Optional:    true,
+							Required:    true,
 							MinItems:    1,
 							Description: "List of status codes that trigger an alert",
 							Elem: &schema.Schema{
 								Type:         schema.TypeString,
-								ValidateFunc: validation.StringIsNotEmpty,
+								ValidateFunc: intvalidation.StringIsNumerical,
 							},
 						},
 						"timeout": &schema.Schema{
-							Type:        schema.TypeInt,
-							Optional:    true,
-							Default:     40,
-							Description: "Time to wait to receive the first byte",
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      15,
+							Description:  "The number of seconds to wait to receive the first byte",
+							ValidateFunc: validation.IntBetween(5, 75),
 						},
 						"user_agent": &schema.Schema{
 							Type:         schema.TypeString,
@@ -328,20 +334,21 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 							ValidateFunc: validation.StringInSlice([]string{"SMTP", "SSH", "TCP"}, false),
 						},
 						"timeout": &schema.Schema{
-							Type:        schema.TypeInt,
-							Optional:    true,
-							Default:     40,
-							Description: "The number of seconds to wait to receive the first byte",
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      15,
+							Description:  "The number of seconds to wait to receive the first byte",
+							ValidateFunc: validation.IntBetween(5, 75),
 						},
 					},
 				},
 				ExactlyOneOf: []string{"dns_check", "http_check", "icmp_check", "tcp_check"},
 			},
 			"trigger_rate": &schema.Schema{
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Default:     4,
-				Description: "The number of minutes to wait before sending an alert",
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Description:  "The number of minutes to wait before sending an alert",
+				ValidateFunc: validation.IntBetween(0, 60),
 			},
 		},
 	}
