@@ -135,7 +135,8 @@ Optional:
 - **follow_redirects** (Boolean) Whether to follow redirects when testing. Disabled by default
 - **request_headers** (Map of String) Represents headers to be sent when making requests
 - **request_method** (String) Type of HTTP check. Either HTTP, or HEAD
-- **request_payload** (Map of String) Payload submitted with the request. Setting this updates the check to use the HTTP POST verb
+- **request_payload** (Map of String) Payload submitted with the request. Setting this updates the check to use the HTTP POST verb. Only one of `request_payload` or `request_payload_raw` may be specified
+- **request_payload_raw** (String) Raw payload submitted with the request. Setting this updates the check to use the HTTP POST verb. Only one of `request_payload` or `request_payload_raw` may be specified
 - **status_codes** (Set of String) List of status codes that trigger an alert
 - **timeout** (Number) Time to wait to receive the first byte
 - **user_agent** (String) Custom user agent string set when testing
