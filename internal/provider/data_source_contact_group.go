@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/internal/provider/validation"
+	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/validation"
 )
 
 func dataSourceStatusCakeContactGroup() *schema.Resource {
