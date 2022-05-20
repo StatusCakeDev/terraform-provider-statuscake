@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
 	statuscake "github.com/StatusCakeDev/statuscake-go"
-	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/internal/provider/validation"
+	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/validation"
 )
 
 func resourceStatusCakePagespeedCheck() *schema.Resource {
