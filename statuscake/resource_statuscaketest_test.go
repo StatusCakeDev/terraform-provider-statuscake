@@ -68,6 +68,25 @@ func TestAccStatusCake_tcp(t *testing.T) {
 	})
 }
 
+func TestAccStatusCake_dns(t *testing.T) {
+	var test statuscake.Test
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccTestCheckDestroy(&test),
+		Steps: []resource.TestStep{
+			{
+				Config: interpolateTerraformTemplate(testAccTestConfig_dns),
+				Check: resource.ComposeTestCheckFunc(
+					testAccTestCheckExists("statuscake_test.google", &test),
+					testAccTestCheckAttributes("statuscake_test.google", &test),
+				),
+			},
+		},
+	})
+}
+
 func TestAccStatusCake_withUpdate(t *testing.T) {
 	var test statuscake.Test
 
@@ -218,6 +237,10 @@ func testAccTestCheckAttributes(rn string, test *statuscake.Test) resource.TestC
 				err = check(key, value, strconv.FormatBool(test.EnableSSLAlert))
 			case "follow_redirect":
 				err = check(key, value, strconv.FormatBool(test.FollowRedirect))
+			case "dns_server":
+				err = check(key, value, test.DNSServer)
+			case "dns_ip":
+				err = check(key, value, test.DNSIP)
 			}
 			if err != nil {
 				return err
@@ -315,5 +338,17 @@ resource "statuscake_test" "google" {
 	contact_group = ["%s"]
 	confirmations = 1
 	port = 80
+}
+`
+const testAccTestConfig_dns = `
+resource "statuscake_test" "google" {
+	website_url = "dns.google"
+	dns_server = "1.1.1.1"
+	dns_ip = "8.8.8.8,8.8.4.4"
+	test_type = "DNS"
+	check_rate = 300
+	timeout = 10
+	contact_group = ["%s"]
+	confirmations = 1
 }
 `

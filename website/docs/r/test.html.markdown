@@ -58,6 +58,8 @@ The following arguments are supported:
 * `final_endpoint` - (Optional) Use to specify the expected Final URL in the testing process.
 * `enable_ssl_alert` - (Optional) HTTP Tests only. If enabled, tests will send warnings if the SSL certificate is about to expire. Paid users only. Default is false
 * `follow_redirect` - (Optional) Use to specify whether redirects should be followed, set to true to enable. Default is false.
+* `dns_server` - (Optional) *Used only for DNS type tests* Hostname or IP of DNS server to use.
+* `dns_ip` - (Optional) *Used only for DNS type tests* Comma-separated IPs to compare against the `website_url` resolved value.
 
 ## Attributes Reference
 
