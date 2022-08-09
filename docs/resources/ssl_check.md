@@ -83,4 +83,10 @@ Optional:
 
 - **hostname** (String) Hostname of the server under test
 
+## Import
 
+SSL checks can be imported using the check `id`, e.g.
+
+```
+$ terraform import statuscake_ssl_check.example_com 1234
+```
