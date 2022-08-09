@@ -93,8 +93,8 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 						"dns_server": &schema.Schema{
 							Type:         schema.TypeString,
 							Optional:     true,
-							Description:  "Hostname or IP address of the nameserver to query",
-							ValidateFunc: validation.IsIPAddress,
+							Description:  "FQDN or IP address of the nameserver to query",
+							ValidateFunc: validation.StringIsNotEmpty,
 						},
 					},
 				},
@@ -216,8 +216,8 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 						"user_agent": &schema.Schema{
 							Type:         schema.TypeString,
 							Optional:     true,
-							ValidateFunc: validation.StringIsNotEmpty,
 							Description:  "Custom user agent string set when testing",
+							ValidateFunc: validation.StringIsNotEmpty,
 						},
 						"validate_ssl": &schema.Schema{
 							Type:        schema.TypeBool,
@@ -268,8 +268,8 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 							Type:         schema.TypeString,
 							Required:     true,
 							ForceNew:     true,
-							Description:  "URL or IP address of the server under test",
-							ValidateFunc: validation.Any(validation.IsURLWithHTTPorHTTPS, validation.IsIPAddress),
+							Description:  "URL, FQDN, or IP address of the server under test",
+							ValidateFunc: validation.StringIsNotEmpty,
 						},
 						"host": &schema.Schema{
 							Type:         schema.TypeString,
