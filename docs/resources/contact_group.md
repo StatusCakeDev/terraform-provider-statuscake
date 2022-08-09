@@ -43,4 +43,10 @@ output "operations_team_contact_group_id" {
 - **mobile_numbers** (Set of String) List of international format mobile phone numbers
 - **ping_url** (String) URL or IP address of an endpoint to push uptime events. Currently this only supports HTTP GET endpoints
 
+## Import
 
+Contact groups can be imported using the contact group `id`, e.g.
+
+```
+$ terraform import statuscake_contact_group.operations_team 1234
+```

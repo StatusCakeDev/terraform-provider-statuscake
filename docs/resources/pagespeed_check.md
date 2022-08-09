@@ -74,4 +74,10 @@ Required:
 
 - **address** (String) URL or IP address of the website under test
 
+## Import
 
+Pagespeed checks can be imported using the check `id`, e.g.
+
+```
+$ terraform import statuscake_pagespeed_check.example_com 1234
+```

@@ -208,4 +208,10 @@ Read-Only:
 - **region_code** (String)
 - **status** (String)
 
+## Import
 
+Uptime checks can be imported using the check `id`, e.g.
+
+```
+$ terraform import statuscake_uptime_check.example_com 1234
+```

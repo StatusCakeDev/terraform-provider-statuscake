@@ -48,4 +48,10 @@ resource "statuscake_maintenance_window" "weekends" {
 - **tags** (Set of String) List of tags used to include matching uptime checks in this maintenance window
 - **tests** (Set of String) List of uptime check IDs explicitly included in this maintenance window
 
+## Import
 
+Maintenance windows can be imported using the maintenance window `id`, e.g.
+
+```
+$ terraform import statuscake_maintenance_window.weekends 1234
+```
