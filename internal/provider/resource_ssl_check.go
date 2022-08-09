@@ -125,8 +125,8 @@ func resourceStatusCakeSSLCheck() *schema.Resource {
 			"user_agent": &schema.Schema{
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validation.StringIsNotEmpty,
 				Description:  "Custom user agent string set when testing",
+				ValidateFunc: validation.StringIsNotEmpty,
 			},
 		},
 	}

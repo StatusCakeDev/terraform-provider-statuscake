@@ -104,7 +104,7 @@ output "example_com_uptime_check_id" {
 
 Required:
 
-- **address** (String) URL or IP address of the server under test
+- **address** (String) URL, FQDN, or IP address of the server under test
 
 Optional:
 
@@ -120,11 +120,15 @@ Required:
 
 Optional:
 
-- **dns_server** (String) Hostname or IP address of the nameserver to query
+- **dns_server** (String) FQDN or IP address of the nameserver to query
 
 
 <a id="nestedblock--http_check"></a>
 ### Nested Schema for `http_check`
+
+Required:
+
+- **status_codes** (Set of String) List of status codes that trigger an alert
 
 Optional:
 
@@ -137,8 +141,7 @@ Optional:
 - **request_method** (String) Type of HTTP check. Either HTTP, or HEAD
 - **request_payload** (Map of String) Payload submitted with the request. Setting this updates the check to use the HTTP POST verb. Only one of `request_payload` or `request_payload_raw` may be specified
 - **request_payload_raw** (String) Raw payload submitted with the request. Setting this updates the check to use the HTTP POST verb. Only one of `request_payload` or `request_payload_raw` may be specified
-- **status_codes** (Set of String) List of status codes that trigger an alert
-- **timeout** (Number) Time to wait to receive the first byte
+- **timeout** (Number) The number of seconds to wait to receive the first byte
 - **user_agent** (String) Custom user agent string set when testing
 - **validate_ssl** (Boolean) Whether to send an alert if the SSL certificate is soon to expire
 
