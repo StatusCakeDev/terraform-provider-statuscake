@@ -356,7 +356,7 @@ func expandSSLCheckAlertConfig(v interface{}, d *schema.ResourceData) (interface
 	broken, err := expandSSLCheckOnBroken(original["on_broken"], d)
 	if err != nil {
 		return nil, err
-	} else if d.HasChange("alert_config.0.broken") {
+	} else if d.HasChange("alert_config.0.on_broken") {
 		transformed["alert_broken"] = broken
 	}
 
