@@ -92,12 +92,10 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	bearer := credentials.NewBearerWithStaticToken(apiToken.(string))
 	opts := []statuscake.Option{
 		statuscake.WithBackoff(backoff.Exponential{
-			Config: backoff.Config{
-				BaseDelay:  time.Duration(d.Get("min_backoff").(int)) * time.Second,
-				Multiplier: 2.0,
-				Jitter:     0.2,
-				MaxDelay:   time.Duration(d.Get("max_backoff").(int)) * time.Second,
-			},
+			BaseDelay:  time.Duration(d.Get("min_backoff").(int)) * time.Second,
+			Multiplier: 2.0,
+			Jitter:     0.2,
+			MaxDelay:   time.Duration(d.Get("max_backoff").(int)) * time.Second,
 		}),
 		statuscake.WithHTTPClient(&http.Client{
 			Transport: throttle.NewWithDefaultTransport(
