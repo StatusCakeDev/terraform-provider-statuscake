@@ -2,15 +2,13 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 	"time"
 
+	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-
-	statuscake "github.com/StatusCakeDev/statuscake-go"
 )
 
 type monitoringLocationsFunc func(context.Context, *statuscake.Client, string) (statuscake.MonitoringLocations, error)
@@ -82,11 +80,11 @@ func dataSourceStatusCakeUptimeLocationsRead(fn monitoringLocationsFunc) schema.
 
 		res, err := fn(ctx, client, d.Get("region_code").(string))
 		if err != nil {
-			return diag.FromErr(fmt.Errorf("failed to list monitoring locations: %w", err))
+			return diag.Errorf("failed to list monitoring locations: %s", err)
 		}
 
 		if err := d.Set("locations", flattenMonitoringLocations(res.Data, d)); err != nil {
-			return diag.FromErr(fmt.Errorf("error setting monitoring locations: %w", err))
+			return diag.Errorf("error setting monitoring locations: %s", err)
 		}
 
 		d.SetId(strconv.FormatInt(time.Now().Unix(), 10))

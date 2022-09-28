@@ -6,11 +6,12 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	statuscake "github.com/StatusCakeDev/statuscake-go"
+	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/internal/provider/diag"
 	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/internal/provider/validation"
 )
 
@@ -114,7 +115,7 @@ func resourceStatusCakeContactGroupCreate(ctx context.Context, d *schema.Resourc
 
 	res, err := client.CreateContactGroupWithData(ctx, body).Execute()
 	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to create contact group: %w", err))
+		return intdiag.FromErr("failed to create contact group", err)
 	}
 
 	d.SetId(res.Data.NewID)
@@ -133,27 +134,27 @@ func resourceStatusCakeContactGroupRead(ctx context.Context, d *schema.ResourceD
 		return nil
 	}
 	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to get contact group with ID: %w", err))
+		return diag.Errorf("failed to get contact group with ID: %s", err)
 	}
 
 	if err := d.Set("email_addresses", flattenContactGroupEmailAddresses(res.Data.EmailAddresses, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read email addresses: %+v", err))
+		return diag.Errorf("failed to read email addresses: %s", err)
 	}
 
 	if err := d.Set("integrations", flattenContactGroupIntegrations(res.Data.Integrations, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read integrations: %+v", err))
+		return diag.Errorf("failed to read integrations: %s", err)
 	}
 
 	if err := d.Set("mobile_numbers", flattenContactGroupMobileNumbers(res.Data.MobileNumbers, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read mobile numbers: %+v", err))
+		return diag.Errorf("failed to read mobile numbers: %s", err)
 	}
 
 	if err := d.Set("name", flattenContactGroupName(res.Data.Name, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read name: %+v", err))
+		return diag.Errorf("failed to read name: %s", err)
 	}
 
 	if err := d.Set("ping_url", flattenContactGroupPingURL(res.Data.PingURL, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to ping url: %+v", err))
+		return diag.Errorf("failed to ping url: %s", err)
 	}
 
 	return nil
@@ -203,7 +204,7 @@ func resourceStatusCakeContactGroupUpdate(ctx context.Context, d *schema.Resourc
 	log.Printf("[DEBUG] Request body: %+v", body)
 
 	if err := client.UpdateContactGroupWithData(ctx, id, body).Execute(); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to update contact group: %w", err))
+		return intdiag.FromErr(fmt.Sprintf("failed to update contact group with id %s", id), err)
 	}
 
 	return resourceStatusCakeContactGroupRead(ctx, d, meta)
@@ -216,7 +217,7 @@ func resourceStatusCakeContactGroupDelete(ctx context.Context, d *schema.Resourc
 	log.Printf("[DEBUG] Deleting StatusCake contact group with ID: %s", id)
 
 	if err := client.DeleteContactGroup(ctx, id).Execute(); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to delete contact group with id %s: %w", id, err))
+		return intdiag.FromErr(fmt.Sprintf("failed to delete contact group with id %s", id), err)
 	}
 
 	return nil
