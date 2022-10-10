@@ -19,13 +19,14 @@
 
 You will need the following things properly installed on your computer.
 
-* [Terraform](https://www.terraform.io/downloads.html): 0.12+
+* [Terraform](https://www.terraform.io/downloads.html) (1.0+)
 
 ## Installation
 
-## Documentation
+### Documentation
 
-Full, comprehensive documentation is available on the [Terraform website](https://registry.terraform.io/providers/StatusCakeDev/statuscake/latest/docs)
+Full, comprehensive documentation is available on the [Terraform
+website](https://registry.terraform.io/providers/StatusCakeDev/statuscake/latest/docs)
 
 ## License
 
