@@ -128,7 +128,7 @@ func resourceStatusCakeContactGroupRead(ctx context.Context, d *schema.ResourceD
 
 	res, err := client.GetContactGroup(ctx, id).Execute()
 
-	// If the resource it not found then remove it from the state.
+	// If the resource is not found then remove it from the state.
 	if err, ok := err.(statuscake.APIError); ok && err.Status == http.StatusNotFound {
 		d.SetId("")
 		return nil

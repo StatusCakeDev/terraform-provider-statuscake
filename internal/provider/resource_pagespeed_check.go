@@ -189,7 +189,7 @@ func resourceStatusCakePagespeedCheckRead(ctx context.Context, d *schema.Resourc
 
 	res, err := client.GetPagespeedTest(ctx, id).Execute()
 
-	// If the resource it not found then remove it from the state.
+	// If the resource is not found then remove it from the state.
 	if err, ok := err.(statuscake.APIError); ok && err.Status == http.StatusNotFound {
 		d.SetId("")
 		return nil

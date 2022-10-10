@@ -74,6 +74,7 @@ func Provider() *schema.Provider {
 			"statuscake_uptime_check":       resourceStatusCakeUptimeCheck(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
+			"statuscake_contact_group":                  dataSourceStatusCakeContactGroup(),
 			"statuscake_pagespeed_monitoring_locations": dataSourceStatusCakeMonitoringLocations(listPagespeedMonitoringLocations),
 			"statuscake_uptime_monitoring_locations":    dataSourceStatusCakeMonitoringLocations(listUptimeMonitoringLocations),
 		},

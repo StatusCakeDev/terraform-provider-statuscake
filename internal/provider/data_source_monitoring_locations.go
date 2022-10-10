@@ -15,7 +15,7 @@ type monitoringLocationsFunc func(context.Context, *statuscake.Client, string) (
 
 func dataSourceStatusCakeMonitoringLocations(fn monitoringLocationsFunc) *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceStatusCakeUptimeLocationsRead(fn),
+		ReadContext: dataSourceStatusCakeMonitoringLocationsRead(fn),
 
 		Schema: map[string]*schema.Schema{
 			"region_code": &schema.Schema{
@@ -74,7 +74,7 @@ func locationSchema() map[string]*schema.Schema {
 	}
 }
 
-func dataSourceStatusCakeUptimeLocationsRead(fn monitoringLocationsFunc) schema.ReadContextFunc {
+func dataSourceStatusCakeMonitoringLocationsRead(fn monitoringLocationsFunc) schema.ReadContextFunc {
 	return func(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 		client := meta.(*statuscake.Client)
 
