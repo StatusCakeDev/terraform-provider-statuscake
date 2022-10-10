@@ -2,7 +2,6 @@ package provider
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"regexp"
 	"runtime"
@@ -14,7 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	statuscake "github.com/StatusCakeDev/statuscake-go"
+	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/StatusCakeDev/statuscake-go/backoff"
 	"github.com/StatusCakeDev/statuscake-go/credentials"
 	"github.com/StatusCakeDev/statuscake-go/throttle"
@@ -86,7 +85,7 @@ func Provider() *schema.Provider {
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	apiToken, ok := d.GetOk("api_token")
 	if !ok {
-		return nil, diag.FromErr(errors.New("credentials are not set correctly"))
+		return nil, diag.Errorf("credentials are not set correctly")
 	}
 
 	bearer := credentials.NewBearerWithStaticToken(apiToken.(string))

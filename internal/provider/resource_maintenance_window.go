@@ -7,11 +7,12 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	statuscake "github.com/StatusCakeDev/statuscake-go"
+	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/internal/provider/diag"
 	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/internal/provider/validation"
 )
 
@@ -141,7 +142,7 @@ func resourceStatusCakeMaintenanceWindowCreate(ctx context.Context, d *schema.Re
 
 	res, err := client.CreateMaintenanceWindowWithData(ctx, body).Execute()
 	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to create maintenance window: %w", err))
+		return intdiag.FromErr("failed to create maintenance window", err)
 	}
 
 	d.SetId(res.Data.NewID)
@@ -160,35 +161,35 @@ func resourceStatusCakeMaintenanceWindowRead(ctx context.Context, d *schema.Reso
 		return nil
 	}
 	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to get maintenance window test with ID: %w", err))
+		return diag.Errorf("failed to get maintenance window test with ID: %s", err)
 	}
 
 	if err := d.Set("end", flattenMaintenanceWindowEnd(res.Data.End, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read end: %+v", err))
+		return diag.Errorf("failed to read end: %s", err)
 	}
 
 	if err := d.Set("name", flattenMaintenanceWindowName(res.Data.Name, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read name: %+v", err))
+		return diag.Errorf("failed to read name: %s", err)
 	}
 
 	if err := d.Set("repeat_interval", flattenMaintenanceWindowRepeatInterval(res.Data.RepeatInterval, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read repeat interval: %+v", err))
+		return diag.Errorf("failed to read repeat interval: %s", err)
 	}
 
 	if err := d.Set("start", flattenMaintenanceWindowStart(res.Data.Start, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read start: %+v", err))
+		return diag.Errorf("failed to read start: %s", err)
 	}
 
 	if err := d.Set("tags", flattenMaintenanceWindowTags(res.Data.Tags, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read tags: %+v", err))
+		return diag.Errorf("failed to read tags: %s", err)
 	}
 
 	if err := d.Set("tests", flattenMaintenanceWindowTests(res.Data.Tests, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read tests: %+v", err))
+		return diag.Errorf("failed to read tests: %s", err)
 	}
 
 	if err := d.Set("timezone", flattenMaintenanceWindowTimezone(res.Data.Timezone, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read timezone: %+v", err))
+		return diag.Errorf("failed to read timezone: %s", err)
 	}
 
 	return nil
@@ -252,7 +253,7 @@ func resourceStatusCakeMaintenanceWindowUpdate(ctx context.Context, d *schema.Re
 	log.Printf("[DEBUG] Request body: %+v", body)
 
 	if err := client.UpdateMaintenanceWindowWithData(ctx, id, body).Execute(); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to update maintenance window: %w", err))
+		return intdiag.FromErr(fmt.Sprintf("failed to update maintenance window with id %s", id), err)
 	}
 
 	return resourceStatusCakeMaintenanceWindowRead(ctx, d, meta)
@@ -265,7 +266,7 @@ func resourceStatusCakeMaintenanceWindowDelete(ctx context.Context, d *schema.Re
 	log.Printf("[DEBUG] Deleting StatusCake maintenance window with ID: %s", id)
 
 	if err := client.DeleteMaintenanceWindow(ctx, id).Execute(); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to delete maintenance window with id %s: %w", id, err))
+		return intdiag.FromErr(fmt.Sprintf("failed to delete maintenance window with id %s", id), err)
 	}
 
 	return nil

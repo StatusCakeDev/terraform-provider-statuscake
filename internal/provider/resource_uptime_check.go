@@ -8,11 +8,12 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	statuscake "github.com/StatusCakeDev/statuscake-go"
+	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/internal/provider/diag"
 	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/internal/provider/validation"
 )
 
@@ -479,7 +480,7 @@ func resourceStatusCakeUptimeCheckCreate(ctx context.Context, d *schema.Resource
 
 	res, err := client.CreateUptimeTestWithData(ctx, body).Execute()
 	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to create uptime test: %w", err))
+		return intdiag.FromErr("failed to create uptime test", err)
 	}
 
 	d.SetId(res.Data.NewID)
@@ -498,55 +499,55 @@ func resourceStatusCakeUptimeCheckRead(ctx context.Context, d *schema.ResourceDa
 		return nil
 	}
 	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to get uptime test with ID: %w", err))
+		return diag.Errorf("failed to get uptime test with ID: %s", err)
 	}
 
 	if err := d.Set("check_interval", flattenUptimeCheckInterval(res.Data.CheckRate, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read check interval: %+v", err))
+		return diag.Errorf("failed to read check interval: %s", err)
 	}
 
 	if err := d.Set("confirmation", flattenUptimeCheckConfirmation(res.Data.Confirmation, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read confirmation: %+v", err))
+		return diag.Errorf("failed to read confirmation: %s", err)
 	}
 
 	if err := d.Set("contact_groups", flattenUptimeCheckContactGroups(res.Data.ContactGroups, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read contact groups: %+v", err))
+		return diag.Errorf("failed to read contact groups: %s", err)
 	}
 
 	if err := d.Set("dns_check", flattenUptimeCheckDNSCheck(res.Data, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read DNS check: %+v", err))
+		return diag.Errorf("failed to read DNS check: %s", err)
 	}
 
 	if err := d.Set("http_check", flattenUptimeCheckHTTPCheck(res.Data, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read HTTP check: %+v", err))
+		return diag.Errorf("failed to read HTTP check: %s", err)
 	}
 
 	if err := d.Set("monitored_resource", flattenUptimeCheckMonitoredResource(res.Data, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read monitored resource: %+v", err))
+		return diag.Errorf("failed to read monitored resource: %s", err)
 	}
 
 	if err := d.Set("name", flattenUptimeCheckName(res.Data.Name, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read name: %+v", err))
+		return diag.Errorf("failed to read name: %s", err)
 	}
 
 	if err := d.Set("paused", flattenUptimeCheckPaused(res.Data.Paused, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read paused: %+v", err))
+		return diag.Errorf("failed to read paused: %s", err)
 	}
 
 	if err := d.Set("locations", flattenMonitoringLocations(res.Data.Servers, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read locations: %+v", err))
+		return diag.Errorf("failed to read locations: %s", err)
 	}
 
 	if err := d.Set("tags", flattenUptimeCheckTags(res.Data.Tags, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read tags: %+v", err))
+		return diag.Errorf("failed to read tags: %s", err)
 	}
 
 	if err := d.Set("tcp_check", flattenUptimeCheckTCPCheck(res.Data, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read TCP check: %+v", err))
+		return diag.Errorf("failed to read TCP check: %s", err)
 	}
 
 	if err := d.Set("trigger_rate", flattenUptimeCheckTriggerRate(res.Data.TriggerRate, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read trigger rate: %+v", err))
+		return diag.Errorf("failed to read trigger rate: %s", err)
 	}
 
 	return nil
@@ -652,7 +653,7 @@ func resourceStatusCakeUptimeCheckUpdate(ctx context.Context, d *schema.Resource
 	log.Printf("[DEBUG] Request body: %+v", body)
 
 	if err := client.UpdateUptimeTestWithData(ctx, id, body).Execute(); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to update uptime test: %w", err))
+		return intdiag.FromErr(fmt.Sprintf("failed to update uptime test with id %s", id), err)
 	}
 
 	return resourceStatusCakeUptimeCheckRead(ctx, d, meta)
@@ -665,7 +666,7 @@ func resourceStatusCakeUptimeCheckDelete(ctx context.Context, d *schema.Resource
 	log.Printf("[DEBUG] Deleting StatusCake uptime test with ID: %s", id)
 
 	if err := client.DeleteUptimeTest(ctx, id).Execute(); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to delete uptime test with id %s: %w", id, err))
+		return intdiag.FromErr(fmt.Sprintf("failed to delete uptime test with id %s", id), err)
 	}
 
 	return nil

@@ -6,11 +6,12 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	statuscake "github.com/StatusCakeDev/statuscake-go"
+	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/internal/provider/diag"
 	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/internal/provider/validation"
 )
 
@@ -190,7 +191,7 @@ func resourceStatusCakeSSLCheckCreate(ctx context.Context, d *schema.ResourceDat
 
 	res, err := client.CreateSslTestWithData(ctx, body).Execute()
 	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to create SSL check: %w", err))
+		return intdiag.FromErr("failed to create SSL check", err)
 	}
 
 	d.SetId(res.Data.NewID)
@@ -209,35 +210,35 @@ func resourceStatusCakeSSLCheckRead(ctx context.Context, d *schema.ResourceData,
 		return nil
 	}
 	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to get SSL check with ID: %w", err))
+		return diag.Errorf("failed to get SSL check with ID: %s", err)
 	}
 
 	if err := d.Set("alert_config", flattenSSLCheckAlertConfig(res.Data, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read alert config: %+v", err))
+		return diag.Errorf("failed to read alert config: %s", err)
 	}
 
 	if err := d.Set("check_interval", flattenSSLCheckInterval(res.Data.CheckRate, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read check interval: %+v", err))
+		return diag.Errorf("failed to read check interval: %s", err)
 	}
 
 	if err := d.Set("contact_groups", flattenSSLCheckContactGroups(res.Data.ContactGroups, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read contact groups: %+v", err))
+		return diag.Errorf("failed to read contact groups: %s", err)
 	}
 
 	if err := d.Set("follow_redirects", flattenSSLCheckFollowRedirects(res.Data.FollowRedirects, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read follow redirects: %+v", err))
+		return diag.Errorf("failed to read follow redirects: %s", err)
 	}
 
 	if err := d.Set("monitored_resource", flattenSSLCheckMonitoredResource(res.Data, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read monitored resource: %+v", err))
+		return diag.Errorf("failed to read monitored resource: %s", err)
 	}
 
 	if err := d.Set("paused", flattenSSLCheckPaused(res.Data.Paused, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read paused: %+v", err))
+		return diag.Errorf("failed to read paused: %s", err)
 	}
 
 	if err := d.Set("user_agent", flattenSSLCheckUserAgent(res.Data.UserAgent, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read user agent: %+v", err))
+		return diag.Errorf("failed to read user agent: %s", err)
 	}
 
 	return nil
@@ -301,7 +302,7 @@ func resourceStatusCakeSSLCheckUpdate(ctx context.Context, d *schema.ResourceDat
 	log.Printf("[DEBUG] Request body: %+v", body)
 
 	if err := client.UpdateSslTestWithData(ctx, id, body).Execute(); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to update SSL check: %w", err))
+		return intdiag.FromErr(fmt.Sprintf("failed to update SSL check with id %s", id), err)
 	}
 
 	return resourceStatusCakeSSLCheckRead(ctx, d, meta)
@@ -314,7 +315,7 @@ func resourceStatusCakeSSLCheckDelete(ctx context.Context, d *schema.ResourceDat
 	log.Printf("[DEBUG] Deleting StatusCake SSL check with ID: %s", id)
 
 	if err := client.DeleteSslTest(ctx, id).Execute(); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to delete SSL check with id %s: %w", id, err))
+		return intdiag.FromErr(fmt.Sprintf("failed to delete SSL check with id %s", id), err)
 	}
 
 	return nil

@@ -6,11 +6,12 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	statuscake "github.com/StatusCakeDev/statuscake-go"
+	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/internal/provider/diag"
 	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/internal/provider/validation"
 )
 
@@ -175,7 +176,7 @@ func resourceStatusCakePagespeedCheckCreate(ctx context.Context, d *schema.Resou
 
 	res, err := client.CreatePagespeedTestWithData(ctx, body).Execute()
 	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to create pagespeed check: %w", err))
+		return intdiag.FromErr("failed to create pagespeed check", err)
 	}
 
 	d.SetId(res.Data.NewID)
@@ -194,35 +195,35 @@ func resourceStatusCakePagespeedCheckRead(ctx context.Context, d *schema.Resourc
 		return nil
 	}
 	if err != nil {
-		return diag.FromErr(fmt.Errorf("failed to get pagespeed check with ID: %w", err))
+		return diag.Errorf("failed to get pagespeed check with ID: %s", err)
 	}
 
 	if err := d.Set("alert_config", flattenPagespeedCheckAlertConfig(res.Data, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read alert config: %+v", err))
+		return diag.Errorf("failed to read alert config: %s", err)
 	}
 
 	if err := d.Set("check_interval", flattenPagespeedCheckInterval(res.Data.CheckRate, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read check interval: %+v", err))
+		return diag.Errorf("failed to read check interval: %s", err)
 	}
 
 	if err := d.Set("contact_groups", flattenPagespeedCheckContactGroups(res.Data.ContactGroups, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read contact groups: %+v", err))
+		return diag.Errorf("failed to read contact groups: %s", err)
 	}
 
 	if err := d.Set("location", flattenPagespeedCheckLocation(res.Data.Location, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read location: %+v", err))
+		return diag.Errorf("failed to read location: %s", err)
 	}
 
 	if err := d.Set("monitored_resource", flattenPagespeedCheckMonitoredResource(res.Data, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read monitored resource: %+v", err))
+		return diag.Errorf("failed to read monitored resource: %s", err)
 	}
 
 	if err := d.Set("name", flattenPagespeedCheckName(res.Data.Name, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read name: %+v", err))
+		return diag.Errorf("failed to read name: %s", err)
 	}
 
 	if err := d.Set("paused", flattenPagespeedCheckPaused(res.Data.Paused, d)); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to read paused: %+v", err))
+		return diag.Errorf("failed to read paused: %s", err)
 	}
 
 	return nil
@@ -286,7 +287,7 @@ func resourceStatusCakePagespeedCheckUpdate(ctx context.Context, d *schema.Resou
 	log.Printf("[DEBUG] Request body: %+v", body)
 
 	if err := client.UpdatePagespeedTestWithData(ctx, id, body).Execute(); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to update pagespeed check: %w", err))
+		return intdiag.FromErr(fmt.Sprintf("failed to update pagespeed check with id %s", id), err)
 	}
 
 	return resourceStatusCakePagespeedCheckRead(ctx, d, meta)
@@ -299,7 +300,7 @@ func resourceStatusCakePagespeedCheckDelete(ctx context.Context, d *schema.Resou
 	log.Printf("[DEBUG] Deleting StatusCake pagespeed check with ID: %s", id)
 
 	if err := client.DeletePagespeedTest(ctx, id).Execute(); err != nil {
-		return diag.FromErr(fmt.Errorf("failed to delete pagespeed check with id %s: %w", id, err))
+		return intdiag.FromErr(fmt.Sprintf("failed to delete pagespeed check with id %s", id), err)
 	}
 
 	return nil
