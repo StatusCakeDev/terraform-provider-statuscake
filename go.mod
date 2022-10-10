@@ -1,4 +1,4 @@
-module github.com/StatusCakeDev/terraform-provider-statuscake
+module github.com/StatusCakeDev/terraform-provider-statuscake/v2
 
 go 1.17
 

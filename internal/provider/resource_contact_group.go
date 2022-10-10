@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/internal/provider/diag"
-	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/internal/provider/validation"
+	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/diag"
+	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/validation"
 )
 
 func resourceStatusCakeContactGroup() *schema.Resource {
