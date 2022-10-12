@@ -53,14 +53,9 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 				ValidateFunc: intvalidation.Int32InSlice(statuscake.UptimeTestCheckRateValues()),
 			},
 			"confirmation": &schema.Schema{
-				Type:     schema.TypeInt,
-				Required: true,
-				// Cannot use `Default` because 0 is a valid value and Go interprets
-				// this as the zero-value for an integer, therefore forcing Terraform
-				// to set the default value.
-				DefaultFunc: func() (interface{}, error) {
-					return 2, nil
-				},
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      2,
 				Description:  "Number of confirmation servers to confirm downtime before an alert is triggered",
 				ValidateFunc: validation.IntBetween(0, 3),
 			},
@@ -162,8 +157,8 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 						"follow_redirects": &schema.Schema{
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Description: "Whether to follow redirects when testing. Disabled by default",
 							Default:     false,
+							Description: "Whether to follow redirects when testing. Disabled by default",
 						},
 						"request_headers": &schema.Schema{
 							Type:        schema.TypeMap,
@@ -356,6 +351,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 			"trigger_rate": &schema.Schema{
 				Type:         schema.TypeInt,
 				Optional:     true,
+				Default:      0,
 				Description:  "The number of minutes to wait before sending an alert",
 				ValidateFunc: validation.IntBetween(0, 60),
 			},
@@ -394,9 +390,8 @@ func resourceStatusCakeUptimeCheckCreate(ctx context.Context, d *schema.Resource
 	confirmation, err := expandUptimeCheckConfirmation(d.Get("confirmation"), d)
 	if err != nil {
 		return diag.FromErr(err)
-	} else if d.HasChange("confirmation") {
-		body["confirmation"] = confirmation
 	}
+	body["confirmation"] = confirmation
 
 	contactGroups, err := expandUptimeCheckContactGroups(d.Get("contact_groups"), d)
 	if err != nil {
@@ -471,9 +466,8 @@ func resourceStatusCakeUptimeCheckCreate(ctx context.Context, d *schema.Resource
 	triggerRate, err := expandUptimeCheckTriggerRate(d.Get("trigger_rate"), d)
 	if err != nil {
 		return diag.FromErr(err)
-	} else if d.HasChange("trigger_rate") {
-		body["trigger_rate"] = triggerRate
 	}
+	body["trigger_rate"] = triggerRate
 
 	log.Print("[DEBUG] Creating StatusCake uptime test")
 	log.Printf("[DEBUG] Request body: %+v", body)
