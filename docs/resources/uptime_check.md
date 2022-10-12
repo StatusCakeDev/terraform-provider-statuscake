@@ -126,10 +126,6 @@ Optional:
 <a id="nestedblock--http_check"></a>
 ### Nested Schema for `http_check`
 
-Required:
-
-- `status_codes` (Set of String) List of status codes that trigger an alert
-
 Optional:
 
 - `basic_authentication` (Block List, Max: 1) Basic Authentication (RFC7235) configuration block (see [below for nested schema](#nestedblock--http_check--basic_authentication))
@@ -141,6 +137,7 @@ Optional:
 - `request_method` (String) Type of HTTP check. Either HTTP, or HEAD
 - `request_payload` (Map of String) Payload submitted with the request. Setting this updates the check to use the HTTP POST verb. Only one of `request_payload` or `request_payload_raw` may be specified
 - `request_payload_raw` (String) Raw payload submitted with the request. Setting this updates the check to use the HTTP POST verb. Only one of `request_payload` or `request_payload_raw` may be specified
+- `status_codes` (Set of String) List of status codes that trigger an alert. If not specified then the default status codes are used. Once set, the default status codes cannot be restored and ommitting this field does not clear the attribute
 - `timeout` (Number) The number of seconds to wait to receive the first byte
 - `user_agent` (String) Custom user agent string set when testing
 - `validate_ssl` (Boolean) Whether to send an alert if the SSL certificate is soon to expire

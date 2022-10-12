@@ -194,9 +194,10 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 						},
 						"status_codes": &schema.Schema{
 							Type:        schema.TypeSet,
-							Required:    true,
+							Computed:    true,
+							Optional:    true,
 							MinItems:    1,
-							Description: "List of status codes that trigger an alert",
+							Description: "List of status codes that trigger an alert. If not specified then the default status codes are used. Once set, the default status codes cannot be restored and ommitting this field does not clear the attribute",
 							Elem: &schema.Schema{
 								Type:         schema.TypeString,
 								ValidateFunc: intvalidation.StringIsNumerical,
