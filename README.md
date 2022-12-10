@@ -7,11 +7,11 @@
 [![Support][support-badge]][support]
 
 [support-badge]: https://img.shields.io/badge/support-terraform--statuscake-623CE4.svg?style=flat
-[support]: https://www.statuscake.com/kb/knowledge-base/integrating-with-terraform/
+[support]: https://developers.statuscake.com/guides/terraform/introduction
 
 - Website: [terraform.io](https://terraform.io)
 - Tutorials: [learn.hashicorp.com](https://learn.hashicorp.com/terraform?track=getting-started#getting-started)
-- Support: [www.statuscake.com](https://www.statuscake.com/kb/knowledge-base/integrating-with-terraform/)
+- Support: [developers.statuscake.com](https://developers.statuscake.com/guides/terraform/introduction)
 - Chat: [gitter](https://gitter.im/hashicorp-terraform/Lobby)
 - Mailing List: [Google Groups](http://groups.google.com/group/terraform-tool)
 

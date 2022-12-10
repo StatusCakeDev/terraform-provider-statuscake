@@ -16,7 +16,6 @@ jobs:
         go:
         - "1.19"
         - "1.18"
-        - "1.17"
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-go@v1
