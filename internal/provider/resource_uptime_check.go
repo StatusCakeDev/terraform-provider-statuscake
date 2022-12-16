@@ -516,6 +516,10 @@ func resourceStatusCakeUptimeCheckRead(ctx context.Context, d *schema.ResourceDa
 		return diag.Errorf("failed to read HTTP check: %s", err)
 	}
 
+	if err := d.Set("icmp_check", flattenUptimeCheckICMPCheck(res.Data, d)); err != nil {
+		return diag.Errorf("failed to read ICMP check: %s", err)
+	}
+
 	if err := d.Set("monitored_resource", flattenUptimeCheckMonitoredResource(res.Data, d)); err != nil {
 		return diag.Errorf("failed to read monitored resource: %s", err)
 	}
@@ -1005,7 +1009,16 @@ func expandUptimeCheckICMPCheck(v interface{}, d *schema.ResourceData) (interfac
 }
 
 func flattenUptimeCheckICMPCheck(v interface{}, d *schema.ResourceData) interface{} {
-	return []interface{}{}
+	data := v.(statuscake.UptimeTest)
+	if data.TestType != statuscake.UptimeTestTypePING {
+		return nil
+	}
+
+	return []map[string]interface{}{
+		map[string]interface{}{
+			"enabled": true,
+		},
+	}
 }
 
 func expandUptimeCheckIncludeHeaders(v interface{}, d *schema.ResourceData) (interface{}, error) {
