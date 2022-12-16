@@ -11,16 +11,16 @@ friction within pull requests.
 ## Installation
 
 If you wish to work on the provider, you'll first need
-[Go](http://www.golang.org) installed on your machine (version 1.17+ is
+[Go](http://www.golang.org) installed on your machine (version 1.19+ is
 *required*). You'll also need to correctly setup a
 [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding
 `$GOPATH/bin` to your `$PATH`.
 
-To compile the provider, run `go build`. This will build the provider and
-should be moved to the `$GOPATH/bin` directory.
+To compile the provider, run `make build`. This will build the provider that
+should then be moved to the `$GOPATH/bin` directory.
 
 ```sh
-$ go build -o terraform-provider-statuscake
+$ make build
 $ mv terraform-provider-statuscake $GOPATH/bin/terraform-provider-statuscake
 ...
 ```
