@@ -93,11 +93,11 @@ func dataSourceStatusCakeMonitoringLocationsRead(fn monitoringLocationsFunc) sch
 	}
 }
 
-func listUptimeMonitoringLocations(ctx context.Context, client *statuscake.Client, location string) (statuscake.MonitoringLocations, error) {
+func listUptimeMonitoringLocations(ctx context.Context, client *statuscake.Client, regionCode string) (statuscake.MonitoringLocations, error) {
 	req := client.ListUptimeMonitoringLocations(ctx)
 
-	if len(location) != 0 {
-		req = req.Location(location)
+	if len(regionCode) != 0 {
+		req = req.RegionCode(regionCode)
 	}
 
 	return req.Execute()
