@@ -104,7 +104,6 @@ func resourceStatusCakeSSLCheck() *schema.Resource {
 						"address": &schema.Schema{
 							Type:         schema.TypeString,
 							Required:     true,
-							ForceNew:     true,
 							Description:  "URL of the server under test",
 							ValidateFunc: validation.IsURLWithHTTPorHTTPS,
 						},
