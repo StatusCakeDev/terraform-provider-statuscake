@@ -1,19 +1,23 @@
+---
 name: test
 on:
   pull_request:
   push:
     branches:
+    - gh-readonly-queue/**
     - master
 jobs:
   test:
+    name: Run tests
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os:
-        - "ubuntu-latest"
-        - "macos-latest"
+        - ubuntu-latest
+        - macos-latest
         go:
+        - "1.20"
         - "1.19"
         - "1.18"
     steps:

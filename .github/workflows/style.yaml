@@ -1,0 +1,23 @@
+---
+name: style
+on:
+  pull_request:
+  push:
+    branches:
+    - gh-readonly-queue/**
+jobs:
+  commit-message-style:
+    if: github.event_name == 'pull_request'
+    name: Check commit message style
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 19.x
+    - name: Install base config
+      run: npm install @commitlint/config-conventional
+    - name: Validate all commits
+      run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to HEAD --verbose

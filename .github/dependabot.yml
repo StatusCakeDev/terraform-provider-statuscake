@@ -1,12 +1,13 @@
 ---
 version: 2
 updates:
-  - package-ecosystem: "gomod"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "monthly"
+- package-ecosystem: github-actions
+  directory: /
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: ci(deps)
+- package-ecosystem: gomod
+  directory: /
+  commit-message:
+    prefix: chore(deps)
