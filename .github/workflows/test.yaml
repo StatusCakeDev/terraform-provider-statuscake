@@ -25,16 +25,7 @@ jobs:
     - uses: actions/setup-go@v3
       with:
         go-version: ${{ matrix.go }}
-    - uses: actions/cache@v3
-      with:
-        path: |
-          ~/go/pkg/mod
-          ~/.cache/go-build
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
-    - run: |
-        go test -v -cover ./...
+    - run: go test -v -cover ./...
       timeout-minutes: 10
       env:
         TF_ACC: "1"
