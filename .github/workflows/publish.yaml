@@ -1,12 +1,12 @@
 ---
-name: release
+name: publish
 on:
   push:
     tags:
     - v*
 jobs:
   goreleaser:
-    name: Publish to Terraform registry
+    name: Publish artefacts to GitHub
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
