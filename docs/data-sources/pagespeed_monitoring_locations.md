@@ -27,23 +27,23 @@ output "pagespeed_monitoring_location_ips" {
 
 ### Optional
 
-- **id** (String) The ID of this resource.
-- **region_code** (String) Location region code
+- `region_code` (String) Location region code
 
 ### Read-Only
 
-- **locations** (List of Object) List of monitoring locations (see [below for nested schema](#nestedatt--locations))
+- `id` (String) The ID of this resource.
+- `locations` (List of Object) List of monitoring locations (see [below for nested schema](#nestedatt--locations))
 
 <a id="nestedatt--locations"></a>
 ### Nested Schema for `locations`
 
 Read-Only:
 
-- **description** (String)
-- **ipv4** (String)
-- **ipv6** (String)
-- **region** (String)
-- **region_code** (String)
-- **status** (String)
+- `description` (String)
+- `ipv4` (String)
+- `ipv6` (String)
+- `region` (String)
+- `region_code` (String)
+- `status` (String)
 
 

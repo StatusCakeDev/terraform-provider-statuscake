@@ -36,17 +36,20 @@ resource "statuscake_maintenance_window" "weekends" {
 
 ### Required
 
-- **end** (String) End of the maintenance window (RFC3339 format)
-- **name** (String) Name of the maintenance window
-- **start** (String) Start of the maintenance window (RFC3339 format)
-- **timezone** (String) Standard timezone associated with this maintenance window
+- `end` (String) End of the maintenance window (RFC3339 format)
+- `name` (String) Name of the maintenance window
+- `start` (String) Start of the maintenance window (RFC3339 format)
+- `timezone` (String) Standard timezone associated with this maintenance window
 
 ### Optional
 
-- **id** (String) The ID of this resource.
-- **repeat_interval** (String) How often the maintenance window should occur
-- **tags** (Set of String) List of tags used to include matching uptime checks in this maintenance window
-- **tests** (Set of String) List of uptime check IDs explicitly included in this maintenance window
+- `repeat_interval` (String) How often the maintenance window should occur
+- `tags` (Set of String) List of tags used to include matching uptime checks in this maintenance window
+- `tests` (Set of String) List of uptime check IDs explicitly included in this maintenance window
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 ## Import
 

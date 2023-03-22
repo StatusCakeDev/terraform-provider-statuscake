@@ -33,15 +33,18 @@ output "operations_team_contact_group_id" {
 
 ### Required
 
-- **name** (String) Name of the contact group
+- `name` (String) Name of the contact group
 
 ### Optional
 
-- **email_addresses** (Set of String) List of email addresses
-- **id** (String) The ID of this resource.
-- **integrations** (Set of String) List of integration IDs
-- **mobile_numbers** (Set of String) List of international format mobile phone numbers
-- **ping_url** (String) URL or IP address of an endpoint to push uptime events. Currently this only supports HTTP GET endpoints
+- `email_addresses` (Set of String) List of email addresses
+- `integrations` (Set of String) List of integration IDs
+- `mobile_numbers` (Set of String) List of international format mobile phone numbers
+- `ping_url` (String) URL or IP address of an endpoint to push uptime events. Currently this only supports HTTP GET endpoints
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 ## Import
 

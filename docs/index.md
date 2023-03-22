@@ -23,12 +23,12 @@ provider "statuscake" {
 
 ### Required
 
-- **api_token** (String) The API token for operations. This can also be provided as an environment variable `STATUSCAKE_API_TOKEN`
+- `api_token` (String) The API token for operations. This can also be provided as an environment variable `STATUSCAKE_API_TOKEN`
 
 ### Optional
 
-- **max_backoff** (Number) Maximum backoff period in seconds after failed API calls. This can also be provided as an environment variable `STATUSCAKE_MAX_BACKOFF`
-- **min_backoff** (Number) Minimum backoff period in seconds after failed API calls. This can also be provided as an environment variable `STATUSCAKE_MIN_BACKOFF`
-- **retries** (Number) Maximum number of retries to perform when an API request fails. This can also be provided as an environment variable `STATUSCAKE_RETRIES`
-- **rps** (Number) RPS limit to apply when making calls to the API. This can also be provided as an environment variable `STATUSCAKE_RPS`
-- **statuscake_custom_endpoint** (String) Custom endpoint to which request will be made. This can also be provided as an environment variable `STATUCAKE_CUSTOM_ENDPOINT`
+- `max_backoff` (Number) Maximum backoff period in seconds after failed API calls. This can also be provided as an environment variable `STATUSCAKE_MAX_BACKOFF`
+- `min_backoff` (Number) Minimum backoff period in seconds after failed API calls. This can also be provided as an environment variable `STATUSCAKE_MIN_BACKOFF`
+- `retries` (Number) Maximum number of retries to perform when an API request fails. This can also be provided as an environment variable `STATUSCAKE_RETRIES`
+- `rps` (Number) RPS limit to apply when making calls to the API. This can also be provided as an environment variable `STATUSCAKE_RPS`
+- `statuscake_custom_endpoint` (String) Custom endpoint to which request will be made. This can also be provided as an environment variable `STATUCAKE_CUSTOM_ENDPOINT`

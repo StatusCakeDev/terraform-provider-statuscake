@@ -45,31 +45,34 @@ output "example_com_ssl_check_id" {
 
 ### Required
 
-- **alert_config** (Block List, Min: 1, Max: 1) Alert configuration block (see [below for nested schema](#nestedblock--alert_config))
-- **check_interval** (Number) Number of seconds between checks
-- **monitored_resource** (Block List, Min: 1, Max: 1) Monitored resource configuration block. The describes server under test (see [below for nested schema](#nestedblock--monitored_resource))
+- `alert_config` (Block List, Min: 1, Max: 1) Alert configuration block (see [below for nested schema](#nestedblock--alert_config))
+- `check_interval` (Number) Number of seconds between checks
+- `monitored_resource` (Block List, Min: 1, Max: 1) Monitored resource configuration block. The describes server under test (see [below for nested schema](#nestedblock--monitored_resource))
 
 ### Optional
 
-- **contact_groups** (Set of String) List of contact group IDs
-- **follow_redirects** (Boolean) Whether to follow redirects when testing. Disabled by default
-- **id** (String) The ID of this resource.
-- **paused** (Boolean) Whether the check should be run
-- **user_agent** (String) Custom user agent string set when testing
+- `contact_groups` (Set of String) List of contact group IDs
+- `follow_redirects` (Boolean) Whether to follow redirects when testing. Disabled by default
+- `paused` (Boolean) Whether the check should be run
+- `user_agent` (String) Custom user agent string set when testing
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--alert_config"></a>
 ### Nested Schema for `alert_config`
 
 Required:
 
-- **alert_at** (Set of Number) List representing when alerts should be sent (days). Must be exactly 3 numerical values
+- `alert_at` (Set of Number) List representing when alerts should be sent (days). Must be exactly 3 numerical values
 
 Optional:
 
-- **on_broken** (Boolean) Whether to enable alerts when SSL certificate issues are found
-- **on_expiry** (Boolean) Whether to enable alerts when the SSL certificate is to expire
-- **on_mixed** (Boolean) Whether to enable alerts when mixed content is found
-- **on_reminder** (Boolean) Whether to enable alert reminders
+- `on_broken` (Boolean) Whether to enable alerts when SSL certificate issues are found
+- `on_expiry` (Boolean) Whether to enable alerts when the SSL certificate is to expire
+- `on_mixed` (Boolean) Whether to enable alerts when mixed content is found
+- `on_reminder` (Boolean) Whether to enable alert reminders
 
 
 <a id="nestedblock--monitored_resource"></a>
@@ -77,11 +80,11 @@ Optional:
 
 Required:
 
-- **address** (String) URL of the server under test
+- `address` (String) URL of the server under test
 
 Optional:
 
-- **hostname** (String) Hostname of the server under test
+- `hostname` (String) Hostname of the server under test
 
 ## Import
 
