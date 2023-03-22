@@ -263,7 +263,6 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 						"address": &schema.Schema{
 							Type:         schema.TypeString,
 							Required:     true,
-							ForceNew:     true,
 							Description:  "URL, FQDN, or IP address of the server under test",
 							ValidateFunc: validation.StringIsNotEmpty,
 						},

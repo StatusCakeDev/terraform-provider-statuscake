@@ -89,7 +89,6 @@ func resourceStatusCakePagespeedCheck() *schema.Resource {
 						"address": &schema.Schema{
 							Type:         schema.TypeString,
 							Required:     true,
-							ForceNew:     true,
 							Description:  "URL or IP address of the website under test",
 							ValidateFunc: validation.Any(validation.IsURLWithHTTPorHTTPS, validation.IsIPAddress),
 						},
