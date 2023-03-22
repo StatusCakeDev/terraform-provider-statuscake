@@ -14,8 +14,8 @@ github.com/Microsoft/go-winio v0.4.16/go.mod h1:XB6nPKklQyQ7GC9LdcBEcBl8PF76WugX
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7 h1:YoJbenK9C67SkzkDfmQuVln04ygHj3vjZfd9FL+GmQQ=
 github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7/go.mod h1:z4/9nQmJSSwwds7ejkxaJwO37dru3geImFUdJlaLzQo=
-github.com/StatusCakeDev/statuscake-go v1.1.0 h1:LKetG6j/yiQQTyHbHvu/DGvrJaezLAdRYAOubtRXOn8=
-github.com/StatusCakeDev/statuscake-go v1.1.0/go.mod h1:YefpyhDUs1gLCKXG5F9pPcZAp3rk4JyNkb9dfHbgr1I=
+github.com/StatusCakeDev/statuscake-go v1.2.0 h1:FC1Yu6o2CJHm5hDAcMv1YD+o3neWbhVbYWbkSg3yx9o=
+github.com/StatusCakeDev/statuscake-go v1.2.0/go.mod h1:YefpyhDUs1gLCKXG5F9pPcZAp3rk4JyNkb9dfHbgr1I=
 github.com/acomagu/bufpipe v1.0.3 h1:fxAGrHZTgQ9w5QqVItgzwj235/uYZYgbXitB+dLupOk=
 github.com/acomagu/bufpipe v1.0.3/go.mod h1:mxdxdup/WdsKVreO5GpW4+M/1CE2sMG4jeGJ2sYmHc4=
 github.com/agext/levenshtein v1.2.3 h1:YB2fHEn0UJagG8T1rrWknE3ZQzWM06O8AMAatNn7lmo=
