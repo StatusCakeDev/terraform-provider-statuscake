@@ -9,5 +9,7 @@ updates:
     prefix: ci(deps)
 - package-ecosystem: gomod
   directory: /
+  schedule:
+    interval: weekly
   commit-message:
     prefix: chore(deps)
