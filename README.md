@@ -1,8 +1,9 @@
-<a href="https://terraform.io">
-  <img src=".github/terraform_logo.svg" alt="Terraform logo" title="Terraform" align="right" height="50" />
-</a>
-
 # StatusCake Terraform Provider ![test](https://github.com/StatusCakeDev/terraform-provider-statuscake/workflows/test/badge.svg)
+
+<a href="https://terraform.io">
+  <img src=".github/terraform_logo.svg" alt="Terraform logo" title="Terraform"
+    align="right" height="50" />
+</a>
 
 [![Support][support-badge]][support]
 
@@ -19,7 +20,7 @@
 
 You will need the following things properly installed on your computer.
 
-* [Terraform](https://www.terraform.io/downloads.html) (1.0+)
+- [Terraform](https://www.terraform.io/downloads.html) (1.0+)
 
 ## Installation
 
@@ -30,4 +31,4 @@ website](https://registry.terraform.io/providers/StatusCakeDev/statuscake/latest
 
 ## License
 
-This project is licensed under the [Mozilla Public License](LICENSE.md).
+This project is licensed under the [Mozilla Public License](LICENSE).

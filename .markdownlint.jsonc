@@ -1,0 +1,12 @@
+{
+  "default": true,
+  "no-inline-html": {
+    "allowed_elements": [
+      "a",
+      "img"
+    ]
+  },
+  "line-length": {
+    "tables": false
+  }
+}

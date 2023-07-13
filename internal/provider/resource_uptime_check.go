@@ -468,12 +468,12 @@ func resourceStatusCakeUptimeCheckCreate(ctx context.Context, d *schema.Resource
 	}
 	body["trigger_rate"] = triggerRate
 
-	log.Print("[DEBUG] Creating StatusCake uptime test")
+	log.Print("[DEBUG] Creating StatusCake uptime check")
 	log.Printf("[DEBUG] Request body: %+v", body)
 
 	res, err := client.CreateUptimeTestWithData(ctx, body).Execute()
 	if err != nil {
-		return intdiag.FromErr("failed to create uptime test", err)
+		return intdiag.FromErr("failed to create uptime check", err)
 	}
 
 	d.SetId(res.Data.NewID)
@@ -492,7 +492,7 @@ func resourceStatusCakeUptimeCheckRead(ctx context.Context, d *schema.ResourceDa
 		return nil
 	}
 	if err != nil {
-		return diag.Errorf("failed to get uptime test with ID: %s", err)
+		return diag.Errorf("failed to get uptime check with ID: %s", err)
 	}
 
 	if err := d.Set("check_interval", flattenUptimeCheckInterval(res.Data.CheckRate, d)); err != nil {
@@ -646,11 +646,11 @@ func resourceStatusCakeUptimeCheckUpdate(ctx context.Context, d *schema.Resource
 		body["trigger_rate"] = triggerRate
 	}
 
-	log.Printf("[DEBUG] Updating StatusCake uptime test with ID: %s", id)
+	log.Printf("[DEBUG] Updating StatusCake uptime check with ID: %s", id)
 	log.Printf("[DEBUG] Request body: %+v", body)
 
 	if err := client.UpdateUptimeTestWithData(ctx, id, body).Execute(); err != nil {
-		return intdiag.FromErr(fmt.Sprintf("failed to update uptime test with id %s", id), err)
+		return intdiag.FromErr(fmt.Sprintf("failed to update uptime check with id %s", id), err)
 	}
 
 	return resourceStatusCakeUptimeCheckRead(ctx, d, meta)
@@ -660,10 +660,10 @@ func resourceStatusCakeUptimeCheckDelete(ctx context.Context, d *schema.Resource
 	client := meta.(*statuscake.Client)
 	id := d.Id()
 
-	log.Printf("[DEBUG] Deleting StatusCake uptime test with ID: %s", id)
+	log.Printf("[DEBUG] Deleting StatusCake uptime check with ID: %s", id)
 
 	if err := client.DeleteUptimeTest(ctx, id).Execute(); err != nil {
-		return intdiag.FromErr(fmt.Sprintf("failed to delete uptime test with id %s", id), err)
+		return intdiag.FromErr(fmt.Sprintf("failed to delete uptime check with id %s", id), err)
 	}
 
 	return nil
