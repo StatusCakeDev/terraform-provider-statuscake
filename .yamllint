@@ -1,0 +1,12 @@
+# vi: ft=yaml
+---
+extends: default
+rules:
+  indentation:
+    indent-sequences: false
+    spaces: 2
+  line-length: false
+  quoted-strings:
+    quote-type: double
+    required: only-when-needed
+  truthy: disable

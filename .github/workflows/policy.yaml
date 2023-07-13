@@ -4,7 +4,12 @@ on:
   pull_request:
   push:
     branches:
+    # This is run on merge queue branches as there are jobs listed in this
+    # action that are often required in branch protection rules. Due to guards
+    # below certain jobs may not run in merge queue branches but will still
+    # return a status indicating a pass.
     - gh-readonly-queue/**
+    - master
 jobs:
   check-merge-commits:
     if: github.event_name == 'pull_request'
@@ -24,3 +29,30 @@ jobs:
           done
           exit 1
         fi
+  commit-message-style:
+    if: github.event_name == 'pull_request' && github.triggering_actor != 'dependabot[bot]'
+    name: Check commit message style
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 19.x
+    - name: Install base config
+      run: npm install @commitlint/config-conventional
+    - name: Validate all commits
+      run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to HEAD --verbose
+  yamllint:
+    name: Lint YAML documents
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    - name: Install yamllint
+      run: pip install --user yamllint
+    - name: Lint
+      run: yamllint .
