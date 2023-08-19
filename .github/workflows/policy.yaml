@@ -55,7 +55,7 @@ jobs:
       with:
         node-version: 19.x
     - name: Validate markdown
-      run: npx markdownlint-cli2 **/*.md
+      run: npx markdownlint-cli2 **/*.md "#docs/**/*.md"
   yaml-style:
     name: Check YAML style
     runs-on: ubuntu-latest

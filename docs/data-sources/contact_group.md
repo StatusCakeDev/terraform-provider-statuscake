@@ -36,5 +36,3 @@ output "developers_contact_group_name" {
 - `mobile_numbers` (Set of String) List of international format mobile phone numbers
 - `name` (String) Name of the contact group
 - `ping_url` (String) URL or IP address of an endpoint to push uptime events. Currently this only supports HTTP GET endpoints
-
-
