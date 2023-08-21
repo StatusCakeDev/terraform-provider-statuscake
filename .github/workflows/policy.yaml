@@ -42,10 +42,22 @@ jobs:
         node-version: 19.x
     - name: Install base config
       run: npm install @commitlint/config-conventional
-    - name: Validate all commits
+    - name: Validate commit messages
       run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to HEAD --verbose
-  yamllint:
-    name: Lint YAML documents
+  markdown-style:
+    name: Check markdown style
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 19.x
+    - name: Validate markdown
+      run: npx markdownlint-cli2 **/*.md "#docs/**/*.md"
+  yaml-style:
+    name: Check YAML style
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -54,5 +66,5 @@ jobs:
         python-version: "3.10"
     - name: Install yamllint
       run: pip install --user yamllint
-    - name: Lint
+    - name: Validate YAML
       run: yamllint .

@@ -45,5 +45,3 @@ Read-Only:
 - `region` (String)
 - `region_code` (String)
 - `status` (String)
-
-

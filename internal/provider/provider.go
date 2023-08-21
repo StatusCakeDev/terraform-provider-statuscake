@@ -68,6 +68,7 @@ func Provider() *schema.Provider {
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"statuscake_contact_group":      resourceStatusCakeContactGroup(),
+			"statuscake_heartbeat_check":    resourceStatusCakeHeartbeatCheck(),
 			"statuscake_maintenance_window": resourceStatusCakeMaintenanceWindow(),
 			"statuscake_pagespeed_check":    resourceStatusCakePagespeedCheck(),
 			"statuscake_ssl_check":          resourceStatusCakeSSLCheck(),
