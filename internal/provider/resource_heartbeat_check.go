@@ -28,11 +28,10 @@ func resourceStatusCakeHeartbeatCheck() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"period": &schema.Schema{
-				Type:         schema.TypeInt,
-				Required:     true,
-				Description:  "Number of seconds since the last ping before the check is considered down.",
-				ValidateFunc: validation.IntBetween(30, 172800),
+			"check_url": &schema.Schema{
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "URL of the heartbeat check",
 			},
 			"contact_groups": &schema.Schema{
 				Type:        schema.TypeSet,
@@ -45,16 +44,11 @@ func resourceStatusCakeHeartbeatCheck() *schema.Resource {
 			},
 			"monitored_resource": &schema.Schema{
 				Type:        schema.TypeList,
-				Required:    true,
+				Optional:    true,
 				MaxItems:    1,
 				Description: "Monitored resource configuration block. The describes server under test",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"address": &schema.Schema{
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "URL of the heartbeat check",
-						},
 						"host": &schema.Schema{
 							Type:         schema.TypeString,
 							Optional:     true,
@@ -76,6 +70,12 @@ func resourceStatusCakeHeartbeatCheck() *schema.Resource {
 				Default:     false,
 				Description: "Whether the check should be run",
 			},
+			"period": &schema.Schema{
+				Type:         schema.TypeInt,
+				Required:     true,
+				Description:  "Number of seconds since the last ping before the check is considered down.",
+				ValidateFunc: validation.IntBetween(30, 172800),
+			},
 			"tags": &schema.Schema{
 				Type:        schema.TypeSet,
 				Optional:    true,
@@ -92,13 +92,6 @@ func resourceStatusCakeHeartbeatCheck() *schema.Resource {
 func resourceStatusCakeHeartbeatCheckCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*statuscake.Client)
 	body := make(map[string]interface{})
-
-	period, err := expandHeartbeatCheckPeriod(d.Get("period"), d)
-	if err != nil {
-		return diag.FromErr(err)
-	} else if d.HasChange("period") {
-		body["period"] = period
-	}
 
 	contactGroups, err := expandHeartbeatCheckContactGroups(d.Get("contact_groups"), d)
 	if err != nil {
@@ -126,6 +119,13 @@ func resourceStatusCakeHeartbeatCheckCreate(ctx context.Context, d *schema.Resou
 		return diag.FromErr(err)
 	} else if d.HasChange("paused") {
 		body["paused"] = paused
+	}
+
+	period, err := expandHeartbeatCheckPeriod(d.Get("period"), d)
+	if err != nil {
+		return diag.FromErr(err)
+	} else if d.HasChange("period") {
+		body["period"] = period
 	}
 
 	tags, err := expandHeartbeatCheckTags(d.Get("tags"), d)
@@ -161,10 +161,6 @@ func resourceStatusCakeHeartbeatCheckRead(ctx context.Context, d *schema.Resourc
 		return diag.Errorf("failed to get heartbeat check with ID: %s", err)
 	}
 
-	if err := d.Set("period", flattenHeartbeatCheckPeriod(res.Data.Period, d)); err != nil {
-		return diag.Errorf("failed to read period: %s", err)
-	}
-
 	if err := d.Set("contact_groups", flattenHeartbeatCheckContactGroups(res.Data.ContactGroups, d)); err != nil {
 		return diag.Errorf("failed to read contact groups: %s", err)
 	}
@@ -181,6 +177,14 @@ func resourceStatusCakeHeartbeatCheckRead(ctx context.Context, d *schema.Resourc
 		return diag.Errorf("failed to read paused: %s", err)
 	}
 
+	if err := d.Set("period", flattenHeartbeatCheckPeriod(res.Data.Period, d)); err != nil {
+		return diag.Errorf("failed to read period: %s", err)
+	}
+
+	if err := d.Set("check_url", flattenHeartbeatCheckURL(res.Data.WebsiteURL, d)); err != nil {
+		return diag.Errorf("failed to read check URL: %s", err)
+	}
+
 	if err := d.Set("tags", flattenHeartbeatCheckTags(res.Data.Tags, d)); err != nil {
 		return diag.Errorf("failed to read tags: %s", err)
 	}
@@ -192,13 +196,6 @@ func resourceStatusCakeHeartbeatCheckUpdate(ctx context.Context, d *schema.Resou
 	client := meta.(*statuscake.Client)
 	body := make(map[string]interface{})
 	id := d.Id()
-
-	period, err := expandHeartbeatCheckPeriod(d.Get("period"), d)
-	if err != nil {
-		return diag.FromErr(err)
-	} else if d.HasChange("period") {
-		body["period"] = period
-	}
 
 	contactGroups, err := expandHeartbeatCheckContactGroups(d.Get("contact_groups"), d)
 	if err != nil {
@@ -226,6 +223,13 @@ func resourceStatusCakeHeartbeatCheckUpdate(ctx context.Context, d *schema.Resou
 		return diag.FromErr(err)
 	} else if d.HasChange("paused") {
 		body["paused"] = paused
+	}
+
+	period, err := expandHeartbeatCheckPeriod(d.Get("period"), d)
+	if err != nil {
+		return diag.FromErr(err)
+	} else if d.HasChange("period") {
+		body["period"] = period
 	}
 
 	tags, err := expandHeartbeatCheckTags(d.Get("tags"), d)
@@ -258,14 +262,6 @@ func resourceStatusCakeHeartbeatCheckDelete(ctx context.Context, d *schema.Resou
 	return nil
 }
 
-func expandHeartbeatCheckAddress(v interface{}, d *schema.ResourceData) (interface{}, error) {
-	return v.(string), nil
-}
-
-func flattenHeartbeatCheckAddress(v interface{}, d *schema.ResourceData) interface{} {
-	return v
-}
-
 func expandHeartbeatCheckContactGroups(v interface{}, d *schema.ResourceData) (interface{}, error) {
 	return convertStringSet(v.(*schema.Set)), nil
 }
@@ -286,7 +282,16 @@ func expandHeartbeatCheckMonitoredResource(v interface{}, d *schema.ResourceData
 	l := v.([]interface{})
 
 	if len(l) == 0 || l[0] == nil {
-		return map[string]interface{}{}, nil
+		// If the monitored resource is not set then return an empty map. This is
+		// necessary for the Heartbeat API only because the monitored_resource block
+		// is optional. Therefore when the entire block is removed then the "host"
+		// field is not set.
+		//
+		// At present this causes the API to return an error. This is a bug in the
+		// API and does have a fix ready to go.
+		return map[string]interface{}{
+			"host": "",
+		}, nil
 	}
 
 	original := l[0].(map[string]interface{})
@@ -304,10 +309,15 @@ func expandHeartbeatCheckMonitoredResource(v interface{}, d *schema.ResourceData
 
 func flattenHeartbeatCheckMonitoredResource(v interface{}, d *schema.ResourceData) interface{} {
 	data := v.(statuscake.HeartbeatTest)
+
+	host := flattenHeartbeatCheckHost(data.Host, d)
+	if !isValid(host) {
+		return nil
+	}
+
 	return []map[string]interface{}{
 		map[string]interface{}{
-			"address": flattenHeartbeatCheckAddress(data.WebsiteURL, d),
-			"host":    flattenHeartbeatCheckHost(data.Host, d),
+			"host": host,
 		},
 	}
 }
@@ -329,10 +339,14 @@ func flattenHeartbeatCheckPaused(v interface{}, d *schema.ResourceData) interfac
 }
 
 func expandHeartbeatCheckPeriod(v interface{}, d *schema.ResourceData) (interface{}, error) {
-	return v.(int), nil
+	return int32(v.(int)), nil
 }
 
 func flattenHeartbeatCheckPeriod(v interface{}, d *schema.ResourceData) interface{} {
+	return v
+}
+
+func flattenHeartbeatCheckURL(v interface{}, d *schema.ResourceData) interface{} {
 	return v
 }
 

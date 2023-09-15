@@ -178,7 +178,7 @@ func resourceStatusCakeSSLCheckCreate(ctx context.Context, d *schema.ResourceDat
 		body["paused"] = paused
 	}
 
-	userAgent, err := expandSSLCheckHostname(d.Get("user_agent"), d)
+	userAgent, err := expandSSLCheckUserAgent(d.Get("user_agent"), d)
 	if err != nil {
 		return diag.FromErr(err)
 	} else if d.HasChange("user_agent") {
@@ -290,7 +290,7 @@ func resourceStatusCakeSSLCheckUpdate(ctx context.Context, d *schema.ResourceDat
 		body["paused"] = paused
 	}
 
-	userAgent, err := expandSSLCheckHostname(d.Get("user_agent"), d)
+	userAgent, err := expandSSLCheckUserAgent(d.Get("user_agent"), d)
 	if err != nil {
 		return diag.FromErr(err)
 	} else if d.HasChange("user_agent") {

@@ -232,7 +232,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 				MaxItems:    1,
 				Description: "ICMP check configuration block. Only one of `dns_check`, `http_check`, `icmp_check`, and `tcp_check` may be specified",
 				// There are no special fields for an ICMP check. All that is required
-				// is the address which is supplied in the `monitoried_resource` block.
+				// is the address which is supplied in the `monitored_resource` block.
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": &schema.Schema{
