@@ -17,18 +17,19 @@ description: |-
 
 ### Required
 
-- `monitored_resource` (Block List, Min: 1, Max: 1) Monitored resource configuration block. The describes server under test (see [below for nested schema](#nestedblock--monitored_resource))
 - `name` (String) Name of the check
 - `period` (Number) Number of seconds since the last ping before the check is considered down.
 
 ### Optional
 
 - `contact_groups` (Set of String) List of contact group IDs
+- `monitored_resource` (Block List, Max: 1) Monitored resource configuration block. This describes the server under test (see [below for nested schema](#nestedblock--monitored_resource))
 - `paused` (Boolean) Whether the check should be run
 - `tags` (Set of String) List of tags
 
 ### Read-Only
 
+- `check_url` (String) URL of the heartbeat check
 - `id` (String) The ID of this resource.
 
 <a id="nestedblock--monitored_resource"></a>
@@ -37,10 +38,6 @@ description: |-
 Optional:
 
 - `host` (String) Name of the hosting provider
-
-Read-Only:
-
-- `address` (String) URL of the heartbeat check
 
 ## Import
 

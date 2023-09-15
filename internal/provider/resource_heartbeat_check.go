@@ -46,7 +46,7 @@ func resourceStatusCakeHeartbeatCheck() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				MaxItems:    1,
-				Description: "Monitored resource configuration block. The describes server under test",
+				Description: "Monitored resource configuration block. This describes the server under test",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"host": &schema.Schema{

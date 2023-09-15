@@ -78,7 +78,7 @@ output "example_com_uptime_check_id" {
 ### Required
 
 - `check_interval` (Number) Number of seconds between checks
-- `monitored_resource` (Block List, Min: 1, Max: 1) Monitored resource configuration block. The describes server under test (see [below for nested schema](#nestedblock--monitored_resource))
+- `monitored_resource` (Block List, Min: 1, Max: 1) Monitored resource configuration block. This describes the server under test (see [below for nested schema](#nestedblock--monitored_resource))
 - `name` (String) Name of the check
 
 ### Optional

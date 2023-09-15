@@ -98,7 +98,7 @@ func resourceStatusCakeSSLCheck() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: "Monitored resource configuration block. The describes server under test",
+				Description: "Monitored resource configuration block. This describes the server under test",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"address": &schema.Schema{
