@@ -98,7 +98,7 @@ func resourceStatusCakeSSLCheck() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: "Monitored resource configuration block. The describes server under test",
+				Description: "Monitored resource configuration block. This describes the server under test",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"address": &schema.Schema{
@@ -178,7 +178,7 @@ func resourceStatusCakeSSLCheckCreate(ctx context.Context, d *schema.ResourceDat
 		body["paused"] = paused
 	}
 
-	userAgent, err := expandSSLCheckHostname(d.Get("user_agent"), d)
+	userAgent, err := expandSSLCheckUserAgent(d.Get("user_agent"), d)
 	if err != nil {
 		return diag.FromErr(err)
 	} else if d.HasChange("user_agent") {
@@ -290,7 +290,7 @@ func resourceStatusCakeSSLCheckUpdate(ctx context.Context, d *schema.ResourceDat
 		body["paused"] = paused
 	}
 
-	userAgent, err := expandSSLCheckHostname(d.Get("user_agent"), d)
+	userAgent, err := expandSSLCheckUserAgent(d.Get("user_agent"), d)
 	if err != nil {
 		return diag.FromErr(err)
 	} else if d.HasChange("user_agent") {

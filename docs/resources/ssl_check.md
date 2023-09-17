@@ -47,7 +47,7 @@ output "example_com_ssl_check_id" {
 
 - `alert_config` (Block List, Min: 1, Max: 1) Alert configuration block (see [below for nested schema](#nestedblock--alert_config))
 - `check_interval` (Number) Number of seconds between checks
-- `monitored_resource` (Block List, Min: 1, Max: 1) Monitored resource configuration block. The describes server under test (see [below for nested schema](#nestedblock--monitored_resource))
+- `monitored_resource` (Block List, Min: 1, Max: 1) Monitored resource configuration block. This describes the server under test (see [below for nested schema](#nestedblock--monitored_resource))
 
 ### Optional
 
