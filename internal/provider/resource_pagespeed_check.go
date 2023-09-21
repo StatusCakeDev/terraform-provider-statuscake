@@ -32,7 +32,7 @@ func resourceStatusCakePagespeedCheck() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: "Alert configuration block. Omitting this block disabled all alerts",
+				Description: "Alert configuration block. An empty block disables all alerts",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"alert_bigger": &schema.Schema{
