@@ -48,8 +48,8 @@ output "operations_team_contact_group_id" {
 
 ## Import
 
-Contact groups can be imported using the contact group `id`, e.g.
+Import is supported using the following syntax:
 
-```
-$ terraform import statuscake_contact_group.operations_team 1234
+```shell
+terraform import statuscake_contact_group.operations_team 1234
 ```

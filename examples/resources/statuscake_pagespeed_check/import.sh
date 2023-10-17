@@ -1,0 +1,1 @@
+terraform import statuscake_pagespeed_check.example_com 1234

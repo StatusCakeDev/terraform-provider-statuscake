@@ -1,0 +1,1 @@
+terraform import statuscake_heartbeat_check.example_com 1234

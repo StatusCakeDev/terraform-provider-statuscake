@@ -213,8 +213,8 @@ Read-Only:
 
 ## Import
 
-Uptime checks can be imported using the check `id`, e.g.
+Import is supported using the following syntax:
 
-```
-$ terraform import statuscake_uptime_check.example_com 1234
+```shell
+terraform import statuscake_uptime_check.example_com 1234
 ```

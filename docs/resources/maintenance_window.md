@@ -52,8 +52,8 @@ resource "statuscake_maintenance_window" "weekends" {
 
 ## Import
 
-Maintenance windows can be imported using the maintenance window `id`, e.g.
+Import is supported using the following syntax:
 
-```
-$ terraform import statuscake_maintenance_window.weekends 1234
+```shell
+terraform import statuscake_maintenance_window.weekends 1234
 ```
