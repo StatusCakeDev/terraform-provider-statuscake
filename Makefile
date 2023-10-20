@@ -35,6 +35,10 @@ $(BINARY_NAME):
 	@echo "building provider"
 	@go build -o $@
 
+.PHONY: docs
+docs:
+	@go generate ./...
+
 .PHONY: testacc
 testacc:
 	TF_ACC=1 $(GO) test ./... -v $(TESTARGS) -timeout 120m
