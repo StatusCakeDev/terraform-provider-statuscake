@@ -14,17 +14,17 @@ description: |-
 
 ```terraform
 resource "statuscake_pagespeed_check" "example_com" {
-  name           = "Example"
   check_interval = 300
+  name           = "Example"
   region         = "UK"
-
-  contact_groups = [
-    statuscake_contact_group.operations_team.id
-  ]
 
   alert_config {
     alert_bigger = "5000"
   }
+
+  contact_groups = [
+    statuscake_contact_group.operations_team.id
+  ]
 
   monitored_resource {
     address = "https://www.example.com"
@@ -76,8 +76,8 @@ Required:
 
 ## Import
 
-Pagespeed checks can be imported using the check `id`, e.g.
+Import is supported using the following syntax:
 
-```
-$ terraform import statuscake_pagespeed_check.example_com 1234
+```shell
+terraform import statuscake_pagespeed_check.example_com 1234
 ```

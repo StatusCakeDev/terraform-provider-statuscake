@@ -14,9 +14,9 @@ description: |-
 
 ```terraform
 resource "statuscake_uptime_check" "example_com" {
-  name           = "Example"
   check_interval = 30
   confirmation   = 3
+  name           = "Example"
   trigger_rate   = 10
 
   contact_groups = [
@@ -31,8 +31,8 @@ resource "statuscake_uptime_check" "example_com" {
     validate_ssl     = true
 
     basic_authentication {
-      username = "username"
       password = "password"
+      username = "username"
     }
 
     content_matchers {
@@ -213,8 +213,8 @@ Read-Only:
 
 ## Import
 
-Uptime checks can be imported using the check `id`, e.g.
+Import is supported using the following syntax:
 
-```
-$ terraform import statuscake_uptime_check.example_com 1234
+```shell
+terraform import statuscake_uptime_check.example_com 1234
 ```
