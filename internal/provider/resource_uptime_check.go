@@ -46,20 +46,20 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"check_interval": &schema.Schema{
+			"check_interval": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				Description:  "Number of seconds between checks",
 				ValidateFunc: intvalidation.Int32InSlice(statuscake.UptimeTestCheckRateValues()),
 			},
-			"confirmation": &schema.Schema{
+			"confirmation": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      2,
 				Description:  "Number of confirmation servers to confirm downtime before an alert is triggered",
 				ValidateFunc: validation.IntBetween(0, 3),
 			},
-			"contact_groups": &schema.Schema{
+			"contact_groups": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of contact group IDs",
@@ -68,7 +68,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 					ValidateFunc: intvalidation.StringIsNumerical,
 				},
 			},
-			"dns_check": &schema.Schema{
+			"dns_check": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
@@ -76,7 +76,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 				Description: "DNS check configuration block. Only one of `dns_check`, `http_check`, `icmp_check`, and `tcp_check` may be specified",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"dns_ips": &schema.Schema{
+						"dns_ips": {
 							Type:        schema.TypeSet,
 							Required:    true,
 							MinItems:    1,
@@ -86,7 +86,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 								ValidateFunc: validation.IsIPAddress,
 							},
 						},
-						"dns_server": &schema.Schema{
+						"dns_server": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Description:  "FQDN or IP address of the nameserver to query",
@@ -96,7 +96,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 				},
 				ExactlyOneOf: []string{"dns_check", "http_check", "icmp_check", "tcp_check"},
 			},
-			"http_check": &schema.Schema{
+			"http_check": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
@@ -104,7 +104,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 				Description: "HTTP check configuration block. Only one of `dns_check`, `http_check`, `icmp_check`, and `tcp_check` may be specified",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"basic_authentication": &schema.Schema{
+						"basic_authentication": {
 							Type:        schema.TypeList,
 							Optional:    true,
 							MaxItems:    1,
@@ -113,26 +113,26 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 								Schema: basicAuthSchema(),
 							},
 						},
-						"content_matchers": &schema.Schema{
+						"content_matchers": {
 							Type:        schema.TypeList,
 							Optional:    true,
 							MaxItems:    1,
 							Description: "Content matcher configuration block. This is used to assert values within the response of the request",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"content": &schema.Schema{
+									"content": {
 										Type:         schema.TypeString,
 										Required:     true,
 										Description:  "String to look for within the response. Considered down if not found",
 										ValidateFunc: validation.StringIsNotEmpty,
 									},
-									"include_headers": &schema.Schema{
+									"include_headers": {
 										Type:        schema.TypeBool,
 										Optional:    true,
 										Default:     false,
 										Description: "Include header content in string match search",
 									},
-									"matcher": &schema.Schema{
+									"matcher": {
 										Type:         schema.TypeString,
 										Optional:     true,
 										Default:      matcherContains,
@@ -142,25 +142,25 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 								},
 							},
 						},
-						"enable_cookies": &schema.Schema{
+						"enable_cookies": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     false,
 							Description: "Whether to enable cookie storage",
 						},
-						"final_endpoint": &schema.Schema{
+						"final_endpoint": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Description:  "Specify where the redirect chain should end",
 							ValidateFunc: validation.StringIsNotEmpty,
 						},
-						"follow_redirects": &schema.Schema{
+						"follow_redirects": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     false,
 							Description: "Whether to follow redirects when testing. Disabled by default",
 						},
-						"request_headers": &schema.Schema{
+						"request_headers": {
 							Type:        schema.TypeMap,
 							Optional:    true,
 							Description: "Represents headers to be sent when making requests",
@@ -168,7 +168,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 								Type: schema.TypeString,
 							},
 						},
-						"request_method": &schema.Schema{
+						"request_method": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ForceNew:     true,
@@ -176,7 +176,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 							Description:  "Type of HTTP check. Either HTTP, or HEAD",
 							ValidateFunc: validation.StringInSlice([]string{"HTTP", "HEAD"}, false),
 						},
-						"request_payload": &schema.Schema{
+						"request_payload": {
 							Type:        schema.TypeMap,
 							Optional:    true,
 							Description: "Payload submitted with the request. Setting this updates the check to use the HTTP POST verb. Only one of `request_payload` or `request_payload_raw` may be specified",
@@ -185,14 +185,14 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 							},
 							ConflictsWith: []string{"http_check.0.request_payload_raw"},
 						},
-						"request_payload_raw": &schema.Schema{
+						"request_payload_raw": {
 							Type:          schema.TypeString,
 							Optional:      true,
 							Description:   "Raw payload submitted with the request. Setting this updates the check to use the HTTP POST verb. Only one of `request_payload` or `request_payload_raw` may be specified",
 							ValidateFunc:  validation.StringIsNotEmpty,
 							ConflictsWith: []string{"http_check.0.request_payload"},
 						},
-						"status_codes": &schema.Schema{
+						"status_codes": {
 							Type:        schema.TypeSet,
 							Computed:    true,
 							Optional:    true,
@@ -203,20 +203,20 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 								ValidateFunc: intvalidation.StringIsNumerical,
 							},
 						},
-						"timeout": &schema.Schema{
+						"timeout": {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							Default:      15,
 							Description:  "The number of seconds to wait to receive the first byte",
 							ValidateFunc: validation.IntBetween(5, 75),
 						},
-						"user_agent": &schema.Schema{
+						"user_agent": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Description:  "Custom user agent string set when testing",
 							ValidateFunc: validation.StringIsNotEmpty,
 						},
-						"validate_ssl": &schema.Schema{
+						"validate_ssl": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     false,
@@ -226,7 +226,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 				},
 				ExactlyOneOf: []string{"dns_check", "http_check", "icmp_check", "tcp_check"},
 			},
-			"icmp_check": &schema.Schema{
+			"icmp_check": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
@@ -236,7 +236,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 				// is the address which is supplied in the `monitored_resource` block.
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"enabled": &schema.Schema{
+						"enabled": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     true,
@@ -246,7 +246,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 				},
 				ExactlyOneOf: []string{"dns_check", "http_check", "icmp_check", "tcp_check"},
 			},
-			"locations": &schema.Schema{
+			"locations": {
 				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "List of assigned monitoring locations on which to run checks",
@@ -254,20 +254,20 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 					Schema: locationSchema(),
 				},
 			},
-			"monitored_resource": &schema.Schema{
+			"monitored_resource": {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
 				Description: "Monitored resource configuration block. This describes the server under test",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"address": &schema.Schema{
+						"address": {
 							Type:         schema.TypeString,
 							Required:     true,
 							Description:  "URL, FQDN, or IP address of the server under test",
 							ValidateFunc: validation.StringIsNotEmpty,
 						},
-						"host": &schema.Schema{
+						"host": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Description:  "Name of the hosting provider",
@@ -276,19 +276,19 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 					},
 				},
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				Description:  "Name of the check",
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
-			"paused": &schema.Schema{
+			"paused": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
 				Description: "Whether the check should be run",
 			},
-			"regions": &schema.Schema{
+			"regions": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "List of regions on which to run checks. The values required for this parameter can be retrieved from the `GET /v1/uptime-locations` endpoint",
@@ -297,7 +297,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 					ValidateFunc: validation.StringIsNotEmpty,
 				},
 			},
-			"tags": &schema.Schema{
+			"tags": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of tags",
@@ -306,7 +306,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 					ValidateFunc: validation.StringIsNotEmpty,
 				},
 			},
-			"tcp_check": &schema.Schema{
+			"tcp_check": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
@@ -314,7 +314,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 				Description: "TCP check configuration block. Only one of `dns_check`, `http_check`, `icmp_check`, and `tcp_check` may be specified",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"authentication": &schema.Schema{
+						"authentication": {
 							Type:        schema.TypeList,
 							Optional:    true,
 							MaxItems:    1,
@@ -323,13 +323,13 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 								Schema: basicAuthSchema(),
 							},
 						},
-						"port": &schema.Schema{
+						"port": {
 							Type:         schema.TypeInt,
 							Required:     true,
 							Description:  "Destination port for TCP checks",
 							ValidateFunc: validation.IsPortNumber,
 						},
-						"protocol": &schema.Schema{
+						"protocol": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							ForceNew:     true,
@@ -337,7 +337,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 							Description:  "Type of TCP check. Either SMTP, SSH or TCP",
 							ValidateFunc: validation.StringInSlice([]string{"SMTP", "SSH", "TCP"}, false),
 						},
-						"timeout": &schema.Schema{
+						"timeout": {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							Default:      15,
@@ -348,7 +348,7 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 				},
 				ExactlyOneOf: []string{"dns_check", "http_check", "icmp_check", "tcp_check"},
 			},
-			"trigger_rate": &schema.Schema{
+			"trigger_rate": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      0,
@@ -364,11 +364,11 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 // encapsulated within a function.
 func basicAuthSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"username": &schema.Schema{
+		"username": {
 			Type:     schema.TypeString,
 			Required: true,
 		},
-		"password": &schema.Schema{
+		"password": {
 			Type:      schema.TypeString,
 			Required:  true,
 			Sensitive: true,
@@ -818,7 +818,7 @@ func flattenUptimeCheckDNSCheck(v interface{}, d *schema.ResourceData) interface
 	}
 
 	return []map[string]interface{}{
-		map[string]interface{}{
+		{
 			"dns_ips":    flattenUptimeCheckDNSIPs(data.DNSIPs, d),
 			"dns_server": flattenUptimeCheckDNSServer(data.DNSServer, d),
 		},
@@ -976,7 +976,7 @@ func flattenUptimeCheckHTTPCheck(v interface{}, d *schema.ResourceData) interfac
 	}
 
 	return []map[string]interface{}{
-		map[string]interface{}{
+		{
 			"basic_authentication": flattenUptimeCheckBasicAuthentication(d.Get("http_check.0.basic_authentication"), d),
 			"content_matchers":     flattenUptimeCheckContentMatchers(data, d),
 			"enable_cookies":       flattenUptimeCheckEnableCookies(data.UseJAR, d),
@@ -1008,14 +1008,14 @@ func expandUptimeCheckICMPCheck(v interface{}, d *schema.ResourceData) (interfac
 	}, nil
 }
 
-func flattenUptimeCheckICMPCheck(v interface{}, d *schema.ResourceData) interface{} {
+func flattenUptimeCheckICMPCheck(v interface{}, _ *schema.ResourceData) interface{} {
 	data := v.(statuscake.UptimeTest)
 	if data.TestType != statuscake.UptimeTestTypePING {
 		return nil
 	}
 
 	return []map[string]interface{}{
-		map[string]interface{}{
+		{
 			"enabled": true,
 		},
 	}
@@ -1037,14 +1037,14 @@ func flattenUptimeCheckInterval(v interface{}, d *schema.ResourceData) interface
 	return int(v.(statuscake.UptimeTestCheckRate))
 }
 
-func expandUptimeCheckMatcher(v interface{}, d *schema.ResourceData) (interface{}, error) {
+func expandUptimeCheckMatcher(v interface{}, _ *schema.ResourceData) (interface{}, error) {
 	if v.(string) == matcherContains {
 		return false, nil
 	}
 	return true, nil
 }
 
-func flattenUptimeCheckMatcher(v interface{}, d *schema.ResourceData) interface{} {
+func flattenUptimeCheckMatcher(v interface{}, _ *schema.ResourceData) interface{} {
 	if !v.(bool) {
 		return matcherContains
 	}
@@ -1081,7 +1081,7 @@ func expandUptimeCheckMonitoredResource(v interface{}, d *schema.ResourceData) (
 func flattenUptimeCheckMonitoredResource(v interface{}, d *schema.ResourceData) interface{} {
 	data := v.(statuscake.UptimeTest)
 	return []map[string]interface{}{
-		map[string]interface{}{
+		{
 			"address": flattenUptimeCheckAddress(data.WebsiteURL, d),
 			"host":    flattenUptimeCheckHost(data.Host, d),
 		},
@@ -1128,7 +1128,7 @@ func flattenUptimeCheckProtocol(v interface{}, d *schema.ResourceData) interface
 	return v
 }
 
-func expandUptimeCheckRequestHeaders(v interface{}, d *schema.ResourceData) (interface{}, error) {
+func expandUptimeCheckRequestHeaders(v interface{}, _ *schema.ResourceData) (interface{}, error) {
 	if !isValid(v) {
 		return "", nil
 	}
@@ -1140,7 +1140,7 @@ func expandUptimeCheckRequestHeaders(v interface{}, d *schema.ResourceData) (int
 	return string(b), nil
 }
 
-func flattenUptimeCheckRequestHeaders(v interface{}, d *schema.ResourceData) interface{} {
+func flattenUptimeCheckRequestHeaders(v interface{}, _ *schema.ResourceData) interface{} {
 	var headers map[string]interface{}
 	if err := json.Unmarshal([]byte(stringElem(v)), &headers); err != nil {
 		return map[string]interface{}{}
@@ -1156,7 +1156,7 @@ func flattenUptimeCheckRequestMethod(v interface{}, d *schema.ResourceData) inte
 	return v
 }
 
-func expandUptimeCheckRequestPayload(v interface{}, d *schema.ResourceData) (interface{}, error) {
+func expandUptimeCheckRequestPayload(v interface{}, _ *schema.ResourceData) (interface{}, error) {
 	if !isValid(v) {
 		return "", nil
 	}
@@ -1168,7 +1168,7 @@ func expandUptimeCheckRequestPayload(v interface{}, d *schema.ResourceData) (int
 	return string(b), nil
 }
 
-func flattenUptimeCheckRequestPayload(v interface{}, d *schema.ResourceData) interface{} {
+func flattenUptimeCheckRequestPayload(v interface{}, _ *schema.ResourceData) interface{} {
 	var body map[string]interface{}
 	if err := json.Unmarshal([]byte(stringElem(v)), &body); err != nil {
 		return map[string]interface{}{}
@@ -1252,7 +1252,7 @@ func flattenUptimeCheckTCPCheck(v interface{}, d *schema.ResourceData) interface
 	}
 
 	return []map[string]interface{}{
-		map[string]interface{}{
+		{
 			"authentication": flattenUptimeCheckBasicAuthentication(d.Get("tcp_check.0.authentication"), d),
 			"port":           flattenUptimeCheckPort(data.Port, d),
 			"protocol":       flattenUptimeCheckProtocol(data.TestType, d),

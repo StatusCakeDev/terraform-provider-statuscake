@@ -29,32 +29,32 @@ func resourceStatusCakeMaintenanceWindow() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"end": &schema.Schema{
+			"end": {
 				Type:         schema.TypeString,
 				Required:     true,
 				Description:  "End of the maintenance window (RFC3339 format)",
 				ValidateFunc: validation.IsRFC3339Time,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				Description:  "Name of the maintenance window",
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
-			"repeat_interval": &schema.Schema{
+			"repeat_interval": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "never",
 				Description:  "How often the maintenance window should occur",
 				ValidateFunc: validation.StringInSlice(statuscake.MaintenanceWindowRepeatIntervalValues(), false),
 			},
-			"start": &schema.Schema{
+			"start": {
 				Type:         schema.TypeString,
 				Required:     true,
 				Description:  "Start of the maintenance window (RFC3339 format)",
 				ValidateFunc: validation.IsRFC3339Time,
 			},
-			"tags": &schema.Schema{
+			"tags": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of tags used to include matching uptime checks in this maintenance window",
@@ -64,7 +64,7 @@ func resourceStatusCakeMaintenanceWindow() *schema.Resource {
 				},
 				AtLeastOneOf: []string{"tags", "tests"},
 			},
-			"tests": &schema.Schema{
+			"tests": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of uptime check IDs explicitly included in this maintenance window",
@@ -74,7 +74,7 @@ func resourceStatusCakeMaintenanceWindow() *schema.Resource {
 				},
 				AtLeastOneOf: []string{"tags", "tests"},
 			},
-			"timezone": &schema.Schema{
+			"timezone": {
 				Type:         schema.TypeString,
 				Required:     true,
 				Description:  "Standard timezone associated with this maintenance window",
@@ -276,7 +276,7 @@ func expandMaintenanceWindowEnd(v interface{}, d *schema.ResourceData) (interfac
 	return time.Parse(time.RFC3339, v.(string))
 }
 
-func flattenMaintenanceWindowEnd(v interface{}, d *schema.ResourceData) interface{} {
+func flattenMaintenanceWindowEnd(v interface{}, _ *schema.ResourceData) interface{} {
 	t := v.(time.Time)
 	return t.Format(time.RFC3339)
 }
@@ -301,7 +301,7 @@ func expandMaintenanceWindowStart(v interface{}, d *schema.ResourceData) (interf
 	return time.Parse(time.RFC3339, v.(string))
 }
 
-func flattenMaintenanceWindowStart(v interface{}, d *schema.ResourceData) interface{} {
+func flattenMaintenanceWindowStart(v interface{}, _ *schema.ResourceData) interface{} {
 	t := v.(time.Time)
 	return t.Format(time.RFC3339)
 }

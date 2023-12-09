@@ -16,13 +16,13 @@ func dataSourceStatusCakeContactGroup() *schema.Resource {
 		ReadContext: dataSourceStatusCakeContactGroupRead,
 
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
+			"id": {
 				Type:         schema.TypeString,
 				Required:     true,
 				Description:  "Contact group ID",
 				ValidateFunc: intvalidation.StringIsNumerical,
 			},
-			"email_addresses": &schema.Schema{
+			"email_addresses": {
 				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "List of email addresses",
@@ -30,7 +30,7 @@ func dataSourceStatusCakeContactGroup() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
-			"integrations": &schema.Schema{
+			"integrations": {
 				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "List of integration IDs",
@@ -38,7 +38,7 @@ func dataSourceStatusCakeContactGroup() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
-			"mobile_numbers": &schema.Schema{
+			"mobile_numbers": {
 				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "List of international format mobile phone numbers",
@@ -46,12 +46,12 @@ func dataSourceStatusCakeContactGroup() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Name of the contact group",
 			},
-			"ping_url": &schema.Schema{
+			"ping_url": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "URL or IP address of an endpoint to push uptime events. Currently this only supports HTTP GET endpoints",

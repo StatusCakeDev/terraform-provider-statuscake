@@ -23,42 +23,42 @@ import (
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			"api_token": &schema.Schema{
+			"api_token": {
 				Type:         schema.TypeString,
 				Required:     true,
 				DefaultFunc:  schema.EnvDefaultFunc("STATUSCAKE_API_TOKEN", nil),
 				Description:  "The API token for operations. This can also be provided as an environment variable `STATUSCAKE_API_TOKEN`",
 				ValidateFunc: validation.StringMatch(regexp.MustCompile("[0-9a-zA-Z_]{20,30}"), "API token must only contain characters 0-9, a-zA-Z and underscores"),
 			},
-			"rps": &schema.Schema{
+			"rps": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				DefaultFunc:  schema.EnvDefaultFunc("STATUSCAKE_RPS", 4),
 				Description:  "RPS limit to apply when making calls to the API. This can also be provided as an environment variable `STATUSCAKE_RPS`",
 				ValidateFunc: validation.IntAtLeast(1),
 			},
-			"retries": &schema.Schema{
+			"retries": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				DefaultFunc:  schema.EnvDefaultFunc("STATUSCAKE_RETRIES", 3),
 				Description:  "Maximum number of retries to perform when an API request fails. This can also be provided as an environment variable `STATUSCAKE_RETRIES`",
 				ValidateFunc: validation.IntBetween(0, 10),
 			},
-			"min_backoff": &schema.Schema{
+			"min_backoff": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				DefaultFunc:  schema.EnvDefaultFunc("STATUSCAKE_MIN_BACKOFF", 1),
 				Description:  "Minimum backoff period in seconds after failed API calls. This can also be provided as an environment variable `STATUSCAKE_MIN_BACKOFF`",
 				ValidateFunc: validation.IntAtLeast(0),
 			},
-			"max_backoff": &schema.Schema{
+			"max_backoff": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				DefaultFunc:  schema.EnvDefaultFunc("STATUSCAKE_MAX_BACKOFF", 30),
 				Description:  "Maximum backoff period in seconds after failed API calls. This can also be provided as an environment variable `STATUSCAKE_MAX_BACKOFF`",
 				ValidateFunc: validation.IntAtLeast(1),
 			},
-			"statuscake_custom_endpoint": &schema.Schema{
+			"statuscake_custom_endpoint": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				DefaultFunc:  schema.EnvDefaultFunc("STATUCAKE_CUSTOM_ENDPOINT", nil),
@@ -84,7 +84,7 @@ func Provider() *schema.Provider {
 }
 
 // providerConfigure parses the config into the Terraform provider meta object.
-func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+func providerConfigure(_ context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	apiToken, ok := d.GetOk("api_token")
 	if !ok {
 		return nil, diag.Errorf("credentials are not set correctly")

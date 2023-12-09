@@ -28,7 +28,7 @@ func resourceStatusCakeContactGroup() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"email_addresses": &schema.Schema{
+			"email_addresses": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of email addresses",
@@ -37,7 +37,7 @@ func resourceStatusCakeContactGroup() *schema.Resource {
 					ValidateFunc: intvalidation.IsEmailAddress,
 				},
 			},
-			"integrations": &schema.Schema{
+			"integrations": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of integration IDs",
@@ -46,7 +46,7 @@ func resourceStatusCakeContactGroup() *schema.Resource {
 					ValidateFunc: intvalidation.StringIsNumerical,
 				},
 			},
-			"mobile_numbers": &schema.Schema{
+			"mobile_numbers": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of international format mobile phone numbers",
@@ -55,13 +55,13 @@ func resourceStatusCakeContactGroup() *schema.Resource {
 					ValidateFunc: validation.StringIsNotEmpty,
 				},
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				Description:  "Name of the contact group",
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
-			"ping_url": &schema.Schema{
+			"ping_url": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Description:  "URL or IP address of an endpoint to push uptime events. Currently this only supports HTTP GET endpoints",

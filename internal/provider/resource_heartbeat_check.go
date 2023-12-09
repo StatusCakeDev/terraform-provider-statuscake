@@ -28,12 +28,12 @@ func resourceStatusCakeHeartbeatCheck() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"check_url": &schema.Schema{
+			"check_url": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "URL of the heartbeat check",
 			},
-			"contact_groups": &schema.Schema{
+			"contact_groups": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of contact group IDs",
@@ -42,14 +42,14 @@ func resourceStatusCakeHeartbeatCheck() *schema.Resource {
 					ValidateFunc: intvalidation.StringIsNumerical,
 				},
 			},
-			"monitored_resource": &schema.Schema{
+			"monitored_resource": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				MaxItems:    1,
 				Description: "Monitored resource configuration block. This describes the server under test",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"host": &schema.Schema{
+						"host": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Description:  "Name of the hosting provider",
@@ -58,25 +58,25 @@ func resourceStatusCakeHeartbeatCheck() *schema.Resource {
 					},
 				},
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				Description:  "Name of the check",
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
-			"paused": &schema.Schema{
+			"paused": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
 				Description: "Whether the check should be run",
 			},
-			"period": &schema.Schema{
+			"period": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				Description:  "Number of seconds since the last ping before the check is considered down.",
 				ValidateFunc: validation.IntBetween(30, 172800),
 			},
-			"tags": &schema.Schema{
+			"tags": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of tags",
@@ -316,7 +316,7 @@ func flattenHeartbeatCheckMonitoredResource(v interface{}, d *schema.ResourceDat
 	}
 
 	return []map[string]interface{}{
-		map[string]interface{}{
+		{
 			"host": host,
 		},
 	}
