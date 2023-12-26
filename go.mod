@@ -6,7 +6,7 @@ require (
 	github.com/StatusCakeDev/statuscake-go v1.3.0
 	github.com/hashicorp/terraform-plugin-docs v0.16.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.29.0
-	golang.org/x/time v0.4.0
+	golang.org/x/time v0.5.0
 )
 
 require (
