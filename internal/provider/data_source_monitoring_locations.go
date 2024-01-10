@@ -18,13 +18,13 @@ func dataSourceStatusCakeMonitoringLocations(fn monitoringLocationsFunc) *schema
 		ReadContext: dataSourceStatusCakeMonitoringLocationsRead(fn),
 
 		Schema: map[string]*schema.Schema{
-			"region_code": &schema.Schema{
+			"region_code": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Description:  "Location region code",
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
-			"locations": &schema.Schema{
+			"locations": {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "List of monitoring locations",
@@ -41,32 +41,32 @@ func dataSourceStatusCakeMonitoringLocations(fn monitoringLocationsFunc) *schema
 // encapsulated within a function.
 func locationSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"description": &schema.Schema{
+		"description": {
 			Type:        schema.TypeString,
 			Computed:    true,
 			Description: "Location description",
 		},
-		"ipv4": &schema.Schema{
+		"ipv4": {
 			Type:        schema.TypeString,
 			Computed:    true,
 			Description: "Location IPv4 address",
 		},
-		"ipv6": &schema.Schema{
+		"ipv6": {
 			Type:        schema.TypeString,
 			Computed:    true,
 			Description: "Location IPv6 address",
 		},
-		"region": &schema.Schema{
+		"region": {
 			Type:        schema.TypeString,
 			Computed:    true,
 			Description: "Location region",
 		},
-		"region_code": &schema.Schema{
+		"region_code": {
 			Type:        schema.TypeString,
 			Computed:    true,
 			Description: "Location region code",
 		},
-		"status": &schema.Schema{
+		"status": {
 			Type:        schema.TypeString,
 			Computed:    true,
 			Description: "Location status",

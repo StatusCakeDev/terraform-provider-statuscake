@@ -28,14 +28,14 @@ func resourceStatusCakeSSLCheck() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"alert_config": &schema.Schema{
+			"alert_config": {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
 				Description: "Alert configuration block",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"alert_at": &schema.Schema{
+						"alert_at": {
 							Type:        schema.TypeSet,
 							Required:    true,
 							MinItems:    3,
@@ -46,25 +46,25 @@ func resourceStatusCakeSSLCheck() *schema.Resource {
 								ValidateFunc: validation.IntAtLeast(1),
 							},
 						},
-						"on_broken": &schema.Schema{
+						"on_broken": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     false,
 							Description: "Whether to enable alerts when SSL certificate issues are found",
 						},
-						"on_expiry": &schema.Schema{
+						"on_expiry": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     false,
 							Description: "Whether to enable alerts when the SSL certificate is to expire",
 						},
-						"on_mixed": &schema.Schema{
+						"on_mixed": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     false,
 							Description: "Whether to enable alerts when mixed content is found",
 						},
-						"on_reminder": &schema.Schema{
+						"on_reminder": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     false,
@@ -73,13 +73,13 @@ func resourceStatusCakeSSLCheck() *schema.Resource {
 					},
 				},
 			},
-			"check_interval": &schema.Schema{
+			"check_interval": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				Description:  "Number of seconds between checks",
 				ValidateFunc: intvalidation.Int32InSlice(statuscake.SSLTestCheckRateValues()),
 			},
-			"contact_groups": &schema.Schema{
+			"contact_groups": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of contact group IDs",
@@ -88,26 +88,26 @@ func resourceStatusCakeSSLCheck() *schema.Resource {
 					ValidateFunc: intvalidation.StringIsNumerical,
 				},
 			},
-			"follow_redirects": &schema.Schema{
+			"follow_redirects": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
 				Description: "Whether to follow redirects when testing. Disabled by default",
 			},
-			"monitored_resource": &schema.Schema{
+			"monitored_resource": {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
 				Description: "Monitored resource configuration block. This describes the server under test",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"address": &schema.Schema{
+						"address": {
 							Type:         schema.TypeString,
 							Required:     true,
 							Description:  "URL of the server under test",
 							ValidateFunc: validation.IsURLWithHTTPorHTTPS,
 						},
-						"hostname": &schema.Schema{
+						"hostname": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Description:  "Hostname of the server under test",
@@ -116,13 +116,13 @@ func resourceStatusCakeSSLCheck() *schema.Resource {
 					},
 				},
 			},
-			"paused": &schema.Schema{
+			"paused": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
 				Description: "Whether the check should be run",
 			},
-			"user_agent": &schema.Schema{
+			"user_agent": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Description:  "Custom user agent string set when testing",
@@ -387,7 +387,7 @@ func expandSSLCheckAlertConfig(v interface{}, d *schema.ResourceData) (interface
 func flattenSSLCheckAlertConfig(v interface{}, d *schema.ResourceData) interface{} {
 	original := v.(statuscake.SSLTest)
 	return []map[string]interface{}{
-		map[string]interface{}{
+		{
 			"alert_at":    flattenSSLCheckAlertAt(original.AlertAt, d),
 			"on_broken":   flattenSSLCheckOnBroken(original.AlertBroken, d),
 			"on_expiry":   flattenSSLCheckOnExpiry(original.AlertExpiry, d),
@@ -459,7 +459,7 @@ func expandSSLCheckMonitoredResource(v interface{}, d *schema.ResourceData) (int
 func flattenSSLCheckMonitoredResource(v interface{}, d *schema.ResourceData) interface{} {
 	data := v.(statuscake.SSLTest)
 	return []map[string]interface{}{
-		map[string]interface{}{
+		{
 			"address":  flattenSSLCheckAddress(data.WebsiteURL, d),
 			"hostname": flattenSSLCheckHostname(data.Hostname, d),
 		},

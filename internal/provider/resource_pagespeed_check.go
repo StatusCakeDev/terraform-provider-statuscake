@@ -28,28 +28,28 @@ func resourceStatusCakePagespeedCheck() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"alert_config": &schema.Schema{
+			"alert_config": {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
 				Description: "Alert configuration block. An empty block disables all alerts",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"alert_bigger": &schema.Schema{
+						"alert_bigger": {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							Default:      0,
 							Description:  "An alert will be sent if the size of the page is larger than this value (kb).",
 							ValidateFunc: validation.IntAtLeast(0),
 						},
-						"alert_slower": &schema.Schema{
+						"alert_slower": {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							Default:      0,
 							Description:  "An alert will be sent if the load time of the page exceeds this value (ms).",
 							ValidateFunc: validation.IntAtLeast(0),
 						},
-						"alert_smaller": &schema.Schema{
+						"alert_smaller": {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							Default:      0,
@@ -59,13 +59,13 @@ func resourceStatusCakePagespeedCheck() *schema.Resource {
 					},
 				},
 			},
-			"check_interval": &schema.Schema{
+			"check_interval": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				Description:  "Number of seconds between checks",
 				ValidateFunc: intvalidation.Int32InSlice(statuscake.PagespeedTestCheckRateValues()),
 			},
-			"contact_groups": &schema.Schema{
+			"contact_groups": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of contact group IDs",
@@ -74,19 +74,19 @@ func resourceStatusCakePagespeedCheck() *schema.Resource {
 					ValidateFunc: intvalidation.StringIsNumerical,
 				},
 			},
-			"location": &schema.Schema{
+			"location": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Assigned monitoring location on which checks will be run",
 			},
-			"monitored_resource": &schema.Schema{
+			"monitored_resource": {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
 				Description: "Monitored resource configuration block. This describes the server under test",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"address": &schema.Schema{
+						"address": {
 							Type:         schema.TypeString,
 							Required:     true,
 							Description:  "URL or IP address of the website under test",
@@ -95,19 +95,19 @@ func resourceStatusCakePagespeedCheck() *schema.Resource {
 					},
 				},
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				Description:  "Name of the check",
 				ValidateFunc: validation.StringIsNotEmpty,
 			},
-			"paused": &schema.Schema{
+			"paused": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
 				Description: "Whether the check should be run",
 			},
-			"region": &schema.Schema{
+			"region": {
 				Type:         schema.TypeString,
 				Required:     true,
 				Description:  "Region on which to run checks",
@@ -358,7 +358,7 @@ func expandPagespeedCheckAlertConfig(v interface{}, d *schema.ResourceData) (int
 func flattenPagespeedCheckAlertConfig(v interface{}, d *schema.ResourceData) interface{} {
 	original := v.(statuscake.PagespeedTest)
 	return []map[string]interface{}{
-		map[string]interface{}{
+		{
 			"alert_bigger":  flattenPagespeedCheckAlertBigger(original.AlertBigger, d),
 			"alert_slower":  flattenPagespeedCheckAlertSlower(original.AlertSlower, d),
 			"alert_smaller": flattenPagespeedCheckAlertSmaller(original.AlertSmaller, d),
@@ -425,7 +425,7 @@ func expandPagespeedCheckMonitoredResource(v interface{}, d *schema.ResourceData
 func flattenPagespeedCheckMonitoredResource(v interface{}, d *schema.ResourceData) interface{} {
 	data := v.(statuscake.PagespeedTest)
 	return []map[string]interface{}{
-		map[string]interface{}{
+		{
 			"address": flattenPagespeedCheckAddress(data.WebsiteURL, d),
 		},
 	}
