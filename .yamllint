@@ -2,6 +2,8 @@
 ---
 extends: default
 rules:
+  document-start:
+    level: error
   indentation:
     indent-sequences: false
     spaces: 2
