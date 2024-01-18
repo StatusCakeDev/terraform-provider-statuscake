@@ -1,0 +1,15 @@
+# vi: ft=yaml
+---
+formatter:
+  type: basic
+  # There is a "bug" with the behaviour of this option that will move file head
+  # comments below the initial document start. For example front matter is
+  # rearraged and therefore misplaced in the file. This behaviour prevents
+  # `ymalfmt` from being run in CI or automatically in code editors.
+  include_document_start: true
+  indentless_arrays: true
+  pad_line_comments: 2
+  # There is missing functionality in `yamlfmt` to remove redundantly quoted
+  # strings from YAML documents, and prefer the use of double quotes (or
+  # whatever is configured). This means further manual effort is required to
+  # correct files.
