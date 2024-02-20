@@ -13,7 +13,7 @@ description: |-
 ## Example Usage
 
 ```terraform
-resource "statuscake_uptime_check" "example" {
+resource "statuscake_heartbeat_check" "example" {
   name   = "Example"
   period = 1800
 
