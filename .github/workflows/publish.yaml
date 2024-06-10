@@ -20,7 +20,7 @@ jobs:
       with:
         gpg_private_key: ${{ secrets.ARTEFACT_SIGNING_KEY }}
         passphrase: ${{ secrets.ARTEFACT_SIGNING_KEY_PASSPHRASE }}
-    - uses: goreleaser/goreleaser-action@v5
+    - uses: goreleaser/goreleaser-action@v6
       with:
         version: latest
         args: release --clean
