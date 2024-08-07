@@ -8,6 +8,15 @@ If this application is found to be missing in functionality, please open an
 issue describing the proposed change - discussing changes ahead of time reduces
 friction within pull requests.
 
+## Prerequisites
+
+You will need the following things properly installed on your computer:
+
+- [Git](https://git-scm.com/)
+- [Go](https://go.dev/) (1.21+)
+- [Terraform](https://www.terraform.io/)
+- [Make](https://en.wikipedia.org/wiki/Make_(software)) (optional)
+
 ## Installation
 
 If you wish to work on the provider, you'll first need
@@ -20,9 +29,8 @@ To compile the provider, run `make build`. This will build the provider that
 should then be moved to the `$GOPATH/bin` directory.
 
 ```sh
-$ make build
-$ mv terraform-provider-statuscake $GOPATH/bin/terraform-provider-statuscake
-...
+make build
+mv terraform-provider-statuscake $GOPATH/bin/terraform-provider-statuscake
 ```
 
 To use the compiled binary the following must be included in the
@@ -30,7 +38,7 @@ To use the compiled binary the following must be included in the
 directory path to the `$GOPATH/bin` directory. This informs the Terraform CLI
 tool to lookup the binary in the `$GOPATH` instead of the regular location.
 
-```
+```terraformrc
 provider_installation {
   dev_overrides {
     "statuscakedev/statuscake" = "FULL_PATH_TO_GO_BIN"
@@ -39,40 +47,11 @@ provider_installation {
 }
 ```
 
-## Linting
-
-* `golint ./...`
-
 ## Running tests
 
-* `make testacc`
+- `make testacc`
 
 ## Making Changes
 
-Begin by creating a new branch. It is appreciated if branch names are written
-using kebab-case.
-
-```bash
-git checkout master
-git pull --rebase
-git checkout -b my-new-feature
-```
-
-Make the desired change, and ensure both the linter and test suite continue to
-pass. Once this requirement is met push the change back to a fork of this
-repository.
-
-```bash
-git push -u origin my-new-feature
-```
-
-Finally open a pull request through the GitHub UI. Upon doing this the CI suite
-will be run to ensure changes do not break current functionality.
-
-Changes are more likely to be approve if they:
-
-- Include tests for new functionality,
-- Are accompanied with a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html),
-- Contain few commits (preferably a single commit),
-- Do not contain merge commits,
-- Maintain backward compatibility.
+For additional contributing guidelines visit
+[devhandbook.org](https://devhandbook.org/contributing)

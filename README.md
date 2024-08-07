@@ -18,7 +18,7 @@
 
 ## Prerequisites
 
-You will need the following things properly installed on your computer.
+You will need the following things properly installed on your computer:
 
 - [Terraform](https://www.terraform.io/downloads.html) (1.0+)
 
