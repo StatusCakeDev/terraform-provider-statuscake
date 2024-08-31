@@ -6,8 +6,25 @@ permissions:
   contents: write
   pull-requests: write
 jobs:
-  dependabot:
+  check-can-auto-merge:
     if: github.triggering_actor == 'dependabot[bot]'
+    name: Check if PR can be auto-merged
+    runs-on: ubuntu-latest
+    outputs:
+      can-auto-merge: ${{ steps.can-auto-merge.outputs.approve }}
+    steps:
+    - uses: dependabot/fetch-metadata@v2.2.0
+      id: dependabot-metadata
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - if: |
+        steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' ||
+        steps.dependabot-metadata.outputs.package-ecosystem == 'github_actions'
+      id: can-auto-merge
+      run: echo "approve=true" >> $GITHUB_OUTPUT
+  auto-merge:
+    needs: check-can-auto-merge
+    if: needs.check-can-auto-merge.outputs.can-auto-merge == 'true'
     name: Auto merge pull requests
     runs-on: ubuntu-latest
     steps:
@@ -19,11 +36,12 @@ jobs:
       run: gh pr review --approve "${PR_URL}"
       env:
         PR_URL: ${{ github.event.pull_request.html_url }}
+        # Because we enforce PRs be approved by a code owner, a token from the
+        # operations team must be used to approve the PR. This token is from the
+        # StatusCake machine account which has been given membership to the
+        # operations team.
         GITHUB_TOKEN: ${{ secrets.MACHINE_TOKEN }}
-    - if: |
-        steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' ||
-        contains(github.event.pull_request.labels.*.name, 'github_actions')
-      name: Enable auto-merge for Dependabot PR
+    - name: Enable auto-merge for Dependabot PR
       run: gh pr merge --auto --merge "${PR_URL}"
       env:
         PR_URL: ${{ github.event.pull_request.html_url }}
