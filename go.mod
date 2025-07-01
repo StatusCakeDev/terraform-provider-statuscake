@@ -8,7 +8,7 @@ require (
 	github.com/StatusCakeDev/statuscake-go v1.3.0
 	github.com/hashicorp/terraform-plugin-docs v0.21.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
-	golang.org/x/time v0.6.0
+	golang.org/x/time v0.12.0
 )
 
 require (
