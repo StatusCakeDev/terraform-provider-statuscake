@@ -158,7 +158,7 @@ func resourceStatusCakeHeartbeatCheckRead(ctx context.Context, d *schema.Resourc
 		return nil
 	}
 	if err != nil {
-		return diag.Errorf("failed to get heartbeat check with ID: %s", err)
+		return diag.Errorf("failed to get heartbeat check with ID: %s, error: %s", id, err)
 	}
 
 	if err := d.Set("contact_groups", flattenHeartbeatCheckContactGroups(res.Data.ContactGroups, d)); err != nil {

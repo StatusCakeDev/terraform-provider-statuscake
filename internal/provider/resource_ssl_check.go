@@ -209,7 +209,7 @@ func resourceStatusCakeSSLCheckRead(ctx context.Context, d *schema.ResourceData,
 		return nil
 	}
 	if err != nil {
-		return diag.Errorf("failed to get SSL check with ID: %s", err)
+		return diag.Errorf("failed to get SSL check with ID: %s, error: %s", id, err)
 	}
 
 	if err := d.Set("alert_config", flattenSSLCheckAlertConfig(res.Data, d)); err != nil {

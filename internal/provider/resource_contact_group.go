@@ -134,7 +134,7 @@ func resourceStatusCakeContactGroupRead(ctx context.Context, d *schema.ResourceD
 		return nil
 	}
 	if err != nil {
-		return diag.Errorf("failed to get contact group with ID: %s", err)
+		return diag.Errorf("failed to get contact group with ID: %s, error: %s", id, err)
 	}
 
 	if err := d.Set("email_addresses", flattenContactGroupEmailAddresses(res.Data.EmailAddresses, d)); err != nil {

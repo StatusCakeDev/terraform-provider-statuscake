@@ -161,7 +161,7 @@ func resourceStatusCakeMaintenanceWindowRead(ctx context.Context, d *schema.Reso
 		return nil
 	}
 	if err != nil {
-		return diag.Errorf("failed to get maintenance window test with ID: %s", err)
+		return diag.Errorf("failed to get maintenance window test with ID: %s, error: %s", id, err)
 	}
 
 	if err := d.Set("end", flattenMaintenanceWindowEnd(res.Data.End, d)); err != nil {
