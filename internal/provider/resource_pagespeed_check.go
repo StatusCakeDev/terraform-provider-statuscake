@@ -194,7 +194,7 @@ func resourceStatusCakePagespeedCheckRead(ctx context.Context, d *schema.Resourc
 		return nil
 	}
 	if err != nil {
-		return diag.Errorf("failed to get pagespeed check with ID: %s", err)
+		return diag.Errorf("failed to get pagespeed check with ID: %s, error: %s", id, err)
 	}
 
 	if err := d.Set("alert_config", flattenPagespeedCheckAlertConfig(res.Data, d)); err != nil {

@@ -493,7 +493,7 @@ func resourceStatusCakeUptimeCheckRead(ctx context.Context, d *schema.ResourceDa
 		return nil
 	}
 	if err != nil {
-		return diag.Errorf("failed to get uptime check with ID: %s", err)
+		return diag.Errorf("failed to get uptime check with ID: %s, error: %s", id, err)
 	}
 
 	if err := d.Set("check_interval", flattenUptimeCheckInterval(res.Data.CheckRate, d)); err != nil {
