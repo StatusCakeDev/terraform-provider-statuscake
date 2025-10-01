@@ -1,12 +1,12 @@
 module github.com/StatusCakeDev/terraform-provider-statuscake/v2
 
-go 1.23.7
+go 1.24.0
 
 require (
 	github.com/StatusCakeDev/statuscake-go v1.3.0
 	github.com/hashicorp/terraform-plugin-docs v0.22.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.37.0
-	golang.org/x/time v0.12.0
+	golang.org/x/time v0.13.0
 )
 
 require (
