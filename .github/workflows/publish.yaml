@@ -16,7 +16,7 @@ jobs:
       with:
         go-version: "1.21"
     - id: import_gpg
-      uses: crazy-max/ghaction-import-gpg@v6
+      uses: crazy-max/ghaction-import-gpg@v7
       with:
         gpg_private_key: ${{ secrets.ARTEFACT_SIGNING_KEY }}
         passphrase: ${{ secrets.ARTEFACT_SIGNING_KEY_PASSPHRASE }}
