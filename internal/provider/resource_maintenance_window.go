@@ -7,13 +7,15 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/diag"
-	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/validation"
+	"github.com/StatusCakeDev/statuscake-go"
+
+	"github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/adapters"
+	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/diag"
+	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/validation"
 )
 
 func resourceStatusCakeMaintenanceWindow() *schema.Resource {
@@ -69,8 +71,8 @@ func resourceStatusCakeMaintenanceWindow() *schema.Resource {
 				Optional:    true,
 				Description: "List of uptime check IDs explicitly included in this maintenance window",
 				Elem: &schema.Schema{
-					Type:         schema.TypeString,
-					ValidateFunc: intvalidation.StringIsNumerical,
+					Type:             schema.TypeString,
+					ValidateDiagFunc: intvalidation.StringIsNumerical,
 				},
 				AtLeastOneOf: []string{"tags", "tests"},
 			},
@@ -85,7 +87,7 @@ func resourceStatusCakeMaintenanceWindow() *schema.Resource {
 }
 
 func resourceStatusCakeMaintenanceWindowCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	body := make(map[string]interface{})
 
 	end, err := expandMaintenanceWindowEnd(d.Get("end"), d)
@@ -142,7 +144,7 @@ func resourceStatusCakeMaintenanceWindowCreate(ctx context.Context, d *schema.Re
 
 	res, err := client.CreateMaintenanceWindowWithData(ctx, body).Execute()
 	if err != nil {
-		return intdiag.FromErr("failed to create maintenance window", err)
+		return intdiag.WrapErr("failed to create maintenance window", err)
 	}
 
 	d.SetId(res.Data.NewID)
@@ -150,7 +152,7 @@ func resourceStatusCakeMaintenanceWindowCreate(ctx context.Context, d *schema.Re
 }
 
 func resourceStatusCakeMaintenanceWindowRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	id := d.Id()
 
 	res, err := client.GetMaintenanceWindow(ctx, id).Execute()
@@ -196,7 +198,7 @@ func resourceStatusCakeMaintenanceWindowRead(ctx context.Context, d *schema.Reso
 }
 
 func resourceStatusCakeMaintenanceWindowUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	body := make(map[string]interface{})
 	id := d.Id()
 
@@ -253,20 +255,20 @@ func resourceStatusCakeMaintenanceWindowUpdate(ctx context.Context, d *schema.Re
 	log.Printf("[DEBUG] Request body: %+v", body)
 
 	if err := client.UpdateMaintenanceWindowWithData(ctx, id, body).Execute(); err != nil {
-		return intdiag.FromErr(fmt.Sprintf("failed to update maintenance window with id %s", id), err)
+		return intdiag.WrapErr(fmt.Sprintf("failed to update maintenance window with id %s", id), err)
 	}
 
 	return resourceStatusCakeMaintenanceWindowRead(ctx, d, meta)
 }
 
 func resourceStatusCakeMaintenanceWindowDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	id := d.Id()
 
 	log.Printf("[DEBUG] Deleting StatusCake maintenance window with ID: %s", id)
 
 	if err := client.DeleteMaintenanceWindow(ctx, id).Execute(); err != nil {
-		return intdiag.FromErr(fmt.Sprintf("failed to delete maintenance window with id %s", id), err)
+		return intdiag.WrapErr(fmt.Sprintf("failed to delete maintenance window with id %s", id), err)
 	}
 
 	return nil

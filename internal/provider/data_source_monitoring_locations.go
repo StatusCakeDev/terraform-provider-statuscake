@@ -5,10 +5,13 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+
+	"github.com/StatusCakeDev/statuscake-go"
+
+	"github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/adapters"
 )
 
 type monitoringLocationsFunc func(context.Context, *statuscake.Client, string) (statuscake.MonitoringLocations, error)
@@ -76,7 +79,7 @@ func locationSchema() map[string]*schema.Schema {
 
 func dataSourceStatusCakeMonitoringLocationsRead(fn monitoringLocationsFunc) schema.ReadContextFunc {
 	return func(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-		client := meta.(*statuscake.Client)
+		client := meta.(*adapters.Client).GetClient()
 
 		res, err := fn(ctx, client, d.Get("region_code").(string))
 		if err != nil {

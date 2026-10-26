@@ -1,0 +1,548 @@
+{
+  "provider": {
+    "attributes": {
+      "api_token": {
+        "type": "tftypes.String",
+        "required": true
+      },
+      "max_backoff": {
+        "type": "tftypes.Number",
+        "optional": true
+      },
+      "min_backoff": {
+        "type": "tftypes.Number",
+        "optional": true
+      },
+      "retries": {
+        "type": "tftypes.Number",
+        "optional": true
+      },
+      "rps": {
+        "type": "tftypes.Number",
+        "optional": true
+      }
+    }
+  },
+  "resources": {
+    "statuscake_contact_group": {
+      "attributes": {
+        "email_addresses": {
+          "type": "tftypes.Set[tftypes.String]",
+          "optional": true
+        },
+        "id": {
+          "type": "tftypes.String",
+          "optional": true,
+          "computed": true
+        },
+        "integrations": {
+          "type": "tftypes.Set[tftypes.String]",
+          "optional": true
+        },
+        "mobile_numbers": {
+          "type": "tftypes.Set[tftypes.String]",
+          "optional": true
+        },
+        "name": {
+          "type": "tftypes.String",
+          "required": true
+        },
+        "ping_url": {
+          "type": "tftypes.String",
+          "optional": true
+        }
+      }
+    },
+    "statuscake_heartbeat_check": {
+      "attributes": {
+        "check_url": {
+          "type": "tftypes.String",
+          "computed": true
+        },
+        "contact_groups": {
+          "type": "tftypes.Set[tftypes.String]",
+          "optional": true
+        },
+        "id": {
+          "type": "tftypes.String",
+          "optional": true,
+          "computed": true
+        },
+        "name": {
+          "type": "tftypes.String",
+          "required": true
+        },
+        "paused": {
+          "type": "tftypes.Bool",
+          "optional": true
+        },
+        "period": {
+          "type": "tftypes.Number",
+          "required": true
+        },
+        "tags": {
+          "type": "tftypes.Set[tftypes.String]",
+          "optional": true
+        }
+      },
+      "blocks": {
+        "monitored_resource": {
+          "nesting": "LIST",
+          "max_items": 1,
+          "attributes": {
+            "host": {
+              "type": "tftypes.String",
+              "optional": true
+            }
+          }
+        }
+      }
+    },
+    "statuscake_maintenance_window": {
+      "attributes": {
+        "end": {
+          "type": "tftypes.String",
+          "required": true
+        },
+        "id": {
+          "type": "tftypes.String",
+          "optional": true,
+          "computed": true
+        },
+        "name": {
+          "type": "tftypes.String",
+          "required": true
+        },
+        "repeat_interval": {
+          "type": "tftypes.String",
+          "optional": true
+        },
+        "start": {
+          "type": "tftypes.String",
+          "required": true
+        },
+        "tags": {
+          "type": "tftypes.Set[tftypes.String]",
+          "optional": true
+        },
+        "tests": {
+          "type": "tftypes.Set[tftypes.String]",
+          "optional": true
+        },
+        "timezone": {
+          "type": "tftypes.String",
+          "required": true
+        }
+      }
+    },
+    "statuscake_pagespeed_check": {
+      "attributes": {
+        "check_interval": {
+          "type": "tftypes.Number",
+          "required": true
+        },
+        "contact_groups": {
+          "type": "tftypes.Set[tftypes.String]",
+          "optional": true
+        },
+        "id": {
+          "type": "tftypes.String",
+          "optional": true,
+          "computed": true
+        },
+        "location": {
+          "type": "tftypes.String",
+          "computed": true
+        },
+        "name": {
+          "type": "tftypes.String",
+          "required": true
+        },
+        "paused": {
+          "type": "tftypes.Bool",
+          "optional": true
+        },
+        "region": {
+          "type": "tftypes.String",
+          "required": true
+        }
+      },
+      "blocks": {
+        "alert_config": {
+          "nesting": "LIST",
+          "min_items": 1,
+          "max_items": 1,
+          "attributes": {
+            "alert_bigger": {
+              "type": "tftypes.Number",
+              "optional": true
+            },
+            "alert_slower": {
+              "type": "tftypes.Number",
+              "optional": true
+            },
+            "alert_smaller": {
+              "type": "tftypes.Number",
+              "optional": true
+            }
+          }
+        },
+        "monitored_resource": {
+          "nesting": "LIST",
+          "min_items": 1,
+          "max_items": 1,
+          "attributes": {
+            "address": {
+              "type": "tftypes.String",
+              "required": true
+            }
+          }
+        }
+      }
+    },
+    "statuscake_ssl_check": {
+      "attributes": {
+        "check_interval": {
+          "type": "tftypes.Number",
+          "required": true
+        },
+        "contact_groups": {
+          "type": "tftypes.Set[tftypes.String]",
+          "optional": true
+        },
+        "follow_redirects": {
+          "type": "tftypes.Bool",
+          "optional": true
+        },
+        "id": {
+          "type": "tftypes.String",
+          "optional": true,
+          "computed": true
+        },
+        "paused": {
+          "type": "tftypes.Bool",
+          "optional": true
+        },
+        "user_agent": {
+          "type": "tftypes.String",
+          "optional": true
+        }
+      },
+      "blocks": {
+        "alert_config": {
+          "nesting": "LIST",
+          "min_items": 1,
+          "max_items": 1,
+          "attributes": {
+            "alert_at": {
+              "type": "tftypes.Set[tftypes.Number]",
+              "required": true
+            },
+            "on_broken": {
+              "type": "tftypes.Bool",
+              "optional": true
+            },
+            "on_expiry": {
+              "type": "tftypes.Bool",
+              "optional": true
+            },
+            "on_mixed": {
+              "type": "tftypes.Bool",
+              "optional": true
+            },
+            "on_reminder": {
+              "type": "tftypes.Bool",
+              "optional": true
+            }
+          }
+        },
+        "monitored_resource": {
+          "nesting": "LIST",
+          "min_items": 1,
+          "max_items": 1,
+          "attributes": {
+            "address": {
+              "type": "tftypes.String",
+              "required": true
+            },
+            "hostname": {
+              "type": "tftypes.String",
+              "optional": true
+            }
+          }
+        }
+      }
+    },
+    "statuscake_uptime_check": {
+      "attributes": {
+        "check_interval": {
+          "type": "tftypes.Number",
+          "required": true
+        },
+        "confirmation": {
+          "type": "tftypes.Number",
+          "optional": true
+        },
+        "contact_groups": {
+          "type": "tftypes.Set[tftypes.String]",
+          "optional": true
+        },
+        "id": {
+          "type": "tftypes.String",
+          "optional": true,
+          "computed": true
+        },
+        "locations": {
+          "type": "tftypes.Set[tftypes.Object[\"description\":tftypes.String, \"ipv4\":tftypes.String, \"ipv6\":tftypes.String, \"region\":tftypes.String, \"region_code\":tftypes.String, \"status\":tftypes.String]]",
+          "computed": true
+        },
+        "name": {
+          "type": "tftypes.String",
+          "required": true
+        },
+        "paused": {
+          "type": "tftypes.Bool",
+          "optional": true
+        },
+        "regions": {
+          "type": "tftypes.List[tftypes.String]",
+          "optional": true
+        },
+        "tags": {
+          "type": "tftypes.Set[tftypes.String]",
+          "optional": true
+        },
+        "trigger_rate": {
+          "type": "tftypes.Number",
+          "optional": true
+        }
+      },
+      "blocks": {
+        "dns_check": {
+          "nesting": "LIST",
+          "max_items": 1,
+          "attributes": {
+            "dns_ips": {
+              "type": "tftypes.Set[tftypes.String]",
+              "required": true
+            },
+            "dns_server": {
+              "type": "tftypes.String",
+              "optional": true
+            }
+          }
+        },
+        "http_check": {
+          "nesting": "LIST",
+          "max_items": 1,
+          "attributes": {
+            "enable_cookies": {
+              "type": "tftypes.Bool",
+              "optional": true
+            },
+            "final_endpoint": {
+              "type": "tftypes.String",
+              "optional": true
+            },
+            "follow_redirects": {
+              "type": "tftypes.Bool",
+              "optional": true
+            },
+            "request_headers": {
+              "type": "tftypes.Map[tftypes.String]",
+              "optional": true
+            },
+            "request_method": {
+              "type": "tftypes.String",
+              "optional": true
+            },
+            "request_payload": {
+              "type": "tftypes.Map[tftypes.String]",
+              "optional": true
+            },
+            "request_payload_raw": {
+              "type": "tftypes.String",
+              "optional": true
+            },
+            "status_codes": {
+              "type": "tftypes.Set[tftypes.String]",
+              "optional": true,
+              "computed": true
+            },
+            "timeout": {
+              "type": "tftypes.Number",
+              "optional": true
+            },
+            "user_agent": {
+              "type": "tftypes.String",
+              "optional": true
+            },
+            "validate_ssl": {
+              "type": "tftypes.Bool",
+              "optional": true
+            }
+          },
+          "blocks": {
+            "basic_authentication": {
+              "nesting": "LIST",
+              "max_items": 1,
+              "attributes": {
+                "password": {
+                  "type": "tftypes.String",
+                  "required": true,
+                  "sensitive": true
+                },
+                "username": {
+                  "type": "tftypes.String",
+                  "required": true
+                }
+              }
+            },
+            "content_matchers": {
+              "nesting": "LIST",
+              "max_items": 1,
+              "attributes": {
+                "content": {
+                  "type": "tftypes.String",
+                  "required": true
+                },
+                "include_headers": {
+                  "type": "tftypes.Bool",
+                  "optional": true
+                },
+                "matcher": {
+                  "type": "tftypes.String",
+                  "optional": true
+                }
+              }
+            }
+          }
+        },
+        "icmp_check": {
+          "nesting": "LIST",
+          "max_items": 1,
+          "attributes": {
+            "enabled": {
+              "type": "tftypes.Bool",
+              "optional": true
+            }
+          }
+        },
+        "monitored_resource": {
+          "nesting": "LIST",
+          "min_items": 1,
+          "max_items": 1,
+          "attributes": {
+            "address": {
+              "type": "tftypes.String",
+              "required": true
+            },
+            "host": {
+              "type": "tftypes.String",
+              "optional": true
+            }
+          }
+        },
+        "tcp_check": {
+          "nesting": "LIST",
+          "max_items": 1,
+          "attributes": {
+            "port": {
+              "type": "tftypes.Number",
+              "required": true
+            },
+            "protocol": {
+              "type": "tftypes.String",
+              "optional": true
+            },
+            "timeout": {
+              "type": "tftypes.Number",
+              "optional": true
+            }
+          },
+          "blocks": {
+            "authentication": {
+              "nesting": "LIST",
+              "max_items": 1,
+              "attributes": {
+                "password": {
+                  "type": "tftypes.String",
+                  "required": true,
+                  "sensitive": true
+                },
+                "username": {
+                  "type": "tftypes.String",
+                  "required": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "data_sources": {
+    "statuscake_contact_group": {
+      "attributes": {
+        "email_addresses": {
+          "type": "tftypes.Set[tftypes.String]",
+          "computed": true
+        },
+        "id": {
+          "type": "tftypes.String",
+          "required": true
+        },
+        "integrations": {
+          "type": "tftypes.Set[tftypes.String]",
+          "computed": true
+        },
+        "mobile_numbers": {
+          "type": "tftypes.Set[tftypes.String]",
+          "computed": true
+        },
+        "name": {
+          "type": "tftypes.String",
+          "computed": true
+        },
+        "ping_url": {
+          "type": "tftypes.String",
+          "computed": true
+        }
+      }
+    },
+    "statuscake_pagespeed_monitoring_locations": {
+      "attributes": {
+        "id": {
+          "type": "tftypes.String",
+          "optional": true,
+          "computed": true
+        },
+        "locations": {
+          "type": "tftypes.List[tftypes.Object[\"description\":tftypes.String, \"ipv4\":tftypes.String, \"ipv6\":tftypes.String, \"region\":tftypes.String, \"region_code\":tftypes.String, \"status\":tftypes.String]]",
+          "computed": true
+        },
+        "region_code": {
+          "type": "tftypes.String",
+          "optional": true
+        }
+      }
+    },
+    "statuscake_uptime_monitoring_locations": {
+      "attributes": {
+        "id": {
+          "type": "tftypes.String",
+          "optional": true,
+          "computed": true
+        },
+        "locations": {
+          "type": "tftypes.List[tftypes.Object[\"description\":tftypes.String, \"ipv4\":tftypes.String, \"ipv6\":tftypes.String, \"region\":tftypes.String, \"region_code\":tftypes.String, \"status\":tftypes.String]]",
+          "computed": true
+        },
+        "region_code": {
+          "type": "tftypes.String",
+          "optional": true
+        }
+      }
+    }
+  }
+}

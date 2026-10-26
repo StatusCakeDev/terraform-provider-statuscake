@@ -1,70 +1,17 @@
 ---
 name: policy
 on:
-  pull_request:
+  pull_request_target:
   push:
     branches:
-    # This is run on merge queue branches as there are jobs listed in this
-    # action that are often required in branch protection rules. Due to guards
-    # below certain jobs may not run in merge queue branches but will still
-    # return a status indicating a pass.
+    # Run on merge queue branches for branch protection compatibility.
     - gh-readonly-queue/**
     - master
+permissions:
+  contents: read
 jobs:
-  check-merge-commits:
-    if: github.event_name == 'pull_request'
-    name: Check merge commits
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v6
-      with:
-        fetch-depth: 0
-    - run: |
-        git config --global --add safe.directory /github/workspace
-        merge_commits=$(git rev-list --merges "origin/$GITHUB_BASE_REF".."origin/$GITHUB_HEAD_REF")
-        if [ -n "$merge_commits" ]; then
-          echo "Error: merge commits found in $GITHUB_BASE_REF..$GITHUB_HEAD_REF"
-          for merge_commit in $merge_commits; do
-            echo "$merge_commit"
-          done
-          exit 1
-        fi
-  commit-message-style:
-    if: github.event_name == 'pull_request' && github.triggering_actor != 'dependabot[bot]'
-    name: Check commit message style
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v6
-      with:
-        fetch-depth: 0
-    - uses: actions/setup-node@v6
-      with:
-        node-version: 19.x
-    - name: Install base config
-      run: npm install @commitlint/config-conventional
-    - name: Validate commit messages
-      run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to HEAD --verbose
-  markdown-style:
-    name: Check markdown style
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v6
-      with:
-        fetch-depth: 0
-    - uses: actions/setup-node@v6
-      with:
-        node-version: 19.x
-    - name: Validate markdown
-      run: npx markdownlint-cli2 **/*.md "#docs/**/*.md"
-  yaml-style:
-    name: Check YAML style
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v6
-    - uses: actions/setup-python@v6
-      with:
-        python-version: "3.10"
-    - name: Install yamllint
-      run: pip install --user yamllint
-    - name: Validate YAML
-      run: yamllint .
+  quality-checks:
+    uses: StatusCakeDev/shared-workflows/.github/workflows/policy.yaml@v1
+    with:
+      enable-merge-commit-check: ${{ github.event_name == 'pull_request_target' }}
+      enable-commit-message-check: ${{ github.event_name == 'pull_request_target' }}
