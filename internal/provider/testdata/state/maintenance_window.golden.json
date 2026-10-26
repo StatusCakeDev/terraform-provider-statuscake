@@ -1,0 +1,11 @@
+{
+  "%": "8",
+  "end": "2022-01-30T23:59:59Z",
+  "id": "1001",
+  "name": "Window",
+  "repeat_interval": "never",
+  "start": "2022-01-29T00:00:00Z",
+  "tags.#": "1",
+  "tags.0": "production",
+  "timezone": "UTC"
+}

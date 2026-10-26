@@ -6,13 +6,15 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/diag"
-	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/validation"
+	"github.com/StatusCakeDev/statuscake-go"
+
+	"github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/adapters"
+	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/diag"
+	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/validation"
 )
 
 func resourceStatusCakeSSLCheck() *schema.Resource {
@@ -74,18 +76,18 @@ func resourceStatusCakeSSLCheck() *schema.Resource {
 				},
 			},
 			"check_interval": {
-				Type:         schema.TypeInt,
-				Required:     true,
-				Description:  "Number of seconds between checks",
-				ValidateFunc: intvalidation.Int32InSlice(statuscake.SSLTestCheckRateValues()),
+				Type:             schema.TypeInt,
+				Required:         true,
+				Description:      "Number of seconds between checks",
+				ValidateDiagFunc: intvalidation.Int32InSlice(statuscake.SSLTestCheckRateValues()),
 			},
 			"contact_groups": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of contact group IDs",
 				Elem: &schema.Schema{
-					Type:         schema.TypeString,
-					ValidateFunc: intvalidation.StringIsNumerical,
+					Type:             schema.TypeString,
+					ValidateDiagFunc: intvalidation.StringIsNumerical,
 				},
 			},
 			"follow_redirects": {
@@ -133,7 +135,7 @@ func resourceStatusCakeSSLCheck() *schema.Resource {
 }
 
 func resourceStatusCakeSSLCheckCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	body := make(map[string]interface{})
 
 	config, err := expandSSLCheckAlertConfig(d.Get("alert_config"), d)
@@ -190,7 +192,7 @@ func resourceStatusCakeSSLCheckCreate(ctx context.Context, d *schema.ResourceDat
 
 	res, err := client.CreateSslTestWithData(ctx, body).Execute()
 	if err != nil {
-		return intdiag.FromErr("failed to create SSL check", err)
+		return intdiag.WrapErr("failed to create SSL check", err)
 	}
 
 	d.SetId(res.Data.NewID)
@@ -198,7 +200,7 @@ func resourceStatusCakeSSLCheckCreate(ctx context.Context, d *schema.ResourceDat
 }
 
 func resourceStatusCakeSSLCheckRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	id := d.Id()
 
 	res, err := client.GetSslTest(ctx, id).Execute()
@@ -244,7 +246,7 @@ func resourceStatusCakeSSLCheckRead(ctx context.Context, d *schema.ResourceData,
 }
 
 func resourceStatusCakeSSLCheckUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	body := make(map[string]interface{})
 	id := d.Id()
 
@@ -301,20 +303,20 @@ func resourceStatusCakeSSLCheckUpdate(ctx context.Context, d *schema.ResourceDat
 	log.Printf("[DEBUG] Request body: %+v", body)
 
 	if err := client.UpdateSslTestWithData(ctx, id, body).Execute(); err != nil {
-		return intdiag.FromErr(fmt.Sprintf("failed to update SSL check with id %s", id), err)
+		return intdiag.WrapErr(fmt.Sprintf("failed to update SSL check with id %s", id), err)
 	}
 
 	return resourceStatusCakeSSLCheckRead(ctx, d, meta)
 }
 
 func resourceStatusCakeSSLCheckDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	id := d.Id()
 
 	log.Printf("[DEBUG] Deleting StatusCake SSL check with ID: %s", id)
 
 	if err := client.DeleteSslTest(ctx, id).Execute(); err != nil {
-		return intdiag.FromErr(fmt.Sprintf("failed to delete SSL check with id %s", id), err)
+		return intdiag.WrapErr(fmt.Sprintf("failed to delete SSL check with id %s", id), err)
 	}
 
 	return nil

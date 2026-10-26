@@ -6,13 +6,15 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/diag"
-	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/validation"
+	"github.com/StatusCakeDev/statuscake-go"
+
+	"github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/adapters"
+	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/diag"
+	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/validation"
 )
 
 func resourceStatusCakeContactGroup() *schema.Resource {
@@ -33,8 +35,8 @@ func resourceStatusCakeContactGroup() *schema.Resource {
 				Optional:    true,
 				Description: "List of email addresses",
 				Elem: &schema.Schema{
-					Type:         schema.TypeString,
-					ValidateFunc: intvalidation.IsEmailAddress,
+					Type:             schema.TypeString,
+					ValidateDiagFunc: intvalidation.IsEmailAddress,
 				},
 			},
 			"integrations": {
@@ -42,8 +44,8 @@ func resourceStatusCakeContactGroup() *schema.Resource {
 				Optional:    true,
 				Description: "List of integration IDs",
 				Elem: &schema.Schema{
-					Type:         schema.TypeString,
-					ValidateFunc: intvalidation.StringIsNumerical,
+					Type:             schema.TypeString,
+					ValidateDiagFunc: intvalidation.StringIsNumerical,
 				},
 			},
 			"mobile_numbers": {
@@ -72,7 +74,7 @@ func resourceStatusCakeContactGroup() *schema.Resource {
 }
 
 func resourceStatusCakeContactGroupCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	body := make(map[string]interface{})
 
 	emailAddresses, err := expandContactGroupEmailAddresses(d.Get("email_addresses"), d)
@@ -115,7 +117,7 @@ func resourceStatusCakeContactGroupCreate(ctx context.Context, d *schema.Resourc
 
 	res, err := client.CreateContactGroupWithData(ctx, body).Execute()
 	if err != nil {
-		return intdiag.FromErr("failed to create contact group", err)
+		return intdiag.WrapErr("failed to create contact group", err)
 	}
 
 	d.SetId(res.Data.NewID)
@@ -123,7 +125,7 @@ func resourceStatusCakeContactGroupCreate(ctx context.Context, d *schema.Resourc
 }
 
 func resourceStatusCakeContactGroupRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	id := d.Id()
 
 	res, err := client.GetContactGroup(ctx, id).Execute()
@@ -161,7 +163,7 @@ func resourceStatusCakeContactGroupRead(ctx context.Context, d *schema.ResourceD
 }
 
 func resourceStatusCakeContactGroupUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	body := make(map[string]interface{})
 	id := d.Id()
 
@@ -204,20 +206,20 @@ func resourceStatusCakeContactGroupUpdate(ctx context.Context, d *schema.Resourc
 	log.Printf("[DEBUG] Request body: %+v", body)
 
 	if err := client.UpdateContactGroupWithData(ctx, id, body).Execute(); err != nil {
-		return intdiag.FromErr(fmt.Sprintf("failed to update contact group with id %s", id), err)
+		return intdiag.WrapErr(fmt.Sprintf("failed to update contact group with id %s", id), err)
 	}
 
 	return resourceStatusCakeContactGroupRead(ctx, d, meta)
 }
 
 func resourceStatusCakeContactGroupDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	id := d.Id()
 
 	log.Printf("[DEBUG] Deleting StatusCake contact group with ID: %s", id)
 
 	if err := client.DeleteContactGroup(ctx, id).Execute(); err != nil {
-		return intdiag.FromErr(fmt.Sprintf("failed to delete contact group with id %s", id), err)
+		return intdiag.WrapErr(fmt.Sprintf("failed to delete contact group with id %s", id), err)
 	}
 
 	return nil

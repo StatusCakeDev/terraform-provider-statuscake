@@ -8,13 +8,15 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/diag"
-	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/validation"
+	"github.com/StatusCakeDev/statuscake-go"
+
+	"github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/adapters"
+	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/diag"
+	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/validation"
 )
 
 const (
@@ -47,10 +49,10 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"check_interval": {
-				Type:         schema.TypeInt,
-				Required:     true,
-				Description:  "Number of seconds between checks",
-				ValidateFunc: intvalidation.Int32InSlice(statuscake.UptimeTestCheckRateValues()),
+				Type:             schema.TypeInt,
+				Required:         true,
+				Description:      "Number of seconds between checks",
+				ValidateDiagFunc: intvalidation.Int32InSlice(statuscake.UptimeTestCheckRateValues()),
 			},
 			"confirmation": {
 				Type:         schema.TypeInt,
@@ -64,8 +66,8 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 				Optional:    true,
 				Description: "List of contact group IDs",
 				Elem: &schema.Schema{
-					Type:         schema.TypeString,
-					ValidateFunc: intvalidation.StringIsNumerical,
+					Type:             schema.TypeString,
+					ValidateDiagFunc: intvalidation.StringIsNumerical,
 				},
 			},
 			"dns_check": {
@@ -199,8 +201,8 @@ func resourceStatusCakeUptimeCheck() *schema.Resource {
 							MinItems:    1,
 							Description: "List of status codes that trigger an alert. If not specified then the default status codes are used. Once set, the default status codes cannot be restored and ommitting this field does not clear the attribute",
 							Elem: &schema.Schema{
-								Type:         schema.TypeString,
-								ValidateFunc: intvalidation.StringIsNumerical,
+								Type:             schema.TypeString,
+								ValidateDiagFunc: intvalidation.StringIsNumerical,
 							},
 						},
 						"timeout": {
@@ -377,7 +379,7 @@ func basicAuthSchema() map[string]*schema.Schema {
 }
 
 func resourceStatusCakeUptimeCheckCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	body := make(map[string]interface{})
 
 	checkInterval, err := expandUptimeCheckInterval(d.Get("check_interval"), d)
@@ -474,7 +476,7 @@ func resourceStatusCakeUptimeCheckCreate(ctx context.Context, d *schema.Resource
 
 	res, err := client.CreateUptimeTestWithData(ctx, body).Execute()
 	if err != nil {
-		return intdiag.FromErr("failed to create uptime check", err)
+		return intdiag.WrapErr("failed to create uptime check", err)
 	}
 
 	d.SetId(res.Data.NewID)
@@ -482,7 +484,7 @@ func resourceStatusCakeUptimeCheckCreate(ctx context.Context, d *schema.Resource
 }
 
 func resourceStatusCakeUptimeCheckRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	id := d.Id()
 
 	res, err := client.GetUptimeTest(ctx, id).Execute()
@@ -552,7 +554,7 @@ func resourceStatusCakeUptimeCheckRead(ctx context.Context, d *schema.ResourceDa
 }
 
 func resourceStatusCakeUptimeCheckUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	body := make(map[string]interface{})
 	id := d.Id()
 
@@ -651,20 +653,20 @@ func resourceStatusCakeUptimeCheckUpdate(ctx context.Context, d *schema.Resource
 	log.Printf("[DEBUG] Request body: %+v", body)
 
 	if err := client.UpdateUptimeTestWithData(ctx, id, body).Execute(); err != nil {
-		return intdiag.FromErr(fmt.Sprintf("failed to update uptime check with id %s", id), err)
+		return intdiag.WrapErr(fmt.Sprintf("failed to update uptime check with id %s", id), err)
 	}
 
 	return resourceStatusCakeUptimeCheckRead(ctx, d, meta)
 }
 
 func resourceStatusCakeUptimeCheckDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	id := d.Id()
 
 	log.Printf("[DEBUG] Deleting StatusCake uptime check with ID: %s", id)
 
 	if err := client.DeleteUptimeTest(ctx, id).Execute(); err != nil {
-		return intdiag.FromErr(fmt.Sprintf("failed to delete uptime check with id %s", id), err)
+		return intdiag.WrapErr(fmt.Sprintf("failed to delete uptime check with id %s", id), err)
 	}
 
 	return nil
@@ -682,7 +684,14 @@ func expandUptimeCheckBasicAuthentication(v interface{}, d *schema.ResourceData)
 	l := v.([]interface{})
 
 	if len(l) == 0 || l[0] == nil {
-		return map[string]interface{}{}, nil
+		// When the block has been removed the API keeps the credentials unless it
+		// is told to clear them, which is done by sending empty values. This is
+		// only reached on an update, as callers only use the result when the block
+		// has changed.
+		return map[string]interface{}{
+			"basic_password": "",
+			"basic_username": "",
+		}, nil
 	}
 
 	original := l[0].(map[string]interface{})
@@ -729,6 +738,17 @@ func expandUptimeCheckContentMatchers(v interface{}, d *schema.ResourceData) (in
 	l := v.([]interface{})
 
 	if len(l) == 0 || l[0] == nil {
+		// When the block has been removed the API keeps the matcher unless it is
+		// told to clear it, which is done by sending empty values. Otherwise the
+		// matcher would remain and the next plan would try to remove it again.
+		if d.HasChange("http_check.0.content_matchers") {
+			return map[string]interface{}{
+				"find_string":    "",
+				"include_header": false,
+				"do_not_find":    false,
+			}, nil
+		}
+
 		return map[string]interface{}{}, nil
 	}
 
