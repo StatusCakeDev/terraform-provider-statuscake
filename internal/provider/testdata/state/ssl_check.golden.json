@@ -1,0 +1,22 @@
+{
+  "%": "8",
+  "alert_config.#": "1",
+  "alert_config.0.%": "5",
+  "alert_config.0.alert_at.#": "3",
+  "alert_config.0.alert_at.0": "7",
+  "alert_config.0.alert_at.1": "14",
+  "alert_config.0.alert_at.2": "21",
+  "alert_config.0.on_broken": "false",
+  "alert_config.0.on_expiry": "false",
+  "alert_config.0.on_mixed": "false",
+  "alert_config.0.on_reminder": "false",
+  "check_interval": "600",
+  "follow_redirects": "false",
+  "id": "1001",
+  "monitored_resource.#": "1",
+  "monitored_resource.0.%": "2",
+  "monitored_resource.0.address": "https://example.com",
+  "monitored_resource.0.hostname": "",
+  "paused": "false",
+  "user_agent": ""
+}

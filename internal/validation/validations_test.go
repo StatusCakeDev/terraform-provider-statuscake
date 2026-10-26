@@ -4,52 +4,59 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/validation"
+	"github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/validation"
+	"github.com/hashicorp/go-cty/cty"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+)
+
+var (
+	path         = cty.IndexStringPath("test")
+	validNumbers = []int32{1, 2, 3}
 )
 
 func TestIsEmailAddress(t *testing.T) {
 	t.Run("returns no errors when the given value is a valid email address", func(t *testing.T) {
-		_, errs := validation.IsEmailAddress("picard@starfleet.com", "email")
-		if errs != nil {
+		diags := validation.IsEmailAddress("picard@starfleet.com", path)
+		if len(diags) != 0 {
 			t.Error("expected no errors but errors were returned")
 		}
 	})
 
 	t.Run("returns an error when the value is not of type string", func(t *testing.T) {
-		expected := []string{`expected type of "email" to be string`}
+		expected := []string{"expected a string value, got int"}
 
-		_, errs := validation.IsEmailAddress(1701, "email")
-		if errs == nil {
+		diags := validation.IsEmailAddress(1701, path)
+		if len(diags) == 0 {
 			t.Error("expected errors but no errors were returned")
 		}
 
-		if !reflect.DeepEqual(collect(errs), expected) {
+		if !reflect.DeepEqual(collect(diags), expected) {
 			t.Error("unexpected error message")
 		}
 	})
 
 	t.Run("returns an error when the value is an empty string", func(t *testing.T) {
-		expected := []string{`expected "email" email address to not be empty, got ""`}
+		expected := []string{"expected a non-empty email address"}
 
-		_, errs := validation.IsEmailAddress("", "email")
-		if errs == nil {
+		diags := validation.IsEmailAddress("", path)
+		if len(diags) == 0 {
 			t.Error("expected errors but no errors were returned")
 		}
 
-		if !reflect.DeepEqual(collect(errs), expected) {
+		if !reflect.DeepEqual(collect(diags), expected) {
 			t.Error("unexpected error message")
 		}
 	})
 
 	t.Run("returns an error when the value is not a valid email address", func(t *testing.T) {
-		expected := []string{`expected "email" to be a valid email address, got "enterprise": mail: missing '@' or angle-addr`}
+		expected := []string{`expected a valid email address, got "enterprise"`}
 
-		_, errs := validation.IsEmailAddress("enterprise", "email")
-		if errs == nil {
+		diags := validation.IsEmailAddress("enterprise", path)
+		if len(diags) == 0 {
 			t.Error("expected errors but no errors were returned")
 		}
 
-		if !reflect.DeepEqual(collect(errs), expected) {
+		if !reflect.DeepEqual(collect(diags), expected) {
 			t.Error("unexpected error message")
 		}
 	})
@@ -57,47 +64,47 @@ func TestIsEmailAddress(t *testing.T) {
 
 func TestStringIsNumerical(t *testing.T) {
 	t.Run("returns no errors when the given value is a string representation of a numerical value", func(t *testing.T) {
-		_, errs := validation.StringIsNumerical("123", "number")
-		if errs != nil {
+		diags := validation.StringIsNumerical("123", path)
+		if len(diags) != 0 {
 			t.Error("expected no errors but errors were returned")
 		}
 	})
 
 	t.Run("returns an error when the value is not of type string", func(t *testing.T) {
-		expected := []string{`expected type of "number" to be string`}
+		expected := []string{"expected a string value, got int"}
 
-		_, errs := validation.StringIsNumerical(1701, "number")
-		if errs == nil {
+		diags := validation.StringIsNumerical(1701, path)
+		if len(diags) == 0 {
 			t.Error("expected errors but no errors were returned")
 		}
 
-		if !reflect.DeepEqual(collect(errs), expected) {
+		if !reflect.DeepEqual(collect(diags), expected) {
 			t.Error("unexpected error message")
 		}
 	})
 
 	t.Run("returns an error when the value is an empty string", func(t *testing.T) {
-		expected := []string{`expected "number" number to not be empty, got ""`}
+		expected := []string{"expected a non-empty string representation of a number"}
 
-		_, errs := validation.StringIsNumerical("", "number")
-		if errs == nil {
+		diags := validation.StringIsNumerical("", path)
+		if len(diags) == 0 {
 			t.Error("expected errors but no errors were returned")
 		}
 
-		if !reflect.DeepEqual(collect(errs), expected) {
+		if !reflect.DeepEqual(collect(diags), expected) {
 			t.Error("unexpected error message")
 		}
 	})
 
 	t.Run("returns an error when the value is not a string representation of a numerical value", func(t *testing.T) {
-		expected := []string{`expected "number" to be a valid number, got "enterprise": strconv.Atoi: parsing "enterprise": invalid syntax`}
+		expected := []string{`expected a string representation of a number, got "enterprise"`}
 
-		_, errs := validation.StringIsNumerical("enterprise", "number")
-		if errs == nil {
+		diags := validation.StringIsNumerical("enterprise", path)
+		if len(diags) == 0 {
 			t.Error("expected errors but no errors were returned")
 		}
 
-		if !reflect.DeepEqual(collect(errs), expected) {
+		if !reflect.DeepEqual(collect(diags), expected) {
 			t.Error("unexpected error message")
 		}
 	})
@@ -105,43 +112,43 @@ func TestStringIsNumerical(t *testing.T) {
 
 func TestInt32InSlice(t *testing.T) {
 	t.Run("returns no errors when the given value is contained within the validation slice", func(t *testing.T) {
-		_, errs := validation.Int32InSlice([]int32{1, 2, 3})(2, "number")
-		if errs != nil {
+		diags := validation.Int32InSlice(validNumbers)(2, path)
+		if len(diags) != 0 {
 			t.Error("expected no errors but errors were returned")
 		}
 	})
 
 	t.Run("returns an error when the value is not of type int32", func(t *testing.T) {
-		expected := []string{`expected type of "number" to be integer`}
+		expected := []string{"expected an int value, got string"}
 
-		_, errs := validation.Int32InSlice([]int32{1, 2, 3})("1701", "number")
-		if errs == nil {
+		diags := validation.Int32InSlice(validNumbers)("1701", path)
+		if len(diags) == 0 {
 			t.Error("expected errors but no errors were returned")
 		}
 
-		if !reflect.DeepEqual(collect(errs), expected) {
+		if !reflect.DeepEqual(collect(diags), expected) {
 			t.Error("unexpected error message")
 		}
 	})
 
 	t.Run("returns an error when the value is not contained within the validation slice", func(t *testing.T) {
-		expected := []string{`expected "number" to be one of [1 2 3], got 4`}
+		expected := []string{"expected value to be one of [1 2 3]"}
 
-		_, errs := validation.Int32InSlice([]int32{1, 2, 3})(4, "number")
-		if errs == nil {
+		diags := validation.Int32InSlice(validNumbers)(4, path)
+		if len(diags) == 0 {
 			t.Error("expected errors but no errors were returned")
 		}
 
-		if !reflect.DeepEqual(collect(errs), expected) {
+		if !reflect.DeepEqual(collect(diags), expected) {
 			t.Error("unexpected error message")
 		}
 	})
 }
 
-func collect(errs []error) []string {
-	strs := make([]string, len(errs))
-	for i, err := range errs {
-		strs[i] = err.Error()
+func collect(diags diag.Diagnostics) []string {
+	strs := make([]string, len(diags))
+	for i, diag := range diags {
+		strs[i] = diag.Summary
 	}
 	return strs
 }

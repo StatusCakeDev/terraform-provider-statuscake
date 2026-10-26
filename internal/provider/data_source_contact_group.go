@@ -4,11 +4,13 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/validation"
+	"github.com/StatusCakeDev/statuscake-go"
+
+	"github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/adapters"
+	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/validation"
 )
 
 func dataSourceStatusCakeContactGroup() *schema.Resource {
@@ -17,10 +19,10 @@ func dataSourceStatusCakeContactGroup() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"id": {
-				Type:         schema.TypeString,
-				Required:     true,
-				Description:  "Contact group ID",
-				ValidateFunc: intvalidation.StringIsNumerical,
+				Type:             schema.TypeString,
+				Required:         true,
+				Description:      "Contact group ID",
+				ValidateDiagFunc: intvalidation.StringIsNumerical,
 			},
 			"email_addresses": {
 				Type:        schema.TypeSet,
@@ -61,7 +63,7 @@ func dataSourceStatusCakeContactGroup() *schema.Resource {
 }
 
 func dataSourceStatusCakeContactGroupRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	id := d.Get("id").(string)
 
 	res, err := client.GetContactGroup(ctx, id).Execute()
@@ -72,7 +74,7 @@ func dataSourceStatusCakeContactGroupRead(ctx context.Context, d *schema.Resourc
 		return nil
 	}
 	if err != nil {
-		return diag.Errorf("failed to get contact group with ID: %s", err)
+		return diag.Errorf("failed to get contact group with ID: %s, error: %s", id, err)
 	}
 
 	if err := d.Set("email_addresses", flattenContactGroupEmailAddresses(res.Data.EmailAddresses, d)); err != nil {
