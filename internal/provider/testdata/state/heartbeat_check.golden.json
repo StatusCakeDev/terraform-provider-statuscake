@@ -1,0 +1,9 @@
+{
+  "%": "8",
+  "check_url": "https://heartbeat.example.com/1001",
+  "id": "1001",
+  "monitored_resource.#": "0",
+  "name": "Job",
+  "paused": "false",
+  "period": "1800"
+}

@@ -1,15 +1,20 @@
+// Package diag provides helpers for converting errors into Terraform
+// Diagnostics.
 package diag
 
 import (
+	"maps"
+	"slices"
 	"strings"
 
-	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+
+	"github.com/StatusCakeDev/statuscake-go"
 )
 
-// FromErr will convert an error into a Diagnostics. Each Diagnostic entry will
+// WrapErr will convert an error into a Diagnostics. Each Diagnostic entry will
 // have the summary line prefixed with a contextual message.
-func FromErr(message string, err error) diag.Diagnostics {
+func WrapErr(message string, err error) diag.Diagnostics {
 	if err == nil {
 		return nil
 	}
@@ -35,7 +40,11 @@ func fromErr(message string, err error) diag.Diagnostics {
 
 func violations(message string, err error, errs map[string][]string) diag.Diagnostics {
 	var diags diag.Diagnostics
-	for field, violations := range errs {
+
+	// Report the fields in a stable order, since the violations are held in a
+	// map and would otherwise come out differently on each run.
+	for _, field := range slices.Sorted(maps.Keys(errs)) {
+		violations := errs[field]
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  message + ": " + err.Error() + ": " + field + " contains violations",

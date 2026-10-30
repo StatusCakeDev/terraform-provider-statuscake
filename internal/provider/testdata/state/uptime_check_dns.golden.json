@@ -1,0 +1,22 @@
+{
+  "%": "15",
+  "check_interval": "300",
+  "confirmation": "2",
+  "dns_check.#": "1",
+  "dns_check.0.%": "2",
+  "dns_check.0.dns_ips.#": "1",
+  "dns_check.0.dns_ips.0": "192.0.2.1",
+  "dns_check.0.dns_server": "",
+  "http_check.#": "0",
+  "icmp_check.#": "0",
+  "id": "1001",
+  "locations.#": "0",
+  "monitored_resource.#": "1",
+  "monitored_resource.0.%": "2",
+  "monitored_resource.0.address": "https://example.com",
+  "monitored_resource.0.host": "",
+  "name": "DNS",
+  "paused": "false",
+  "tcp_check.#": "0",
+  "trigger_rate": "0"
+}

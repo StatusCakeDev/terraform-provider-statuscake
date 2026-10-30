@@ -1,8 +1,8 @@
 ---
-# Visit https://goreleaser.com for documentation on how to customize this
-# behavior.
+version: 2
 archives:
-- format: zip
+- formats:
+  - zip
   name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 before:
   hooks:
@@ -11,8 +11,7 @@ builds:
 - binary: "{{ .ProjectName }}_v{{ .Version }}"
   env:
   # goreleaser does not work with CGO, it could also complicate usage by users
-  # in CI/CD systems like Terraform Cloud where they are unable to install
-  # libraries.
+  # in CI/CD systems where they may be unable to install libraries.
   - CGO_ENABLED=0
   flags:
   - -trimpath
@@ -33,7 +32,7 @@ builds:
     goos: darwin
   mod_timestamp: "{{ .CommitTimestamp }}"
 changelog:
-  skip: true
+  disable: true
 checksum:
   algorithm: sha256
   extra_files:
@@ -44,14 +43,15 @@ release:
   extra_files:
   - glob: terraform-registry-manifest.json
     name_template: "{{ .ProjectName }}_{{ .Version }}_manifest.json"
+  prerelease: auto
 signs:
 - artifacts: checksum
   args:
-  # If you are using this in a GitHub action or some other automated pipeline,
-  # you need to pass the batch flag to indicate its not interactive.
+  # The `batch` flag must be specified to indicate signing should be
+  # non-interactive.
   - --batch
   - --local-user
-  - "{{ .Env.GPG_FINGERPRINT }}"  # set this environment variable for your signing key
+  - "{{ .Env.GPG_FINGERPRINT }}"
   - --output
   - ${signature}
   - --detach-sign

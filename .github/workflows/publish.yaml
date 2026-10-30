@@ -4,26 +4,12 @@ on:
   push:
     tags:
     - v*
+permissions:
+  contents: write
+  packages: write
 jobs:
   goreleaser:
-    name: Publish artefacts to GitHub
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v6
-      with:
-        fetch-depth: 0
-    - uses: actions/setup-go@v6
-      with:
-        go-version: "1.21"
-    - id: import_gpg
-      uses: crazy-max/ghaction-import-gpg@v6
-      with:
-        gpg_private_key: ${{ secrets.ARTEFACT_SIGNING_KEY }}
-        passphrase: ${{ secrets.ARTEFACT_SIGNING_KEY_PASSPHRASE }}
-    - uses: goreleaser/goreleaser-action@v6
-      with:
-        version: latest
-        args: release --clean
-      env:
-        GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    uses: StatusCakeDev/shared-workflows/.github/workflows/goreleaser.yaml@v1
+    secrets:
+      GPG_PRIVATE_KEY: ${{ secrets.ARTEFACT_SIGNING_KEY }}
+      GPG_PASSPHRASE: ${{ secrets.ARTEFACT_SIGNING_KEY_PASSPHRASE }}

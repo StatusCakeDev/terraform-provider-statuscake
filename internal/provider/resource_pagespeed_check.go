@@ -6,13 +6,15 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/diag"
-	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/validation"
+	"github.com/StatusCakeDev/statuscake-go"
+
+	"github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/adapters"
+	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/diag"
+	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/validation"
 )
 
 func resourceStatusCakePagespeedCheck() *schema.Resource {
@@ -60,18 +62,18 @@ func resourceStatusCakePagespeedCheck() *schema.Resource {
 				},
 			},
 			"check_interval": {
-				Type:         schema.TypeInt,
-				Required:     true,
-				Description:  "Number of seconds between checks",
-				ValidateFunc: intvalidation.Int32InSlice(statuscake.PagespeedTestCheckRateValues()),
+				Type:             schema.TypeInt,
+				Required:         true,
+				Description:      "Number of seconds between checks",
+				ValidateDiagFunc: intvalidation.Int32InSlice(statuscake.PagespeedTestCheckRateValues()),
 			},
 			"contact_groups": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "List of contact group IDs",
 				Elem: &schema.Schema{
-					Type:         schema.TypeString,
-					ValidateFunc: intvalidation.StringIsNumerical,
+					Type:             schema.TypeString,
+					ValidateDiagFunc: intvalidation.StringIsNumerical,
 				},
 			},
 			"location": {
@@ -118,7 +120,7 @@ func resourceStatusCakePagespeedCheck() *schema.Resource {
 }
 
 func resourceStatusCakePagespeedCheckCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	body := make(map[string]interface{})
 
 	config, err := expandPagespeedCheckAlertConfig(d.Get("alert_config"), d)
@@ -175,7 +177,7 @@ func resourceStatusCakePagespeedCheckCreate(ctx context.Context, d *schema.Resou
 
 	res, err := client.CreatePagespeedTestWithData(ctx, body).Execute()
 	if err != nil {
-		return intdiag.FromErr("failed to create pagespeed check", err)
+		return intdiag.WrapErr("failed to create pagespeed check", err)
 	}
 
 	d.SetId(res.Data.NewID)
@@ -183,7 +185,7 @@ func resourceStatusCakePagespeedCheckCreate(ctx context.Context, d *schema.Resou
 }
 
 func resourceStatusCakePagespeedCheckRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	id := d.Id()
 
 	res, err := client.GetPagespeedTest(ctx, id).Execute()
@@ -229,7 +231,7 @@ func resourceStatusCakePagespeedCheckRead(ctx context.Context, d *schema.Resourc
 }
 
 func resourceStatusCakePagespeedCheckUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	body := make(map[string]interface{})
 	id := d.Id()
 
@@ -286,20 +288,20 @@ func resourceStatusCakePagespeedCheckUpdate(ctx context.Context, d *schema.Resou
 	log.Printf("[DEBUG] Request body: %+v", body)
 
 	if err := client.UpdatePagespeedTestWithData(ctx, id, body).Execute(); err != nil {
-		return intdiag.FromErr(fmt.Sprintf("failed to update pagespeed check with id %s", id), err)
+		return intdiag.WrapErr(fmt.Sprintf("failed to update pagespeed check with id %s", id), err)
 	}
 
 	return resourceStatusCakePagespeedCheckRead(ctx, d, meta)
 }
 
 func resourceStatusCakePagespeedCheckDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	id := d.Id()
 
 	log.Printf("[DEBUG] Deleting StatusCake pagespeed check with ID: %s", id)
 
 	if err := client.DeletePagespeedTest(ctx, id).Execute(); err != nil {
-		return intdiag.FromErr(fmt.Sprintf("failed to delete pagespeed check with id %s", id), err)
+		return intdiag.WrapErr(fmt.Sprintf("failed to delete pagespeed check with id %s", id), err)
 	}
 
 	return nil
