@@ -1,0 +1,17 @@
+{
+  "%": "9",
+  "alert_config.#": "1",
+  "alert_config.0.%": "3",
+  "alert_config.0.alert_bigger": "0",
+  "alert_config.0.alert_slower": "0",
+  "alert_config.0.alert_smaller": "0",
+  "check_interval": "300",
+  "id": "1001",
+  "location": "UK",
+  "monitored_resource.#": "1",
+  "monitored_resource.0.%": "1",
+  "monitored_resource.0.address": "https://example.com",
+  "name": "Page",
+  "paused": "false",
+  "region": "UK"
+}
