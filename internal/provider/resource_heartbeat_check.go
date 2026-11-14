@@ -6,13 +6,15 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/StatusCakeDev/statuscake-go"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
-	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/diag"
-	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/provider/validation"
+	"github.com/StatusCakeDev/statuscake-go"
+
+	"github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/adapters"
+	intdiag "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/diag"
+	intvalidation "github.com/StatusCakeDev/terraform-provider-statuscake/v2/internal/validation"
 )
 
 func resourceStatusCakeHeartbeatCheck() *schema.Resource {
@@ -38,8 +40,8 @@ func resourceStatusCakeHeartbeatCheck() *schema.Resource {
 				Optional:    true,
 				Description: "List of contact group IDs",
 				Elem: &schema.Schema{
-					Type:         schema.TypeString,
-					ValidateFunc: intvalidation.StringIsNumerical,
+					Type:             schema.TypeString,
+					ValidateDiagFunc: intvalidation.StringIsNumerical,
 				},
 			},
 			"monitored_resource": {
@@ -90,7 +92,7 @@ func resourceStatusCakeHeartbeatCheck() *schema.Resource {
 }
 
 func resourceStatusCakeHeartbeatCheckCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	body := make(map[string]interface{})
 
 	contactGroups, err := expandHeartbeatCheckContactGroups(d.Get("contact_groups"), d)
@@ -139,7 +141,7 @@ func resourceStatusCakeHeartbeatCheckCreate(ctx context.Context, d *schema.Resou
 
 	res, err := client.CreateHeartbeatTestWithData(ctx, body).Execute()
 	if err != nil {
-		return intdiag.FromErr("failed to create heartbeat check", err)
+		return intdiag.WrapErr("failed to create heartbeat check", err)
 	}
 
 	d.SetId(res.Data.NewID)
@@ -147,7 +149,7 @@ func resourceStatusCakeHeartbeatCheckCreate(ctx context.Context, d *schema.Resou
 }
 
 func resourceStatusCakeHeartbeatCheckRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	id := d.Id()
 
 	res, err := client.GetHeartbeatTest(ctx, id).Execute()
@@ -193,7 +195,7 @@ func resourceStatusCakeHeartbeatCheckRead(ctx context.Context, d *schema.Resourc
 }
 
 func resourceStatusCakeHeartbeatCheckUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	body := make(map[string]interface{})
 	id := d.Id()
 
@@ -243,20 +245,20 @@ func resourceStatusCakeHeartbeatCheckUpdate(ctx context.Context, d *schema.Resou
 	log.Printf("[DEBUG] Request body: %+v", body)
 
 	if err := client.UpdateHeartbeatTestWithData(ctx, id, body).Execute(); err != nil {
-		return intdiag.FromErr(fmt.Sprintf("failed to update heartbeat check with id %s", id), err)
+		return intdiag.WrapErr(fmt.Sprintf("failed to update heartbeat check with id %s", id), err)
 	}
 
 	return resourceStatusCakeHeartbeatCheckRead(ctx, d, meta)
 }
 
 func resourceStatusCakeHeartbeatCheckDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*statuscake.Client)
+	client := meta.(*adapters.Client).GetClient()
 	id := d.Id()
 
 	log.Printf("[DEBUG] Deleting StatusCake heartbeat check with ID: %s", id)
 
 	if err := client.DeleteHeartbeatTest(ctx, id).Execute(); err != nil {
-		return intdiag.FromErr(fmt.Sprintf("failed to delete heartbeat check with id %s", id), err)
+		return intdiag.WrapErr(fmt.Sprintf("failed to delete heartbeat check with id %s", id), err)
 	}
 
 	return nil
